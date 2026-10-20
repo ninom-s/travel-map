@@ -5,6 +5,16 @@
 <meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>旅の地図帳 ズーム版</title>
+<meta name="description" content="ヨーロッパ一周35日と、エジプト・ケニアの旅を1枚の地図に。ズームすると、思い出のイラストと写真が出てくる。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="旅の地図帳">
+<meta property="og:title" content="旅の地図帳｜ヨーロッパ一周とエジプト・ケニア">
+<meta property="og:description" content="ズームすると、思い出のイラストと写真が出てくる旅の地図。">
+<meta property="og:url" content="https://ninom-s.github.io/travel-map/">
+<meta property="og:image" content="https://ninom-s.github.io/travel-map/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -124,6 +134,18 @@ body.isfull .panel.empty{display:none}
 .ph{display:block;flex:0 0 100%;width:100%;aspect-ratio:4/3;object-fit:cover;scroll-snap-align:center;border-radius:4px}
 .dots{display:flex;gap:8px;justify-content:center;max-width:520px;margin-top:2px}.dot{width:8px;height:8px;padding:0;border-radius:50%;border:0;background:var(--rule);cursor:pointer}.dot.on{background:var(--fg)}
 .ill .phb{fill:var(--eu);stroke:var(--card);stroke-width:1.6}
+.phwrap{position:relative;max-width:520px;margin-top:6px}
+.phwrap .phs{margin-top:0}
+.phwrap.multi .phs{gap:6px;scroll-padding-left:0}
+.phwrap.multi .ph{flex:0 0 91%;width:91%;min-width:0;scroll-snap-align:start}
+.phwrap.multi .ph:last-child{flex-basis:100%;width:100%}
+.phn{position:absolute;top:8px;right:8px;}.phwrap.multi .phn{right:calc(9% + 8px);}.phn{padding:2px 8px;border-radius:999px;background:rgba(20,24,28,.62);color:#fff;font:600 12px/1.6 var(--mono,monospace);letter-spacing:.02em;pointer-events:none}
+.pha{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#1d2328;font:600 22px/1 system-ui,sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;display:grid;place-items:center;padding:0 0 3px}
+.pha.prev{left:8px}.pha.next{right:12%}
+.pha[hidden]{display:none}
+@media (hover:none){.pha{width:30px;height:30px;font-size:19px}}
+.ill .phn2{font:700 6px/1 var(--mono,monospace);fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+
 .illrow{display:flex;gap:14px;align-items:center}.illbig{flex:none}.illtx{display:grid;gap:4px;min-width:0}
 .mode.taxi{background:var(--taxi)}.mode.trip{background:var(--muted)}.mode.ev{background:var(--fg);color:var(--bg)}
 .tl{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:4px;font-size:13.5px}
@@ -211,7 +233,7 @@ body.isfull .panel.empty{display:none}
     <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="var(--card)" stroke="var(--fg)" stroke-width="1.2"/><path d="M5,5L11,11M11,5L5,11" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/></svg>運休・乗り遅れ</span>
     <span style="color:var(--muted)">※ズームすると陸路が乗り物の色に変わる</span>
   </div>
-  <p class="hint" id="hint">ダブルタップ（PCはダブルクリック）かピンチで拡大、1本指で移動。右上の ⤢ で全画面になる。右上に赤い点があるイラストは写真つき。</p>
+  <p class="hint" id="hint">ダブルタップ（PCはダブルクリック）かピンチで拡大、1本指で移動。右上の ⤢ で全画面になる。右上に赤い点があるイラストは写真つき（数字は写真の枚数。横にスワイプか矢印で切り替え）。</p>
   <section class="panel empty" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
   <p class="foot">日付・便・時刻は各旅程表から。列車・バスの経由地は道のりから推測したもので、実際の経路と違う場合がある。ヨーロッパ行きの飛行機は★の記録に合わせて北極回りで描いた。このファイルはネットにつながっていなくても全部表示される。</p>
 </div>
@@ -959,7 +981,7 @@ function drawOverlay(){
     inner.append("circle").attr("class","bg").attr("r",18);
     const hasPh=(il.photos&&il.photos.length)||il.photo;
     inner.append("g").attr("transform","scale(1.15)").html(ICONS[il.ic]);
-    if(hasPh)inner.append("circle").attr("class","phb").attr("cx",13).attr("cy",-13).attr("r",4);
+    if(hasPh){const pn=phList(il).length;inner.append("circle").attr("class","phb").attr("cx",13).attr("cy",-13).attr("r",pn>1?5.6:4);if(pn>1)inner.append("text").attr("class","phn2").attr("x",13).attr("y",-12.6).text(pn);}
     addItem(g.node(),P[il.k],0,0);
   });
   // stops
@@ -993,7 +1015,7 @@ function declutter(){
   const lt=lodtag.getBoundingClientRect();obst.push({x:lt.left-sr.left,y:lt.top-sr.top,w:lt.width,h:lt.height});
   const placed=[];
   const hit=b=>b.x<2||b.y<2||b.x+b.w>sr.width-2||b.y+b.h>sr.height-2||obst.concat(placed).some(o=>b.x<o.x+o.w+2&&b.x+b.w+2>o.x&&b.y<o.y+o.h+2&&b.y+b.h+2>o.y);
-  const PR=t=>{const v=+t.dataset.pr;return isNaN(v)?5:v;};const labels=[...gOver.node().querySelectorAll("text")].filter(t=>t.getClientRects().length).sort((a,b)=>PR(a)-PR(b));
+  const PR=t=>{const v=+t.dataset.pr;return isNaN(v)?5:v;};const labels=[...gOver.node().querySelectorAll("text:not(.phn2)")].filter(t=>t.getClientRects().length).sort((a,b)=>PR(a)-PR(b));
   const placeIcons=()=>{
     const all=[...gOver.node().querySelectorAll(".ill")];all.forEach(g=>g.style.display="");
     const lodNow=lodOf(cur.k);const tier=g=>+g.dataset.tier;const kk=cur.k/kRef();const maxT=kk<1.6?0:kk<3.2?1:kk<12?2:3;
@@ -1036,12 +1058,19 @@ svg.call(zoom);
 let selEl=null;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const phList=il=>il.photos||(il.photo?[il.photo]:[]);
-function phHTML(il){const ph=phList(il);if(!ph.length)return "";
-  return `<div class="phs" tabindex="0" aria-label="${esc(il.name)}の写真">${ph.map((u,i)=>`<img class="ph" loading="lazy" decoding="async" src="${u}" alt="${esc(il.name)}の写真${ph.length>1?" "+(i+1)+"/"+ph.length:""}">`).join("")}</div>`+
-   (ph.length>1?`<div class="dots">${ph.map((_,i)=>`<button type="button" class="dot${i?"":" on"}" data-i="${i}" aria-label="${i+1}枚目"></button>`).join("")}</div>`:"");}
+function phHTML(il){const ph=phList(il);if(!ph.length)return "";const n=ph.length;
+  return `<div class="phwrap${n>1?" multi":""}"><div class="phs" tabindex="0" aria-label="${esc(il.name)}の写真${n>1?"（"+n+"枚。横にスワイプで切り替え）":""}">${ph.map((u,i)=>`<img class="ph" decoding="async" src="${u}" alt="${esc(il.name)}の写真${n>1?" "+(i+1)+"/"+n:""}">`).join("")}</div>`+
+   (n>1?`<span class="phn" aria-hidden="true"><b>1</b>/${n}</span><button type="button" class="pha prev" aria-label="前の写真" hidden>‹</button><button type="button" class="pha next" aria-label="次の写真">›</button>`:"")+`</div>`+
+   (n>1?`<div class="dots">${ph.map((_,i)=>`<button type="button" class="dot${i?"":" on"}" data-i="${i}" aria-label="${i+1}枚目"></button>`).join("")}</div>`:"");}
 function initPhs(){const c=panel.querySelector(".phs");if(!c)return;const ds=[...panel.querySelectorAll(".dot")];if(!ds.length)return;
-  c.addEventListener("scroll",()=>{const i=Math.round(c.scrollLeft/c.clientWidth);ds.forEach((d,j)=>d.classList.toggle("on",i===j));},{passive:true});
-  ds.forEach(d=>d.addEventListener("click",()=>c.scrollTo({left:c.clientWidth*(+d.dataset.i),behavior:"smooth"})));}
+  const imgs=[...c.querySelectorAll(".ph")],n=imgs.length,nb=panel.querySelector(".phn b"),pv=panel.querySelector(".pha.prev"),nx=panel.querySelector(".pha.next");
+  const step=()=>imgs.length>1?imgs[1].offsetLeft-imgs[0].offsetLeft:c.clientWidth;
+  const go=i=>c.scrollTo({left:step()*Math.max(0,Math.min(n-1,i)),behavior:"smooth"});
+  let cur=0;const upd=()=>{cur=Math.max(0,Math.min(n-1,Math.round(c.scrollLeft/step())));ds.forEach((d,j)=>d.classList.toggle("on",cur===j));if(nb)nb.textContent=cur+1;if(pv)pv.hidden=cur===0;if(nx)nx.hidden=cur===n-1;};
+  c.addEventListener("scroll",upd,{passive:true});
+  ds.forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
+  if(pv)pv.addEventListener("click",()=>go(cur-1));if(nx)nx.addEventListener("click",()=>go(cur+1));
+  c.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){go(cur+1);e.preventDefault();}if(e.key==="ArrowLeft"){go(cur-1);e.preventDefault();}});}
 function select(el){
   if(selEl)selEl.classList.remove("on");selEl=el;el.classList.add("on");
   panel.classList.remove("empty");
