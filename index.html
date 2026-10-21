@@ -134,6 +134,17 @@ body.isfull .panel.empty{display:none}
 .ph{display:block;flex:0 0 100%;width:100%;aspect-ratio:4/3;object-fit:cover;scroll-snap-align:center;border-radius:4px}
 .dots{display:flex;gap:8px;justify-content:center;max-width:520px;margin-top:2px}.dot{width:8px;height:8px;padding:0;border-radius:50%;border:0;background:var(--rule);cursor:pointer}.dot.on{background:var(--fg)}
 .ill .phb{fill:var(--eu);stroke:var(--card);stroke-width:1.6}
+.panel{position:relative}
+.pclose{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--fg);font:500 18px/1 system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;padding:0;z-index:2}
+.pclose:hover{background:var(--bg)}
+.panel:not(.empty){padding-right:52px}
+.panel:not(.empty) .phwrap,.panel:not(.empty) .dots{margin-right:-36px}
+@media (max-width:760px){
+ .wrap>header{order:0}.wrap>.nav{order:1}.wrap>#panel{order:2}.wrap>#stage{order:3}.wrap>#modelegend{order:4}.wrap>#hint{order:5}.wrap>.foot{order:6}
+ .wrap>#panel.empty{display:none}
+ #panel{scroll-margin-top:8px}
+}
+
 .phwrap{position:relative;max-width:520px;margin-top:6px}
 .phwrap .phs{margin-top:0}
 .phwrap.multi .phs{gap:6px;scroll-padding-left:0}
@@ -1093,7 +1104,18 @@ function select(el){
     panel.innerHTML=`<div class="k"><span class="tag g">経由地${KNOWN.has(k)?"":"（推測）"}</span><h2>${esc(WPN[k])}</h2></div>
       <p class="m"><span class="mode ${w.mode}">${MODEJ[w.mode]}</span>${esc(w.from)} → ${esc(w.to)}${w.kind==="trip"?"（日帰り）":""}の途中</p>`;
   }
+  panel.insertAdjacentHTML("afterbegin",'<button type="button" class="pclose" aria-label="解説を閉じて地図に戻る" title="閉じる">✕</button>');
+  panel.querySelector(".pclose").addEventListener("click",closePanel);
+  if(MOBILE.matches&&!document.body.classList.contains("isfull")){requestAnimationFrame(()=>{const r=panel.getBoundingClientRect();if(r.top<0||r.top>innerHeight*0.25)panel.scrollIntoView({block:"start",behavior:"smooth"});});}
 }
+const MOBILE=matchMedia("(max-width:760px)");
+const PANEL_EMPTY=panel.innerHTML;
+function closePanel(){
+  if(selEl)selEl.classList.remove("on");selEl=null;
+  panel.classList.add("empty");panel.innerHTML=PANEL_EMPTY;
+  if(MOBILE.matches&&!document.body.classList.contains("isfull")){const st=document.getElementById("stage");const r=st.getBoundingClientRect();if(r.top<0||r.top>innerHeight*0.4)st.scrollIntoView({block:"start",behavior:"smooth"});}
+}
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!panel.classList.contains("empty"))closePanel();});
 
 // jump targets
 const JUMP={all:allKeys,eu:EU.stops.map(s=>s.k).concat(["GLF"]),nordic:["ARN","HEL","RVN"],uk:["LON","EDI","FTW","GLF","OXF","CHC","CAR"],
