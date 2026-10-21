@@ -134,16 +134,40 @@ body.isfull .panel.empty{display:none}
 .ph{display:block;flex:0 0 100%;width:100%;aspect-ratio:4/3;object-fit:cover;scroll-snap-align:center;border-radius:4px}
 .dots{display:flex;gap:8px;justify-content:center;max-width:520px;margin-top:2px}.dot{width:8px;height:8px;padding:0;border-radius:50%;border:0;background:var(--rule);cursor:pointer}.dot.on{background:var(--fg)}
 .ill .phb{fill:var(--eu);stroke:var(--card);stroke-width:1.6}
+.nav{grid-template-columns:auto auto;align-items:center;justify-content:start;column-gap:10px}
+.nav>.areas{grid-column:1 / -1}
+.playbtn{background:var(--fg)!important;color:var(--bg)!important;box-shadow:none!important;padding:8px 14px;font-weight:700;white-space:nowrap}
+.playbtn:hover{opacity:.88}
+@media (max-width:520px){.nav{grid-template-columns:1fr}.playbtn{justify-self:start}}
+.stage.playing path.seg{opacity:.16}
+.stage.playing .lodtag{display:none}
+.playh path{fill:none;stroke:var(--card);stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.playl path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.playp .pp1{fill:none;stroke:var(--eu);stroke-width:2.5;animation:pp 1.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.playp .pp2{fill:var(--eu);stroke:var(--card);stroke-width:2}
+@keyframes pp{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.4);opacity:0}}
+.play{position:absolute;inset:0;pointer-events:none}
+.pcap{position:absolute;left:12px;top:12px;max-width:min(360px,calc(100% - 84px));background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--rule);border-radius:8px;padding:10px 14px;box-shadow:0 2px 10px rgba(0,0,0,.12);display:grid;gap:2px}
+.pdate{font:600 13px/1.4 var(--mono,monospace);color:var(--eu)}
+.pname{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.3}
+.pnote{font-size:13px;line-height:1.6;color:var(--muted)}
+.pnote[hidden]{display:none}
+.pctl{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:min(420px,calc(100% - 24px));display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--card) 94%,transparent);border:1px solid var(--rule);border-radius:999px;padding:6px 8px;box-shadow:0 2px 10px rgba(0,0,0,.14);pointer-events:auto}
+.pbtn{all:unset;box-sizing:border-box;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;cursor:pointer;font-size:14px;color:var(--fg);flex:none}
+.pbtn:hover{background:var(--bg)}
+.pbtn:focus-visible{outline:2px solid var(--eu);outline-offset:1px}
+.pbtn.sm{font:600 12px var(--mono,monospace);width:38px}
+.pbar{flex:1;height:4px;border-radius:2px;background:var(--rule);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--eu);transition:width .4s}
+.play.af .pdate{color:var(--af)}.play.af .pbar i{background:var(--af)}
+.playp.af .pp1{stroke:var(--af)}.playp.af .pp2{fill:var(--af)}
+@media (max-width:600px){.pcap{left:8px;top:8px;padding:8px 11px;max-width:calc(100% - 74px)}.pname{font-size:17px}.pnote{font-size:12px}}
+
 .panel{position:relative}
 .pclose{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--fg);font:500 18px/1 system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;padding:0;z-index:2}
 .pclose:hover{background:var(--bg)}
 .panel:not(.empty){padding-right:52px}
 .panel:not(.empty) .phwrap,.panel:not(.empty) .dots{margin-right:-36px}
-@media (max-width:760px){
- .wrap>header{order:0}.wrap>.nav{order:1}.wrap>#panel{order:2}.wrap>#stage{order:3}.wrap>#modelegend{order:4}.wrap>#hint{order:5}.wrap>.foot{order:6}
- .wrap>#panel.empty{display:none}
- #panel{scroll-margin-top:8px}
-}
 
 .phwrap{position:relative;max-width:520px;margin-top:6px}
 .phwrap .phs{margin-top:0}
@@ -213,6 +237,12 @@ body.isfull .panel.empty{display:none}
       <button class="chip" type="button" data-jump="eu" data-trip="eu" aria-pressed="false"><span class="sw" style="background:var(--eu)"></span>ヨーロッパ旅</button>
       <button class="chip" type="button" data-jump="af" data-trip="af" aria-pressed="false"><span class="sw" style="background:var(--af)"></span>アフリカ旅</button>
     </div>
+    <button class="chip playbtn" type="button" id="playbtn" aria-expanded="false" aria-controls="playmenu">▶ 再生</button>
+    <div class="areas playmenu" id="playmenu" role="group" aria-label="再生する旅を選ぶ" hidden>
+      <span class="lab">再生</span>
+      <button class="chip" type="button" data-play="eu"><span class="sw" style="background:var(--eu)"></span>ヨーロッパ旅を再生</button>
+      <button class="chip" type="button" data-play="af"><span class="sw" style="background:var(--af)"></span>アフリカ旅を再生</button>
+    </div>
     <div class="areas" data-for="eu" role="group" aria-label="ヨーロッパ旅のエリア" hidden>
       <span class="lab">エリア</span>
       <button class="chip" type="button" data-jump="nordic">北欧</button>
@@ -231,6 +261,10 @@ body.isfull .panel.empty{display:none}
   <div class="stage" id="stage">
     <div class="zbtns"><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button></div>
     <div class="lodtag" id="lodtag" aria-live="polite"></div>
+    <div class="play" id="play" hidden>
+      <div class="pcap" aria-live="polite"><div class="pdate"></div><div class="pname"></div><div class="pnote"></div></div>
+      <div class="pctl"><button type="button" class="pbtn" id="ppause" aria-label="一時停止">❚❚</button><div class="pbar" aria-hidden="true"><i></i></div><button type="button" class="pbtn sm" id="pspeed" aria-label="速さ 1倍">1×</button><button type="button" class="pbtn" id="pstop" aria-label="再生をやめる">✕</button></div>
+    </div>
   </div>
   <div class="legend" id="modelegend" aria-label="乗り物の色">
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--train)" stroke-width="3" stroke-linecap="round"/></svg>列車</span>
@@ -1009,7 +1043,7 @@ const LODTXT={1:"<b>全体</b>：ズームすると寄港地の名前と飛行�
 let lastLod=0;
 function place(){
   items.forEach(it=>{const p=proj(it.geo);const [x,y]=cur.apply(p);
-    if(it.el.tagName==="text"){it.el.setAttribute("x",x+it.dx);it.el.setAttribute("y",y+it.dy);it.el.setAttribute("text-anchor",it.anchor||"start");
+    if(it.el.tagName==="text"){it.el.setAttribute("x",x+(it.dx||0));it.el.setAttribute("y",y+(it.dy||0));it.el.setAttribute("text-anchor",it.anchor||"start");
       it.el.dataset.ax=x;it.el.dataset.ay=y;it.el.style.display="";}
     else{it.el.setAttribute("transform",`translate(${x},${y})`);it.el.dataset.ax=x;it.el.dataset.ay=y;}});
   const lod=lodOf(cur.k);
@@ -1026,7 +1060,7 @@ function declutter(){
   const lt=lodtag.getBoundingClientRect();obst.push({x:lt.left-sr.left,y:lt.top-sr.top,w:lt.width,h:lt.height});
   const placed=[];
   const hit=b=>b.x<2||b.y<2||b.x+b.w>sr.width-2||b.y+b.h>sr.height-2||obst.concat(placed).some(o=>b.x<o.x+o.w+2&&b.x+b.w+2>o.x&&b.y<o.y+o.h+2&&b.y+b.h+2>o.y);
-  const PR=t=>{const v=+t.dataset.pr;return isNaN(v)?5:v;};const labels=[...gOver.node().querySelectorAll("text:not(.phn2)")].filter(t=>t.getClientRects().length).sort((a,b)=>PR(a)-PR(b));
+  const PR=t=>{const v=+t.dataset.pr;return isNaN(v)?5:v;};const labels=[...gOver.node().querySelectorAll("text")].filter(t=>!t.closest(".ill")&&t.getClientRects().length).sort((a,b)=>PR(a)-PR(b));
   const placeIcons=()=>{
     const all=[...gOver.node().querySelectorAll(".ill")];all.forEach(g=>g.style.display="");
     const lodNow=lodOf(cur.k);const tier=g=>+g.dataset.tier;const kk=cur.k/kRef();const maxT=kk<1.6?0:kk<3.2?1:kk<12?2:3;
@@ -1106,14 +1140,13 @@ function select(el){
   }
   panel.insertAdjacentHTML("afterbegin",'<button type="button" class="pclose" aria-label="解説を閉じて地図に戻る" title="閉じる">✕</button>');
   panel.querySelector(".pclose").addEventListener("click",closePanel);
-  if(MOBILE.matches&&!document.body.classList.contains("isfull")){requestAnimationFrame(()=>{const r=panel.getBoundingClientRect();if(r.top<0||r.top>innerHeight*0.25)panel.scrollIntoView({block:"start",behavior:"smooth"});});}
 }
 const MOBILE=matchMedia("(max-width:760px)");
 const PANEL_EMPTY=panel.innerHTML;
 function closePanel(){
   if(selEl)selEl.classList.remove("on");selEl=null;
   panel.classList.add("empty");panel.innerHTML=PANEL_EMPTY;
-  if(MOBILE.matches&&!document.body.classList.contains("isfull")){const st=document.getElementById("stage");const r=st.getBoundingClientRect();if(r.top<0||r.top>innerHeight*0.4)st.scrollIntoView({block:"start",behavior:"smooth"});}
+  if(!document.body.classList.contains("isfull")){const st=document.getElementById("stage");const r=st.getBoundingClientRect();if(r.top<-4||r.top>innerHeight*0.5)st.scrollIntoView({block:"start",behavior:"smooth"});}
 }
 addEventListener("keydown",e=>{if(e.key==="Escape"&&!panel.classList.contains("empty"))closePanel();});
 
@@ -1146,7 +1179,7 @@ document.getElementById("zout").addEventListener("click",()=>svg.transition().du
 
 function build(){W=stage.clientWidth;H=stage.clientHeight;svg.attr("viewBox",`0 0 ${W} ${H}`);fitBase();
   zoom.extent([[0,0],[W,H]]).translateExtent([[-W*0.5,-H*0.5],[W*1.5,H*1.5]]);
-  drawBase();drawOverlay();gMap.attr("transform",cur);place();declutter();}
+  drawBase();drawOverlay();gMap.attr("transform",cur);place();declutter();if(window.__playRedraw)window.__playRedraw();}
 build();
 let rt,lw=W,lh=H;
 new ResizeObserver(()=>{if(Math.abs(stage.clientWidth-lw)<8&&Math.abs(stage.clientHeight-lh)<8)return;lw=stage.clientWidth;lh=stage.clientHeight;
@@ -1167,6 +1200,132 @@ function setFull(on){
 }
 zfull.addEventListener("click",()=>setFull(!stage.classList.contains("full")));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&stage.classList.contains("full"))setFull(false);});
+// ---- trip playback ----
+const PLAYS=(()=>{
+  const st=k=>EU.stops.find(s=>s.k===k)||AF.stops.find(s=>s.k===k);
+  const S=(k,legs,o={})=>{const s=st(k)||{};return {d:o.d||s.d||"",t:o.t||s.name||k,n:o.n!==undefined?o.n:(s.note||""),end:o.end||k,legs};};
+  const PL=["PL1","PL2","PL3","PL4","PL5","PL6"];
+  const eu=[
+    S("FRA",[["air",["NRT",...PL.slice().reverse(),"FRA"]]],{d:"1/2",t:"成田 → フランクフルト",n:"初めての海外へ。14時間15分のフライト"}),
+    S("ARN",[["air",["FRA","ARN"]]],{d:"1/3"}),
+    S("RVN",[["air",["ARN","HEL","RVN"]]]),
+    S("LON",[["air",["RVN","HEL","HEA"]]]),
+    S("OXF",[["train",["LON","HWY","BIC","OXF"]]],{d:"ロンドン滞在中",t:"オックスフォード",n:"列車で日帰り"}),
+    S("BOU",[["bus",["LON","BIB","STO","BOU","CHC","LON"]]]),
+    S("EDI",[["bus",["LON","HEA","BHM","MAN","PRE","CAR","EDI"]]]),
+    S("FTW",[["bus",["EDI","GLA","LLO","CRI","GCO","FTW"]]]),
+    S("GLF",[["train",["FTW","COR","LEH","GLF"]]],{d:"1/12",t:"グレンフィナン高架橋",n:"フォートウィリアムから列車で"}),
+    S("EDI",[["train",["GLF","LEH","COR","FTW"]],["bus",["FTW","GCO","CRI","LLO","GLA","EDI"]]],{d:"1/12",t:"エディンバラへ戻る",n:""}),
+    S("BCN",[["air",["EDI","BCN"]]]),
+    S("MRS",[["bus",["BCN","GIR","FIG","PER","NAR","MPL","NIM","ARL","MRS"]]]),
+    S("MCO",[["bus",["MRS","AIX","BRI","LMU","CNS","NAP","NCE"]],["train",["NCE","VIL","EZE","CAP","MCO"]]]),
+    S("MEN",[["train",["MCO","ROQ","MEN"]]]),
+    S("NCE",[["train",["MEN","ROQ","MCO","CAP","EZE","VIL","NCE"]]]),
+    S("MIL",[["train",["NCE","VIL","EZE","CAP","MCO","ROQ","MEN","VTM"]],["taxi",["VTM","BOR","SRM"]],["bus",["SRM","IMP","ALA","SAV","ALT","CEV","MDV","FOS","CMG","TUR"]],["bus",["TUR","CHV","VCL","NOV","LAM"]],["bus",["LAM","MIL"]]]),
+    S("STM",[["bus",["MIL","LEC","VAR"]],["boat",["VAR","BEL","MEG"]],["bus",["MEG","GRA","CHI","MAL","STM"]]]),
+    S("TIR",[["train",["STM","PON","OSP","AGR","POS","BRU","TIR"]],["bus",["TIR","SON","COL","LEC","MIL"]]],{d:"1/23",t:"ベルニナ鉄道",n:"ティラーノまで列車、バスでミラノへ戻る",end:"MIL"}),
+    S("VCE",[["bus",["MIL","LAM"]],["bus",["LAM","BGY","BRE","VRN","VIC","PAD","MES"]],["train",["MES","VCE"]]]),
+    S("BZO",[["bus",["MES","PAD","VIC","VRN"]],["bus",["VRN","ROV","TRE","BZO"]]]),
+    S("MUC",[["bus",["BZO","BRX","STZ","BRN","INN","KUF","ROS","MUC"]]]),
+    S("FUS",[["bus",["MUC","SCH","STG","HSW"]],["walk",["HSW","FUS"]],["bus",["FUS","STG","SCH","MUC"]]],{end:"MUC"}),
+    S("NOE",[["train",["MUC","AUG","DON","NOE"]]]),
+    S("ROT",[["train",["NOE","DON","TRL","ANS","STE","ROT"]]]),
+    S("NUE",[["train",["ROT","STE","ANS","HEI","NUE"]]]),
+    S("WUE",[["bus",["NUE","SLF","WUE"]]]),
+    S("FRA",[["bus",["WUE","MAR","ASC","FRA"]]],{d:"2/3"}),
+    S("NRT",[["air",["FRA",...PL,"NRT"]]],{d:"2/3–2/4",t:"帰国",n:"フランクフルトから成田へ。13時間のフライト"})];
+  const af=[
+    S("CAI",[["air",["NRT","PEK"]],["air",["PEK","CAI"]]],{d:"12/20–12/21",n:"北京で乗り継いでカイロへ"}),
+    S("GIZ",[["taxi",["CAI","GIZ"]]]),
+    S("LXR",[["air",["CAI","LXR"]]]),
+    S("HRG",[["bus",["LXR","QEN","SAF","HRG"]]]),
+    S("CAI",[["air",["HRG","CAI"]]],{d:"12/28",t:"カイロへ",n:"フルガダから飛行機"}),
+    S("NBO",[["air",["CAI","DOH"]],["air",["DOH","NBO"]]],{d:"12/29"}),
+    S("AMB",[["car",["NBO","KAJ","NAM","AMB"]]]),
+    S("NBO",[["car",["AMB","NAM","KAJ","NBO"]]],{d:"1/1",t:"ナイロビへ戻る",n:""}),
+    S("HND",[["air",["NBO","BAH"]],["air",["BAH","GZ"]],["air",["GZ","HND"]]],{d:"1/2–1/3",t:"帰国",n:"バーレーンと広州で乗り継いで羽田へ"})];
+  return {eu,af};
+})();
+const MCOL={air:"var(--air)",train:"var(--train)",bus:"var(--bus)",boat:"var(--boat)",car:"var(--car)",taxi:"var(--taxi)",walk:"var(--walk)"};
+const gPlayH=svg.insert("g",()=>gOver.node()).attr("class","playh");
+const gPlay=svg.insert("g",()=>gOver.node()).attr("class","playl");
+const gPulse=svg.append("g").attr("class","playp");
+const playEl=document.getElementById("play"),pDate=playEl.querySelector(".pdate"),pName=playEl.querySelector(".pname"),pNote=playEl.querySelector(".pnote"),
+  pBar=playEl.querySelector(".pbar i"),pPause=document.getElementById("ppause"),pSpeed=document.getElementById("pspeed"),pStop=document.getElementById("pstop"),playBtn=document.getElementById("playbtn");
+const PS={on:false,paused:false,trip:"eu",i:0,tok:0,speed:1,pulse:null};
+function syncPlay(){const k=cur.k;gPlayH.attr("transform",cur);gPlay.attr("transform",cur);
+  gPlayH.selectAll("path").attr("stroke-width",function(){return (this.classList.contains("air")?5:8)/k;});
+  gPlay.selectAll("path").attr("stroke-width",function(){return (this.classList.contains("air")?2.2:4)/k;});
+  gPlay.selectAll("path.air.done").attr("stroke-dasharray",`${7/k} ${5/k}`);
+  if(PS.pulse){const [x,y]=cur.apply(proj(P[PS.pulse]));gPulse.attr("transform",`translate(${x},${y})`);}}
+zoom.on("zoom.play",syncPlay);
+zoom.on("start.play",e=>{if(e.sourceEvent&&PS.on&&!PS.paused)pausePlay();});
+window.__playRedraw=()=>{gPlayH.selectAll("path").attr("d",function(){return path({type:"LineString",coordinates:JSON.parse(this.dataset.c).map(k=>P[k])});});
+  gPlay.selectAll("path").attr("d",function(){return path({type:"LineString",coordinates:JSON.parse(this.dataset.c).map(k=>P[k])});});syncPlay();};
+const RM=()=>window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wait=(ms,tok)=>new Promise(r=>setTimeout(()=>r(tok===PS.tok),ms/PS.speed));
+function fitLegs(legs){const pts=legs.flatMap(([,ks])=>ks.map(k=>proj(P[k])));const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const k=Math.max(1,Math.min(kRef()*12,0.6/Math.max((x1-x0)/W,(y1-y0)/(H*0.78),1e-3)));
+  return d3.zoomIdentity.translate(W/2,H*0.56).scale(k).translate(-(x0+x1)/2,-(y0+y1)/2);}
+function setCap(step,i,n){pDate.textContent=step.d;pName.textContent=step.t;pNote.textContent=step.n;pNote.hidden=!step.n;pBar.style.width=((i+1)/n*100)+"%";}
+async function runStep(i,tok){
+  const steps=PLAYS[PS.trip],step=steps[i];
+  gPlay.selectAll(`[data-s="${i}"]`).remove();gPlayH.selectAll(`[data-s="${i}"]`).remove();
+  setCap(step,i,steps.length);PS.pulse=null;gPulse.selectAll("*").remove();
+  const t=fitLegs(step.legs);
+  if(RM())svg.call(zoom.transform,t);else{try{await svg.transition("play").duration(900/PS.speed).ease(d3.easeCubicInOut).call(zoom.transform,t).end();}catch(e){return false;}}
+  if(tok!==PS.tok)return false;
+  for(const [m,ks] of step.legs){
+    const c=JSON.stringify(ks),d=path({type:"LineString",coordinates:ks.map(k=>P[k])});
+    const hl=gPlayH.append("path").attr("data-s",i).attr("data-c",c).attr("d",d).attr("class","ph-halo "+m);
+    const el=gPlay.append("path").attr("data-s",i).attr("data-c",c).attr("d",d).attr("class","ph-line "+m).style("stroke",MCOL[m]||"var(--eu)");
+    syncPlay();
+    const L=el.node().getTotalLength();const px=L*cur.k;
+    const fin=()=>{hl.attr("stroke-dasharray",null).attr("stroke-dashoffset",null);el.attr("stroke-dasharray",null).attr("stroke-dashoffset",null).classed("done",true);syncPlay();};
+    if(RM()||L<0.01){fin();continue;}
+    hl.attr("stroke-dasharray",`${L} ${L}`).attr("stroke-dashoffset",L);el.attr("stroke-dasharray",`${L} ${L}`).attr("stroke-dashoffset",L);
+    const dur=Math.max(450,Math.min(1600,350+px*1.6))/PS.speed;
+    try{await Promise.all([hl.transition("play").duration(dur).ease(d3.easeLinear).attr("stroke-dashoffset",0).end(),el.transition("play").duration(dur).ease(d3.easeLinear).attr("stroke-dashoffset",0).end()]);}catch(e){return false;}
+    if(tok!==PS.tok)return false;
+    fin();
+  }
+  PS.pulse=step.end;gPulse.selectAll("*").remove();gPulse.append("circle").attr("class","pp1").attr("r",9);gPulse.append("circle").attr("class","pp2").attr("r",5);syncPlay();
+  return await wait(1500,tok);
+}
+async function loop(tok){
+  const steps=PLAYS[PS.trip];
+  while(PS.i<steps.length){const ok=await runStep(PS.i,tok);if(!ok||tok!==PS.tok)return;PS.i++;}
+  if(tok!==PS.tok)return;
+  PS.paused=true;pPause.textContent="↺";pPause.setAttribute("aria-label","最初から再生");playEl.classList.add("done");
+  pDate.textContent=PS.trip==="eu"?"2025.1.2 – 2.4":"2025.12.20 – 2026.1.3";pName.textContent="おしまい";pNote.textContent="イラストをタップすると、思い出と写真が見られる";pNote.hidden=false;
+  jump(PS.trip);
+}
+function startPlay(trip){
+  if(typeof closePanel==="function")closePanel();
+  PS.trip=trip;PS.i=0;PS.on=true;PS.paused=false;PS.tok++;
+  gPlay.selectAll("*").remove();gPlayH.selectAll("*").remove();gPulse.selectAll("*").remove();
+  stage.classList.add("playing");playEl.hidden=false;playEl.classList.toggle("af",trip==="af");gPulse.classed("af",trip==="af");playEl.classList.remove("done");pPause.textContent="❚❚";pPause.setAttribute("aria-label","一時停止");
+  if(MOBILE.matches&&!document.body.classList.contains("isfull")){const r=stage.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)stage.scrollIntoView({block:"start",behavior:"smooth"});}
+  loop(PS.tok);
+}
+function pausePlay(){if(!PS.on||PS.paused)return;PS.paused=true;PS.tok++;svg.interrupt("play");gPlay.selectAll("path").interrupt("play");gPlayH.selectAll("path").interrupt("play");pPause.textContent="▶";pPause.setAttribute("aria-label","再開");playEl.classList.add("paused");}
+function resumePlay(){if(!PS.on)return;if(playEl.classList.contains("done")){startPlay(PS.trip);return;}PS.paused=false;PS.tok++;pPause.textContent="❚❚";pPause.setAttribute("aria-label","一時停止");playEl.classList.remove("paused");loop(PS.tok);}
+function stopPlay(){PS.on=false;PS.paused=false;PS.tok++;svg.interrupt("play");gPlay.selectAll("path").interrupt("play");gPlayH.selectAll("path").interrupt("play");
+  gPlay.selectAll("*").remove();gPlayH.selectAll("*").remove();gPulse.selectAll("*").remove();PS.pulse=null;stage.classList.remove("playing");playEl.hidden=true;playEl.classList.remove("done","paused");}
+pPause.addEventListener("click",()=>PS.paused?resumePlay():pausePlay());
+pSpeed.addEventListener("click",()=>{PS.speed=PS.speed===1?2:1;pSpeed.textContent=PS.speed+"×";pSpeed.setAttribute("aria-label",`速さ ${PS.speed}倍`);});
+pStop.addEventListener("click",stopPlay);
+const curTrip=()=>{const b=document.querySelector('.seg .chip[aria-pressed="true"]');const t=b&&b.dataset.trip;return t==="af"?"af":"eu";};
+const playMenu=document.getElementById("playmenu");
+const selTrip=()=>{const b=document.querySelector('.seg .chip[aria-pressed="true"]');return (b&&b.dataset.trip)||"all";};
+const setMenu=on=>{playMenu.hidden=!on;playBtn.setAttribute("aria-expanded",on?"true":"false");};
+const playLabel=()=>{const t=selTrip();playBtn.innerHTML=t==="all"?`<span aria-hidden="true">▶</span> 再生`:`<span aria-hidden="true">▶</span> ${t==="af"?"アフリカ旅":"ヨーロッパ旅"}を再生`;
+  if(t==="all")playBtn.setAttribute("aria-controls","playmenu");else{playBtn.removeAttribute("aria-controls");playBtn.removeAttribute("aria-expanded");}};
+playLabel();document.querySelectorAll(".seg .chip").forEach(b=>b.addEventListener("click",()=>{if(PS.on)stopPlay();setMenu(false);playLabel();}));
+playBtn.addEventListener("click",()=>{const t=selTrip();if(t==="all"){setMenu(playMenu.hidden);return;}startPlay(t);});
+playMenu.querySelectorAll("[data-play]").forEach(b=>b.addEventListener("click",()=>{setMenu(false);startPlay(b.dataset.play);}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&PS.on&&!stage.classList.contains("full"))stopPlay();});
 })();
 </script>
 
