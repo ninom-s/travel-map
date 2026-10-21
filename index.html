@@ -70,7 +70,7 @@ body.isfull .panel.empty{display:none}
 .hint{font-size:12px;color:var(--muted);margin:0}
 .stage svg{display:block;width:100%;height:100%;cursor:grab}
 .stage svg:active{cursor:grabbing}
-.zbtns{position:absolute;right:10px;top:10px;display:grid;gap:4px}
+.zbtns{position:absolute;right:10px;top:10px;display:grid;gap:4px}.zbtn.compass svg{transition:none;display:block}.zbtn[hidden]{display:none}
 .zbtn{all:unset;box-sizing:border-box;width:34px;height:34px;display:grid;place-items:center;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);cursor:pointer;font:600 18px var(--mono)}
 .zbtn:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .lodtag{position:absolute;left:10px;bottom:10px;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);padding:6px 10px;font-size:12px;color:var(--muted);max-width:calc(100% - 20px)}
@@ -86,7 +86,7 @@ body.isfull .panel.empty{display:none}
 .tag{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;color:#fff}
 .tag.eu{background:var(--eu)}.tag.af{background:var(--af)}.tag.g{background:var(--muted)}
 .mode{font-family:var(--mono);font-size:11px;padding:0 5px;border-radius:3px;color:#fff;margin-right:6px}
-.mode.air{background:var(--air)}.mode.train{background:var(--train)}.mode.bus{background:var(--bus)}.mode.car{background:var(--car)}.mode.mix{background:var(--muted)}.mode.boat{background:var(--boat)}.mode.walk{background:var(--walk)}
+.mode.air{background:var(--air)}.mode.train{background:var(--train)}.mode.bus{background:var(--bus)}.mode.car{background:var(--car)}.mode.van{background:var(--car)}.mode.mix{background:var(--muted)}.mode.boat{background:var(--boat)}.mode.walk{background:var(--walk)}
 .foot{font-size:12px;color:var(--muted);margin:0}
 
 /* map */
@@ -94,7 +94,7 @@ body.isfull .panel.empty{display:none}
 .land.v{fill:var(--visited)}.land.v2{fill:var(--visited2)}
 .grat{fill:none;stroke:var(--land-edge);stroke-opacity:.35;stroke-width:.5;vector-effect:non-scaling-stroke}
 .seg{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.seg.train{stroke:var(--train)}.seg.bus{stroke:var(--bus)}.seg.boat{stroke:var(--boat)}.seg.car{stroke:var(--car)}.seg.walk{stroke:var(--walk)}
+.seg.train{stroke:var(--train)}.seg.bus{stroke:var(--bus)}.seg.boat{stroke:var(--boat)}.seg.car{stroke:var(--car)}.seg.van{stroke:var(--car)}.seg.walk{stroke:var(--walk)}
 .seg.main{stroke-width:3}.seg.trip{stroke-width:2;stroke-dasharray:1.5 4.5}.seg.walk{stroke-width:1.6;stroke-dasharray:1 3.5}
 .seg.air{stroke:var(--air);stroke-width:1.6;stroke-dasharray:6 5}
 .seg.taxi{stroke:var(--taxi)}
@@ -134,6 +134,36 @@ body.isfull .panel.empty{display:none}
 .ph{display:block;flex:0 0 100%;width:100%;aspect-ratio:4/3;object-fit:cover;scroll-snap-align:center;border-radius:4px}
 .dots{display:flex;gap:8px;justify-content:center;max-width:520px;margin-top:2px}.dot{width:8px;height:8px;padding:0;border-radius:50%;border:0;background:var(--rule);cursor:pointer}.dot.on{background:var(--fg)}
 .ill .phb{fill:var(--eu);stroke:var(--card);stroke-width:1.6}
+.vehl .veh{cursor:pointer}
+.vehl .vbg{fill:var(--card);stroke:var(--fg);stroke-width:1.6}
+.vehl .veh.air .vbg{stroke:var(--air)}.vehl .veh.train .vbg{stroke:var(--train)}.vehl .veh.bus .vbg{stroke:var(--bus)}.vehl .veh.taxi .vbg{stroke:var(--taxi)}.vehl .veh.boat .vbg{stroke:var(--boat)}.vehl .veh.car .vbg{stroke:var(--car)}.vehl .veh.van .vbg{stroke:var(--car)}
+.vehl .vring{fill:none;stroke:var(--eu);stroke-width:2;opacity:0;transform-box:fill-box;transform-origin:center;animation:vr 1.8s ease-out infinite}
+.vehl .veh.riding .vring{animation:none;opacity:0}
+@keyframes vr{0%{transform:scale(.75);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+.vehl .veh:focus{outline:none}.vehl .veh:focus-visible .vbg{stroke-width:3}
+.play.riding .pdate{color:var(--fg)}
+.stage.riding text.lbl:not(.stopn):not(.big),.stage.riding text.dur{visibility:hidden}
+
+.stage svg.globe{position:absolute;inset:0;cursor:grab;touch-action:none}
+.stage svg.globe:active{cursor:grabbing}
+.stage svg.globe.gfade{animation:gfade .32s ease-out}.stage svg.ffade{animation:ffade .28s ease-out}@keyframes ffade{from{opacity:.55}to{opacity:1}}@keyframes gfade{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.stage svg.globe.gfade{animation:none}}
+.gs0{stop-color:color-mix(in srgb,var(--sea) 70%,#fff)}.gs1{stop-color:color-mix(in srgb,var(--sea) 82%,#5d7b8e)}
+.gsph{fill:url(#gSea)}
+.gatm{fill:none;stroke:color-mix(in srgb,var(--sea) 60%,#fff);stroke-width:10;opacity:.55}
+.gedge{fill:none;stroke:var(--land-edge);stroke-width:1}
+.ggrat{fill:none;stroke:var(--land-edge);stroke-opacity:.35;stroke-width:.5}
+.gland{fill:var(--land);stroke:var(--land-edge);stroke-width:.45}.gland.v{fill:var(--visited)}.gland.v2{fill:var(--visited2)}
+.gseg{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2;pointer-events:none}
+.gseg.air{stroke-width:1.4;stroke-dasharray:4 3.5}.gseg.air.eu{stroke:var(--eu)}.gseg.air.af{stroke:var(--af)}
+.gseg.eu:not(.air){stroke:var(--eu)}.gseg.af:not(.air){stroke:var(--af)}.gseg.walk{display:none}
+.gshine{pointer-events:none}
+.gpt{stroke:var(--card);stroke-width:1.6;cursor:pointer}.gpt.eu{fill:var(--eu)}.gpt.af{fill:var(--af)}
+.glbl{font:800 15px var(--display);paint-order:stroke;stroke:var(--card);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none;fill:var(--fg)}.glbl.eu{fill:var(--eu)}.glbl.af{fill:var(--af)}
+.gname{font:700 11.5px var(--body);fill:var(--fg);paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.gpl{fill:none;stroke:var(--eu);stroke-width:3.4;stroke-linecap:round;pointer-events:none}
+@media (max-width:600px){.glbl{font-size:12.5px}}
+
+
 .nav{grid-template-columns:auto auto;align-items:center;justify-content:start;column-gap:10px}
 .nav>.areas{grid-column:1 / -1}
 .playbtn{background:var(--fg)!important;color:var(--bg)!important;box-shadow:none!important;padding:8px 14px;font-weight:700;white-space:nowrap}
@@ -206,7 +236,7 @@ body.isfull .panel.empty{display:none}
 .lbl.wpn{font-size:11px;fill:var(--muted);font-weight:400}
 .lbl.big{font:800 16px var(--display)}.lbl.big.eu{fill:var(--eu)}.lbl.big.af{fill:var(--af)}
 .dur{font:600 11px var(--mono);paint-order:stroke;stroke:var(--halo);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
-.dur.air{fill:var(--air)}.dur.train{fill:var(--train)}.dur.bus{fill:var(--bus)}.dur.car{fill:var(--car)}
+.dur.air{fill:var(--air)}.dur.train{fill:var(--train)}.dur.bus{fill:var(--bus)}.dur.car{fill:var(--car)}.dur.van{fill:var(--car)}
 /* level of detail */
 .l1,.l2,.l3,.l4{display:none}
 .z1 .l1,.z2 .l2,.z3 .l3,.z4 .l4{display:inline}
@@ -259,7 +289,7 @@ body.isfull .panel.empty{display:none}
     </div>
   </nav>
   <div class="stage" id="stage">
-    <div class="zbtns"><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button></div>
+    <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button></div>
     <div class="lodtag" id="lodtag" aria-live="polite"></div>
     <div class="play" id="play" hidden>
       <div class="pcap" aria-live="polite"><div class="pdate"></div><div class="pname"></div><div class="pnote"></div></div>
@@ -270,7 +300,7 @@ body.isfull .panel.empty{display:none}
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--train)" stroke-width="3" stroke-linecap="round"/></svg>列車</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--bus)" stroke-width="3" stroke-linecap="round"/></svg>バス</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--boat)" stroke-width="2" stroke-dasharray="1.5 4.5" stroke-linecap="round"/></svg>船</span>
-    <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--car)" stroke-width="3" stroke-linecap="round"/></svg>サファリジープ</span>
+    <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--car)" stroke-width="3" stroke-linecap="round"/></svg>サファリジープ・ツアー車</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--muted)" stroke-width="2" stroke-dasharray="1.5 4.5" stroke-linecap="round"/></svg>日帰り</span>
     <span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4" fill="var(--card)" stroke="var(--muted)" stroke-width="1.3"/></svg>経由地（推測）</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--taxi)" stroke-width="3" stroke-linecap="round"/></svg>タクシー</span>
@@ -278,7 +308,7 @@ body.isfull .panel.empty{display:none}
     <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="var(--card)" stroke="var(--fg)" stroke-width="1.2"/><path d="M5,5L11,11M11,5L5,11" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/></svg>運休・乗り遅れ</span>
     <span style="color:var(--muted)">※ズームすると陸路が乗り物の色に変わる</span>
   </div>
-  <p class="hint" id="hint">ダブルタップ（PCはダブルクリック）かピンチで拡大、1本指で移動。右上の ⤢ で全画面になる。右上に赤い点があるイラストは写真つき（数字は写真の枚数。横にスワイプか矢印で切り替え）。</p>
+  <p class="hint" id="hint">ダブルタップ（PCはダブルクリック）かピンチで拡大、1本指で移動。右上の ⤢ で全画面になる。2本指でひねると地図の向きを回せる（パソコンは Shift を押しながらドラッグ）。回したら、右上のコンパスで北が上に戻る。旅の再生中は、ルートの上を走る乗り物を押すと、その乗り物の目線で行き先まで進む。右上に赤い点があるイラストは写真つき（数字は写真の枚数。横にスワイプか矢印で切り替え）。</p>
   <section class="panel empty" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
   <p class="foot">日付・便・時刻は各旅程表から。列車・バスの経由地は道のりから推測したもので、実際の経路と違う場合がある。ヨーロッパ行きの飛行機は★の記録に合わせて北極回りで描いた。このファイルはネットにつながっていなくても全部表示される。</p>
 </div>
@@ -335,6 +365,8 @@ const P={
  MCO:[7.42,43.74],MEN:[7.50,43.78],NCE:[7.27,43.70],MIL:[9.19,45.46],STM:[9.84,46.50],TIR:[10.17,46.22],
  VCE:[12.33,45.44],BZO:[11.35,46.50],MUC:[11.58,48.14],FUS:[10.70,47.57],NOE:[10.49,48.85],ROT:[10.18,49.38],
  NUE:[11.08,49.45],WUE:[9.95,49.79],
+ // day-trip destinations (2026-10-21)
+ AUR:[26.37,66.07],RNZ:[26.51,65.94],PDI:[33.95,27.19],
  // Europe waypoints (guessed roads / rail)
  HEA:[-0.45,51.47],BHM:[-1.89,52.48],MAN:[-2.24,53.48],PRE:[-2.70,53.76],CAR:[-2.93,54.89],
  HWY:[-0.75,51.63],BIC:[-1.15,51.90],BIB:[-1.83,51.76],STO:[-1.72,51.93],CHC:[-1.78,52.05],
@@ -396,6 +428,7 @@ const EU={key:"eu",title:"ninomのヨーロッパ一周",accent:"eu",
  {n:22,k:"FRA",name:"フランクフルト",d:"1/2・2/3",note:"行きは乗り継ぎ。帰りはキャリーケースを買って帰国",lm:"bus",lt:"ヴュルツブルク中央駅10:55発 FlixBusでフランクフルト中央駅の長距離バス乗り場12:30着。1時間35分（★では列車）。帰りは成田まで13時間"}],
  seg:[
  ["air","main",["FRA","ARN"]],["air","main",["ARN","HEL","RVN"]],["air","main",["RVN","HEL","HEA"]],
+ ["van","trip",["RVN","AUR"]],["bus","trip",["RVN","RNZ"]],
  ["air","main",["FRA","PL1","PL2","PL3","PL4","PL5","PL6","NRT"]],
  ["train","trip",["LON","HWY","BIC","OXF"]],["bus","trip",["LON","BIB","STO","BOU","CHC","LON"]],
  ["bus","main",["LON","HEA","BHM","MAN","PRE","CAR","EDI"]],
@@ -436,7 +469,7 @@ const EU={key:"eu",title:"ninomのヨーロッパ一周",accent:"eu",
  {m:"zoom",r:["BZO","BRX","STZ","BRN","INN","KUF","ROS","MUC"],f:.55,t:"4h10m",c:"bus"},
  {m:"zoom",r:["MUC","SCH","STG"],f:.5,t:"片道2h",c:"bus"}],
  table:{t:"ドイツ国内の移動",rows:[["ネルトリンゲン → ローテンブルク（列車）","約2時間"],["ローテンブルク → ニュルンベルク（列車）","約1時間"],["ニュルンベルク → ヴュルツブルク（バス）","1時間40分"],["ヴュルツブルク → フランクフルト（バス）","1時間35分"]]},
- legend:[["train main","列車"],["bus main","バス（ツアー・夜行バス含む）"],["boat trip","船"],["air","飛行機"],["legtrip","日帰り（色は乗り物）"]]
+ legend:[["train main","列車"],["bus main","バス（ツアー・夜行バス含む）"],["boat trip","船"],["van trip","ツアー車"],["air","飛行機"],["legtrip","日帰り（色は乗り物）"]]
 };
 EU.maps=[
  {id:"all",cap:"全体図",sub:"赤い点線の枠が拡大図",ratio:1.18,minW:400,pad:34,proj:"conic",par:[45,62],lon0:10,
@@ -465,7 +498,7 @@ const AF={key:"af",title:"エジプト・ケニアの旅",accent:"af",
  seg:[
  ["air","main",["NRT","PEK"]],["air","main",["PEK","CAI"]],["air","main",["CAI","LXR"]],["air","main",["HRG","CAI"]],
  ["air","main",["CAI","DOH"]],["air","main",["DOH","NBO"]],["air","main",["NBO","BAH"]],["air","main",["BAH","GZ"]],["air","main",["GZ","HND"]],
- ["bus","main",["LXR","QEN","SAF","HRG"]],["car","main",["NBO","KAJ","NAM","AMB"]],["taxi","main",["CAI","GIZ"]]],
+ ["bus","main",["LXR","QEN","SAF","HRG"]],["car","main",["NBO","KAJ","NAM","AMB"]],["taxi","main",["CAI","GIZ"]],["boat","trip",["HRG","PDI"]]],
  dur:[
  {m:"all",r:["NRT","PEK"],f:.5,t:"4h25m",c:"air"},{m:"all",r:["PEK","CAI"],f:.5,t:"12h00m",c:"air"},
  {m:"all",r:["CAI","DOH"],f:.5,t:"3h05m",c:"air"},{m:"all",r:["DOH","NBO"],f:.5,t:"5h10m",c:"air"},
@@ -504,9 +537,11 @@ const WPN={HEA:"ヒースロー空港",BHM:"バーミンガム",MAN:"マンチ�
  ROV:"ロヴェレート",TRE:"トレント",BRX:"ブリクセン",STZ:"シュテルツィング",BRN:"ブレンナー峠",INN:"インスブルック",KUF:"クーフシュタイン",
  ROS:"ローゼンハイム",SCH:"ショーンガウ",STG:"シュタインガーデン",HSW:"ホーエンシュヴァンガウ",AUG:"アウクスブルク",DON:"ドナウヴェルト",
  TRL:"トロイヒトリンゲン",ANS:"アンスバッハ",STE:"シュタイナッハ",HEI:"ハイルスブロン",FUE:"フュルト",NEA:"ノイシュタット・アン・デア・アイシュ",
- KIT:"キッツィンゲン",GEM:"ゲミュンデン",ASC:"アシャッフェンブルク",HAN:"ハーナウ",QEN:"ケナ",SAF:"サファガ",KAJ:"カジアド",NAM:"ナマンガ"};
+ KIT:"キッツィンゲン",GEM:"ゲミュンデン",ASC:"アシャッフェンブルク",HAN:"ハーナウ",QEN:"ケナ",SAF:"サファガ",AUR:"オーロラを見た林道",RNZ:"ラヌア動物園",PDI:"パラダイス島",KAJ:"カジアド",NAM:"ナマンガ"};
 const TRN={HEL:"ヘルシンキ（乗り継ぎ）",PEK:"北京（乗り継ぎ）",DOH:"ドーハ（乗り継ぎ）",BAH:"バーレーン（乗り継ぎ）",GZ:"広州（乗り継ぎ）",NRT:"成田",HND:"羽田"};
-const KNOWN=new Set(["OXF","BIB","STO","CHC","GLF","TIR","HSW","MES","SRM","TUR","LAM","VRN","NAP"]); // places named in the notes or itinerary, not guessed
+const KNOWN=new Set(["OXF","BIB","STO","CHC","GLF","TIR","HSW","MES","SRM","TUR","LAM","VRN","NAP","AUR","RNZ","PDI"]);
+// day-trip destinations: date and how we got there (shown in the panel)
+const DAYT={GLF:{d:"1/12",m:"train",t:"フォートウィリアムから列車で"},AUR:{d:"1/4の夜",m:"van",t:"ロヴァニエミからツアー車で林道へ。ここでオーロラを見た"},RNZ:{d:"1/5",m:"bus",t:"ロヴァニエミのバスターミナル9:30発 → 10:35着（65分）。帰りは16:18発 → 17:30着"},PDI:{d:"12/27",m:"boat",t:"フルガダから船で紅海の島へ。シュノーケルをした"}}; // places named in the notes or itinerary, not guessed
 const EVENTS=[
  {k:"EV1",d:"1/20",title:"線路の故障で運休",where:"ニース → ミラノ（ヴェンティミーリア付近）",
   tl:[["8:21","ニースから列車で出発（ミラノ中央駅15:35着の予定）"],["11:05","Trenitaliaから「線路の故障で Regionale 3365 は一部区間運休」"],["—","降ろされた駅から1〜2駅戻り、サンレモより西でベンツのタクシーに乗る（約30分・35ユーロ）。駅名は覚えていない"],["11:27","サンレモ13:35発 → トリノ17:00着のFlixBusを予約"],["16:33","トリノに向かうバスの中で、トリノ17:30発 → ミラノ19:40着のFlixBusを予約"],["19:36","ミラノのランプニャーノに到着。バスから地下鉄に乗り換え"],["20:00頃","ミラノの宿に到着。予定より約5時間遅れ"]]},
@@ -713,7 +748,7 @@ const ICONS={
  tram:`<rect class="i-gold" x="-9" y="-5" width="18" height="11" rx="2"/><path class="i-l" d="M-9,-3 Q-9,-5 -7,-5 H7 Q9,-5 9,-3 V6 H-9 Z M-7,-3 H-2 V1 H-7 Z M0,-3 H7 V1 H0 Z M0,-5 L-3,-11 H3 M-6,6 V8 M6,6 V8 M-12,9 H12"/>`
 };
 const PHOTO1="photos/af_gem_liver.jpg";
-const PH={fiaurpro:"photos/fiaurpro.webp",fi6681:"photos/fi6681.webp",cw7667:"photos/cw7667.webp",sc8050:"photos/sc8050.webp",mc9005:"photos/mc9005.webp",ch9882:"photos/ch9882.webp",ch9906:"photos/ch9906.webp",vc9982:"photos/vc9982.webp",vc9950:"photos/vc9950.webp",de0394:"photos/de0394.webp",de0546:"photos/de0546.webp",rt0711:"photos/rt0711.webp",se6457:"photos/se6457.webp",fi6539:"photos/fi6539.webp",ox7292:"photos/ox7292.webp",mr8901:"photos/mr8901.webp",mi9531:"photos/mi9531.webp",mj9610:"photos/mj9610.webp",mj9634:"photos/mj9634.webp",ch9801:"photos/ch9801.webp",bz0231:"photos/bz0231.webp",de0385:"photos/de0385.webp",ox7356:"photos/ox7356.webp",es8404:"photos/es8404.webp",es8620:"photos/es8620.webp",mn9215:"photos/mn9215.webp",vc0066:"photos/vc0066.webp",bz0124:"photos/bz0124.webp",degable:"photos/degable.webp",rt0613:"photos/rt0613.webp",fr6225:"photos/fr6225.webp",fr0857:"photos/fr0857.webp",fr0868:"photos/fr0868.webp",fr0882:"photos/fr0882.webp",wz0801:"photos/wz0801.webp",wz0804:"photos/wz0804.webp",wz0808:"photos/wz0808.webp",wz0811:"photos/wz0811.webp",wz0827:"photos/wz0827.webp",wz0834:"photos/wz0834.webp",nu0779:"photos/nu0779.webp",nu0780:"photos/nu0780.webp",nu0781:"photos/nu0781.webp",nu0736:"photos/nu0736.webp",nu0749:"photos/nu0749.webp",nu0770:"photos/nu0770.webp",nupuzzle:"photos/nupuzzle.webp",nu0776:"photos/nu0776.webp",rt0637:"photos/rt0637.webp",rt0615:"photos/rt0615.webp",rt0651:"photos/rt0651.webp",rt0674:"photos/rt0674.webp",de0571:"photos/de0571.webp",de0543:"photos/de0543.webp",de0576:"photos/de0576.webp",de0389:"photos/de0389.webp",de0498:"photos/de0498.webp",de0594:"photos/de0594.webp",de0374:"photos/de0374.webp",de0381:"photos/de0381.webp",de0387:"photos/de0387.webp",de0407:"photos/de0407.webp",de0434:"photos/de0434.webp",de0538:"photos/de0538.webp",de0583:"photos/de0583.webp",de0592:"photos/de0592.webp",bz0123:"photos/bz0123.webp",bz0136:"photos/bz0136.webp",bz0143:"photos/bz0143.webp",bz0190:"photos/bz0190.webp",bz0247:"photos/bz0247.webp",bz0255:"photos/bz0255.webp",bz0336:"photos/bz0336.webp",vc0011:"photos/vc0011.webp",vc0054:"photos/vc0054.webp",vc0060:"photos/vc0060.webp",vc0062:"photos/vc0062.webp",vc0067:"photos/vc0067.webp",vc9944:"photos/vc9944.webp",vc9948:"photos/vc9948.webp",vc9957:"photos/vc9957.webp",vc9978:"photos/vc9978.webp",mj9471:"photos/mj9471.webp",mj9478:"photos/mj9478.webp",mj9547:"photos/mj9547.webp",mj9555:"photos/mj9555.webp",mj9620:"photos/mj9620.webp",mj9647:"photos/mj9647.webp",mj9651:"photos/mj9651.webp",ch9779:"photos/ch9779.webp",sr9465:"photos/sr9465.webp",sr9448:"photos/sr9448.webp",sr9457:"photos/sr9457.webp",ch9922:"photos/ch9922.webp",ch9700:"photos/ch9700.webp",ch9784:"photos/ch9784.webp",ch9785:"photos/ch9785.webp",ch9824:"photos/ch9824.webp",ch9915:"photos/ch9915.webp",mi9475:"photos/mi9475.webp",mi9504:"photos/mi9504.webp",mi9506:"photos/mi9506.webp",mi9524:"photos/mi9524.webp",mi9527:"photos/mi9527.webp",mi9565:"photos/mi9565.webp",mi9589:"photos/mi9589.webp",mc9001:"photos/mc9001.webp",mc9013:"photos/mc9013.webp",mc9053:"photos/mc9053.webp",mc9072:"photos/mc9072.webp",mc9100:"photos/mc9100.webp",mc9153:"photos/mc9153.webp",cn9402:"photos/cn9402.webp",nc9428:"photos/nc9428.webp",nc9283:"photos/nc9283.webp",nc9350:"photos/nc9350.webp",nc9373:"photos/nc9373.webp",nc9374:"photos/nc9374.webp",nc9418:"photos/nc9418.webp",mn9243:"photos/mn9243.webp",mn9260:"photos/mn9260.webp",mn9261:"photos/mn9261.webp",nc9199:"photos/nc9199.webp",mr8898:"photos/mr8898.webp",mr8739:"photos/mr8739.webp",mr8875:"photos/mr8875.webp",mr8882:"photos/mr8882.webp",es8340:"photos/es8340.webp",es8369:"photos/es8369.webp",es8378:"photos/es8378.webp",es8488:"photos/es8488.webp",es8552:"photos/es8552.webp",es8569:"photos/es8569.webp",es8598:"photos/es8598.webp",es8614:"photos/es8614.webp",es8675:"photos/es8675.webp",es8677:"photos/es8677.webp",sc8284:"photos/sc8284.webp",sc8062:"photos/sc8062.webp",sc8210:"photos/sc8210.webp",sc8265:"photos/sc8265.webp",sc8280:"photos/sc8280.webp",uk7983:"photos/uk7983.webp",uk8026:"photos/uk8026.webp",ukpasta:"photos/ukpasta.webp",cw7565:"photos/cw7565.webp",cw7567:"photos/cw7567.webp",cw7650:"photos/cw7650.webp",cw7709:"photos/cw7709.webp",cw7760:"photos/cw7760.webp",ox7318:"photos/ox7318.webp",ox7373:"photos/ox7373.webp",ox7439:"photos/ox7439.webp",uk7036:"photos/uk7036.webp",uk7841:"photos/uk7841.webp",uk7856:"photos/uk7856.webp",uk7892:"photos/uk7892.webp",fi6673:"photos/fi6673.webp",fi6591:"photos/fi6591.webp",fi6726:"photos/fi6726.webp",fi6749:"photos/fi6749.webp",fi6835:"photos/fi6835.webp",fi6920:"photos/fi6920.webp",fimoose:"photos/fimoose.webp",se6444:"photos/se6444.webp",se6352:"photos/se6352.webp",se6386:"photos/se6386.webp",se6411:"photos/se6411.webp",se6420:"photos/se6420.webp",se6463:"photos/se6463.webp"};
+const PH={hgsnork:"photos/hgsnork.webp",hgsign:"photos/hgsign.webp",hgbeach:"photos/hgbeach.webp",firnlynx:"photos/firnlynx.webp",firnrein:"photos/firnrein.webp",firngate:"photos/firngate.webp",fiaurpro:"photos/fiaurpro.webp",fi6681:"photos/fi6681.webp",cw7667:"photos/cw7667.webp",sc8050:"photos/sc8050.webp",mc9005:"photos/mc9005.webp",ch9882:"photos/ch9882.webp",ch9906:"photos/ch9906.webp",vc9982:"photos/vc9982.webp",vc9950:"photos/vc9950.webp",de0394:"photos/de0394.webp",de0546:"photos/de0546.webp",rt0711:"photos/rt0711.webp",se6457:"photos/se6457.webp",fi6539:"photos/fi6539.webp",ox7292:"photos/ox7292.webp",mr8901:"photos/mr8901.webp",mi9531:"photos/mi9531.webp",mj9610:"photos/mj9610.webp",mj9634:"photos/mj9634.webp",ch9801:"photos/ch9801.webp",bz0231:"photos/bz0231.webp",de0385:"photos/de0385.webp",ox7356:"photos/ox7356.webp",es8404:"photos/es8404.webp",es8620:"photos/es8620.webp",mn9215:"photos/mn9215.webp",vc0066:"photos/vc0066.webp",bz0124:"photos/bz0124.webp",degable:"photos/degable.webp",rt0613:"photos/rt0613.webp",fr6225:"photos/fr6225.webp",fr0857:"photos/fr0857.webp",fr0868:"photos/fr0868.webp",fr0882:"photos/fr0882.webp",wz0801:"photos/wz0801.webp",wz0804:"photos/wz0804.webp",wz0808:"photos/wz0808.webp",wz0811:"photos/wz0811.webp",wz0827:"photos/wz0827.webp",wz0834:"photos/wz0834.webp",nu0779:"photos/nu0779.webp",nu0780:"photos/nu0780.webp",nu0781:"photos/nu0781.webp",nu0736:"photos/nu0736.webp",nu0749:"photos/nu0749.webp",nu0770:"photos/nu0770.webp",nupuzzle:"photos/nupuzzle.webp",nu0776:"photos/nu0776.webp",rt0637:"photos/rt0637.webp",rt0615:"photos/rt0615.webp",rt0651:"photos/rt0651.webp",rt0674:"photos/rt0674.webp",de0571:"photos/de0571.webp",de0543:"photos/de0543.webp",de0576:"photos/de0576.webp",de0389:"photos/de0389.webp",de0498:"photos/de0498.webp",de0594:"photos/de0594.webp",de0374:"photos/de0374.webp",de0381:"photos/de0381.webp",de0387:"photos/de0387.webp",de0407:"photos/de0407.webp",de0434:"photos/de0434.webp",de0538:"photos/de0538.webp",de0583:"photos/de0583.webp",de0592:"photos/de0592.webp",bz0123:"photos/bz0123.webp",bz0136:"photos/bz0136.webp",bz0143:"photos/bz0143.webp",bz0190:"photos/bz0190.webp",bz0247:"photos/bz0247.webp",bz0255:"photos/bz0255.webp",bz0336:"photos/bz0336.webp",vc0011:"photos/vc0011.webp",vc0054:"photos/vc0054.webp",vc0060:"photos/vc0060.webp",vc0062:"photos/vc0062.webp",vc0067:"photos/vc0067.webp",vc9944:"photos/vc9944.webp",vc9948:"photos/vc9948.webp",vc9957:"photos/vc9957.webp",vc9978:"photos/vc9978.webp",mj9471:"photos/mj9471.webp",mj9478:"photos/mj9478.webp",mj9547:"photos/mj9547.webp",mj9555:"photos/mj9555.webp",mj9620:"photos/mj9620.webp",mj9647:"photos/mj9647.webp",mj9651:"photos/mj9651.webp",ch9779:"photos/ch9779.webp",sr9465:"photos/sr9465.webp",sr9448:"photos/sr9448.webp",sr9457:"photos/sr9457.webp",ch9922:"photos/ch9922.webp",ch9700:"photos/ch9700.webp",ch9784:"photos/ch9784.webp",ch9785:"photos/ch9785.webp",ch9824:"photos/ch9824.webp",ch9915:"photos/ch9915.webp",mi9475:"photos/mi9475.webp",mi9504:"photos/mi9504.webp",mi9506:"photos/mi9506.webp",mi9524:"photos/mi9524.webp",mi9527:"photos/mi9527.webp",mi9565:"photos/mi9565.webp",mi9589:"photos/mi9589.webp",mc9001:"photos/mc9001.webp",mc9013:"photos/mc9013.webp",mc9053:"photos/mc9053.webp",mc9072:"photos/mc9072.webp",mc9100:"photos/mc9100.webp",mc9153:"photos/mc9153.webp",cn9402:"photos/cn9402.webp",nc9428:"photos/nc9428.webp",nc9283:"photos/nc9283.webp",nc9350:"photos/nc9350.webp",nc9373:"photos/nc9373.webp",nc9374:"photos/nc9374.webp",nc9418:"photos/nc9418.webp",mn9243:"photos/mn9243.webp",mn9260:"photos/mn9260.webp",mn9261:"photos/mn9261.webp",nc9199:"photos/nc9199.webp",mr8898:"photos/mr8898.webp",mr8739:"photos/mr8739.webp",mr8875:"photos/mr8875.webp",mr8882:"photos/mr8882.webp",es8340:"photos/es8340.webp",es8369:"photos/es8369.webp",es8378:"photos/es8378.webp",es8488:"photos/es8488.webp",es8552:"photos/es8552.webp",es8569:"photos/es8569.webp",es8598:"photos/es8598.webp",es8614:"photos/es8614.webp",es8675:"photos/es8675.webp",es8677:"photos/es8677.webp",sc8284:"photos/sc8284.webp",sc8062:"photos/sc8062.webp",sc8210:"photos/sc8210.webp",sc8265:"photos/sc8265.webp",sc8280:"photos/sc8280.webp",uk7983:"photos/uk7983.webp",uk8026:"photos/uk8026.webp",ukpasta:"photos/ukpasta.webp",cw7565:"photos/cw7565.webp",cw7567:"photos/cw7567.webp",cw7650:"photos/cw7650.webp",cw7709:"photos/cw7709.webp",cw7760:"photos/cw7760.webp",ox7318:"photos/ox7318.webp",ox7373:"photos/ox7373.webp",ox7439:"photos/ox7439.webp",uk7036:"photos/uk7036.webp",uk7841:"photos/uk7841.webp",uk7856:"photos/uk7856.webp",uk7892:"photos/uk7892.webp",fi6673:"photos/fi6673.webp",fi6591:"photos/fi6591.webp",fi6726:"photos/fi6726.webp",fi6749:"photos/fi6749.webp",fi6835:"photos/fi6835.webp",fi6920:"photos/fi6920.webp",fimoose:"photos/fimoose.webp",se6444:"photos/se6444.webp",se6352:"photos/se6352.webp",se6386:"photos/se6386.webp",se6411:"photos/se6411.webp",se6420:"photos/se6420.webp",se6463:"photos/se6463.webp"};
 const DROP_AF=new Set(["koshari","museum","soup","burger","steak","spa","house","elephant","giraffe"]);
 const TOP0=new Set(["オーロラ","ガムラスタン","ビッグベン","エディンバラ城","サグラダ・ファミリア","モンテカルロ・カジノ","ベネチアの水路","ノイシュバンシュタイン城","ギザのピラミッド","キリマンジャロ"]);
 const TOP1AF=new Set(["ルクソール神殿","パラダイス島でシュノーケル","巨大バッファロー","ハン・ハリーリ市場"]);
@@ -722,7 +757,7 @@ const PICK_EXTRA=new Set(["カンヌのレッドカーペット","ウニ","フ�
 const ILLS=[
  {k:"ARN",ic:"vasa",name:"ヴァーサ号",trip:"eu",cap:"ストックホルム",photos:[PH.se6386]},
  {k:"ARN",ic:"gamla",name:"ガムラスタン",trip:"eu",cap:"ストックホルムの旧市街。セムラも食べた",photos:[PH.se6352]},
- {k:"RVN",ic:"aurora",name:"オーロラ",trip:"eu",cap:"初日の夜、空いっぱいの緑とピンク。光が強いとカーテンみたいに揺れる。肉眼だと淡くて、写真のほうがきれいに写る",photos:[PH.fi6673,PH.fiaurpro,PH.fi6681]},
+ {k:"AUR",ic:"aurora",name:"オーロラ",trip:"eu",cap:"初日の夜、空いっぱいの緑とピンク。光が強いとカーテンみたいに揺れる。肉眼だと淡くて、写真のほうがきれいに写る",photos:[PH.fi6673,PH.fiaurpro,PH.fi6681]},
  {k:"RVN",ic:"reindeer",name:"トナカイ",trip:"eu",cap:"サンタ村でトナカイに苔をあげた。ラヌア動物園ではヘラジカの大きさに衝撃",photos:[PH.fi6749]},
  {k:"LON",ic:"bigben",name:"ビッグベン",trip:"eu",cap:"ロンドンに着いてさっそく見に行った",photos:[PH.uk7036]},
  {k:"LON",ic:"towerbridge",name:"タワーブリッジ",trip:"eu",cap:"ツアーで会った人と再会して、跳ね橋が上がるのを一緒に見た"},
@@ -756,7 +791,7 @@ const ILLS=[
  {k:"LXR",ic:"soup",name:"モロヘイヤスープ",trip:"af",cap:"ルクソールで飲んだモロヘイヤスープがおいしかった"},
  {k:"LXR",ic:"burger",name:"ラクダ肉のハンバーガー",trip:"af",cap:"ルクソールで食べた"},
  {k:"DEN",ic:"temple",name:"デンデラ神殿",trip:"af",cap:"ルクソールから足をのばした"},
- {k:"HRG",ic:"fish",name:"パラダイス島でシュノーケル",trip:"af",cap:"紅海の島でシュノーケル"},
+ {k:"PDI",ic:"fish",name:"パラダイス島でシュノーケル",trip:"af",cap:"紅海の島でシュノーケル",photos:[PH.hgsnork,PH.hgsign,PH.hgbeach]},
  {k:"HRG",ic:"steak",name:"ラクダ肉のステーキ",trip:"af",cap:"フルガダで食べた。この旅はラクダを食べ続けた"},
  {k:"HRG",ic:"spa",name:"スパ",trip:"af",cap:"フルガダでスパを受けた"},
  {k:"NBO",ic:"hat",name:"サファリ帽子",trip:"af",cap:"マサイビレッジでサファリ帽子を買った"},
@@ -771,7 +806,7 @@ const ILLS=[
  {k:"ARN",ic:"cityhall",name:"ストックホルム市庁舎",trip:"eu",cap:"ストックホルムで見た市庁舎",lv:3},
  {k:"ARN",ic:"metro",name:"地下鉄アート",trip:"eu",cap:"駅そのものがアートになっている地下鉄",lv:3,photos:[PH.se6463,PH.se6457]},
  {k:"RVN",ic:"santahat",name:"サンタクロース村",trip:"eu",cap:"急いで帽子を調達。サンタに挨拶して、トナカイとベリーウォッカもいただいた",lv:3,photos:[PH.fi6726]},
- {k:"RVN",ic:"moose",name:"ヘラジカ",trip:"eu",cap:"ラヌア動物園で一番の衝撃。トナカイの倍くらいに感じた",lv:3,photos:[PH.fimoose]},
+ {k:"RNZ",ic:"moose",name:"ヘラジカ",trip:"eu",cap:"ラヌア動物園で一番の衝撃。トナカイの倍くらいに感じた",lv:3,photos:[PH.fimoose]},
  {k:"RVN",ic:"frozenphone",name:"凍った携帯",trip:"eu",cap:"空港からサンタ村まで約30分歩いたら、携帯が凍って電源が落ちた。サンタ村であっためたら復活",lv:3},
  {k:"RVN",ic:"rimetree",name:"樹氷の林道",trip:"eu",cap:"到着日、晴れていたので空港からサンタ村まで約30分歩いた。誰も歩いていない林道に、きれいな樹氷。昼過ぎなのに太陽が低い。まつ毛が凍って、瞬きすると上下がくっつく",lv:3,photos:[PH.fi6591,PH.fi6539]},
  {k:"LON",ic:"guard",name:"衛兵交代",trip:"eu",cap:"ツアーのガイドさんに教えてもらって、バッキンガム宮殿へ。パイレーツの曲が流れた",lv:3},
@@ -848,8 +883,8 @@ const ILLS=[
  {k:"RVN",ic:"scale",name:"パン屋の量り売り",trip:"eu",cap:"量り売りに慣れず大苦戦",lv:3},
  {k:"RVN",ic:"bento",name:"スーパーのお弁当",trip:"eu",cap:"パンとミートボールとポテトの弁当がおいしい。スーパーは暖かくて、体中の氷が解けてびしょびしょ",lv:3,photos:[PH.fi6835]},
  {k:"RVN",ic:"dog",name:"でっかい犬",trip:"eu",cap:"モフモフでかわいい",lv:3},
- {k:"RVN",ic:"polarbear",name:"ラヌア動物園の動物たち",trip:"eu",cap:"ホッキョクグマ、ジャコウウシ、オオヤマネコ、クズリ。飼育範囲が広くて人間がアウェー",lv:3},
- {k:"RVN",ic:"owl",name:"シロフクロウ",trip:"eu",cap:"ラヌア動物園で",lv:3},
+ {k:"RNZ",ic:"polarbear",name:"ラヌア動物園の動物たち",trip:"eu",cap:"ホッキョクグマ、ジャコウウシ、オオヤマネコ、クズリ、トナカイ。飼育範囲が広くて人間がアウェー",lv:3,photos:[PH.firnlynx,PH.firnrein,PH.firngate]},
+ {k:"RNZ",ic:"owl",name:"シロフクロウ",trip:"eu",cap:"ラヌア動物園で",lv:3},
  {k:"RVN",ic:"postcard",name:"ポストカード",trip:"eu",cap:"少し前まで世界最北端だったハンバーガー店でゲット",lv:3,photos:[PH.fi6920]},
  {k:"RVN",ic:"sleep",name:"空港でひと眠り",trip:"eu",cap:"朝5時20分の便に備えて空港泊。空港の机と椅子がかわいすぎた",lv:3},
  {k:"LON",ic:"lobster",name:"ロブスター＆ハンバーガー",trip:"eu",cap:"ロンドンで最初の食事",lv:3},
@@ -942,7 +977,7 @@ const ILLS=[
  {k:"FRA",ic:"locker",name:"Bounceで荷物を預ける",trip:"eu",cap:"両手いっぱいのお土産を持ったままでは探せないので、アプリで見つけた店に預けた",lv:3}
 ];
 
-const MODEJ={train:"列車",bus:"バス",boat:"船",car:"サファリジープ",walk:"徒歩",air:"飛行機",mix:"乗継",trip:"日帰り",taxi:"タクシー",plan:"予定"};
+const MODEJ={train:"列車",bus:"バス",boat:"船",car:"サファリジープ",van:"ツアー車",walk:"徒歩",air:"飛行機",mix:"乗継",trip:"日帰り",taxi:"タクシー",plan:"予定"};
 const TRIPS=[EU,AF];
 const nameOf=k=>{for(const t of TRIPS){const s=t.stops.find(s=>s.k===k);if(s)return s.name;}return WPN[k]||TRN[k]||k;};
 
@@ -967,7 +1002,7 @@ let W=stage.clientWidth,H=stage.clientHeight;
 const allKeys=[...EU.stops.map(s=>s.k),...AF.stops.map(s=>s.k),"NRT","HND","PEK","GZ"];
 const proj=d3.geoNaturalEarth1().rotate([-60,0]);
 const path=d3.geoPath(proj);
-function fitBase(){proj.fitExtent([[24,24],[W-24,H-24]],{type:"MultiPoint",coordinates:allKeys.map(k=>P[k])});}
+function fitBase(){const an=proj.angle();proj.angle(0).fitExtent([[24,24],[W-24,H-24]],{type:"MultiPoint",coordinates:allKeys.map(k=>P[k])});proj.angle(an);}
 fitBase();
 
 const svg=d3.select(stage).insert("svg",":first-child").attr("role","img").attr("aria-label","2つの旅のズームできる地図");
@@ -976,6 +1011,7 @@ const gOver=svg.append("g");
 let cur=d3.zoomIdentity;
 
 function drawBase(){
+  if(typeof ICO!=="undefined"){ICO.segKey="";ICO.key="";}
   gMap.selectAll("*").remove();
   gMap.append("path").attr("class","grat").attr("d",path(d3.geoGraticule().step([10,10])()));
   if(world)gMap.append("g").selectAll("path").data(world).join("path")
@@ -1048,7 +1084,8 @@ function place(){
     else{it.el.setAttribute("transform",`translate(${x},${y})`);it.el.dataset.ax=x;it.el.dataset.ay=y;}});
   const lod=lodOf(cur.k);
   svg.attr("class",`z${lod}${lod<3?" lo":""}`);
-  if(lod!==lastLod){lodtag.innerHTML=LODTXT[lod];lastLod=lod;}
+  if(lod!==lastLod&&!window.__globeOn){lodtag.innerHTML=LODTXT[lod];lastLod=lod;}
+  if(typeof applyIcons==="function"&&gOver.node().querySelector(".ill"))applyIcons();
 }
 
 // keep labels from overlapping: names stay beside their point or hide; optional labels hide
@@ -1061,29 +1098,11 @@ function declutter(){
   const placed=[];
   const hit=b=>b.x<2||b.y<2||b.x+b.w>sr.width-2||b.y+b.h>sr.height-2||obst.concat(placed).some(o=>b.x<o.x+o.w+2&&b.x+b.w+2>o.x&&b.y<o.y+o.h+2&&b.y+b.h+2>o.y);
   const PR=t=>{const v=+t.dataset.pr;return isNaN(v)?5:v;};const labels=[...gOver.node().querySelectorAll("text")].filter(t=>!t.closest(".ill")&&t.getClientRects().length).sort((a,b)=>PR(a)-PR(b));
-  const placeIcons=()=>{
-    const all=[...gOver.node().querySelectorAll(".ill")];all.forEach(g=>g.style.display="");
-    const lodNow=lodOf(cur.k);const tier=g=>+g.dataset.tier;const kk=cur.k/kRef();const maxT=kk<1.6?0:kk<3.2?1:kk<12?2:3;
-    const ills=all.filter(g=>g.getClientRects().length).sort((a,b)=>tier(a)-tier(b));
-    const R0=18,G=4;
-    const off=[[30,-30],[-30,-30],[30,30],[-30,30],[0,-40],[0,40],[44,0],[-44,0],[52,-34],[-52,-34],[52,34],[-52,34]];[[80,16],[118,20],[156,24],[194,28]].forEach(([r,n])=>{for(let i=0;i<n;i++){const a=-Math.PI/2+i*2*Math.PI/n;off.push([Math.round(r*Math.cos(a)),Math.round(r*Math.sin(a))]);}});
-    for(const g of ills){
-      const ax=+g.dataset.ax,ay=+g.dataset.ay,ic=g.querySelector(".ic"),ld=g.querySelector(".ld");
-      g.style.display="";
-      if(ax<-40||ay<-40||ax>sr.width+40||ay>sr.height+40){g.style.display="none";continue;}
-      let ok=false;
-      const isPick=g.classList.contains("pick");
-      if(tier(g)>maxT){g.style.display="none";continue;}
-      const cand=(tier(g)<3||kk>=24)?off:off.slice(0,28);
-      for(const[dx,dy] of cand){const b={x:ax+dx-R0,y:ay+dy-R0,w:2*R0,h:2*R0};
-        if(!hit(b)){placed.push({x:b.x-G,y:b.y-G,w:b.w+2*G,h:b.h+2*G});ic.setAttribute("transform",`translate(${dx},${dy})`);
-          const L=Math.hypot(dx,dy),s=(L-R0)/L;ld.setAttribute("x1",dx*0.22);ld.setAttribute("y1",dy*0.22);ld.setAttribute("x2",dx*s);ld.setAttribute("y2",dy*s);ok=true;break;}}
-      if(!ok)g.style.display="none";
-    }
+  const placeIcons=()=>{applyIcons();
+    for(const g of gOver.node().querySelectorAll(".ill")){if(g.style.display==="none"||!g.getClientRects().length)continue;const b=R(g.querySelector(".ic .bg"));if(b.w)placed.push({x:b.x-3,y:b.y-3,w:b.w+6,h:b.h+6});}
   };
-  let iconsDone=false;
+  placeIcons();
   for(const t of labels){
-    if(!iconsDone&&PR(t)>1){placeIcons();iconsDone=true;}
     const ax=+t.dataset.ax,ay=+t.dataset.ay,d=+t.dataset.d||10;
     if(ax<-50||ay<-50||ax>sr.width+50||ay>sr.height+50){t.style.display="none";continue;}
     const o=[+t.getAttribute("x"),+t.getAttribute("y"),t.getAttribute("text-anchor")||"start"];
@@ -1093,8 +1112,63 @@ function declutter(){
     if(!done){t.setAttribute("x",o[0]);t.setAttribute("y",o[1]);t.setAttribute("text-anchor",o[2]);
       if(t.classList.contains("big"))placed.push(R(t));else t.style.display="none";}
   }
-  if(!iconsDone)placeIcons();
 }
+// ---- stable illustration layout ----
+// Positions are worked out per zoom step (every x1.41) in map space, so they don't depend on panning,
+// and they are checked against each other and against the route lines across the whole step.
+const ICO={key:"",res:null,segs:null,segKey:""};
+const ICO_OFF=(()=>{const off=[[30,-30],[-30,-30],[30,30],[-30,30],[0,-40],[0,40],[44,0],[-44,0],[52,-34],[-52,-34],[52,34],[-52,34]];
+  [[80,16],[118,20],[156,24],[194,28]].forEach(([r,n])=>{for(let i=0;i<n;i++){const a=-Math.PI/2+i*2*Math.PI/n;off.push([Math.round(r*Math.cos(a)),Math.round(r*Math.sin(a))]);}});return off;})();
+function icoSegs(){const key=W+"x"+H+"|"+proj.angle()+"|"+proj.scale();if(ICO.segKey===key&&ICO.segs)return ICO.segs;const out=[];
+  // use the route lines exactly as drawn
+  gMap.selectAll("path.seg").each(function(){const d=this.getAttribute("d")||"";let prev=null;const re=/([MLZ])([^MLZ]*)/g;let m;
+    while((m=re.exec(d))){if(m[1]==="Z"){prev=null;continue;}const v=m[2].split(/[ ,]+/).filter(Boolean).map(Number);
+      for(let k=0;k+1<v.length;k+=2){const q=[v[k],v[k+1]];if(m[1]==="L"&&prev)out.push([prev[0],prev[1],q[0],q[1]]);prev=q;}}});
+  ICO.segKey=key;ICO.segs=out;return out;}
+function segDist(px,py,x1,y1,x2,y2){const dx=x2-x1,dy=y2-y1,l=dx*dx+dy*dy;let t=l?((px-x1)*dx+(py-y1)*dy)/l:0;t=Math.max(0,Math.min(1,t));const ex=x1+t*dx-px,ey=y1+t*dy-py;return Math.sqrt(ex*ex+ey*ey);}
+function icoLayout(){
+  const n=Math.floor(2*Math.log2(Math.max(1,cur.k))+1e-9),kb=Math.pow(2,n/2),key=n+"|"+proj.angle()+"|"+W+"x"+H;
+  if(ICO.key===key)return ICO.res;
+  const SC=[1,1.19,1.414],R0=18,G=4,kk=kb/kRef(),maxT=kk<1.6?0:kk<3.2?1:kk<12?2:3,lodB=lodOf(kb);
+  const segs=icoSegs();
+  const nodes=[...gOver.node().querySelectorAll(".ill")];
+  const ills=nodes.map(g=>{const il=ILLS[+g.dataset.ill],p=proj(P[il.k]);return {g,t:+g.dataset.tier,a:[p[0]*kb,p[1]*kb]};}).sort((x,y)=>x.t-y.t);
+  // fixed obstacles: stop dots, stop names at their default place, way points and events when shown
+  const obs=[];
+  TRIPS.forEach(t=>t.stops.forEach(s=>{const p=proj(P[s.k]);const a=[p[0]*kb,p[1]*kb];obs.push({a,x:-7,y:-7,w:14,h:14});obs.push({a,x:9,y:-11,w:s.name.length*13.5+4,h:17});}));
+  if(lodB>=3)gOver.selectAll(".wp").each(function(){const k=this.dataset.k;if(!P[k])return;const p=proj(P[k]);obs.push({a:[p[0]*kb,p[1]*kb],x:-5,y:-5,w:10,h:10});});
+  if(lodB>=3)EVENTS.forEach(ev=>{if(!P[ev.k])return;const p=proj(P[ev.k]);obs.push({a:[p[0]*kb,p[1]*kb],x:-10,y:-10,w:20,h:20});});
+  const res=new Map(),placed=[];
+  const boxHit=(c,b,s)=>{const ox=b.a[0]*s+b.x,oy=b.a[1]*s+b.y;return c[0]-R0-G<ox+b.w&&c[0]+R0+G>ox&&c[1]-R0-G<oy+b.h&&c[1]+R0+G>oy;};
+  for(const it of ills){
+    if(it.t>maxT){res.set(it.g,null);continue;}
+    const near=r=>Math.abs(r[0]-it.a[0])<420&&Math.abs(r[1]-it.a[1])<420;
+    const nObs=obs.filter(o=>near(o.a)),nPl=placed.filter(o=>near(o.a));
+    const nSeg=segs.filter(sg=>{const x0=Math.min(sg[0],sg[2])*kb,x1=Math.max(sg[0],sg[2])*kb,y0=Math.min(sg[1],sg[3])*kb,y1=Math.max(sg[1],sg[3])*kb;
+      return SC.some(sc=>x1*sc>it.a[0]*sc-240&&x0*sc<it.a[0]*sc+240&&y1*sc>it.a[1]*sc-240&&y0*sc<it.a[1]*sc+240);});
+    const cand=(it.t<3||kk>=24)?ICO_OFF:ICO_OFF.slice(0,28);let got=null;
+    for(const [dx,dy] of cand){let bad=false;
+      for(const s of SC){const c=[it.a[0]*s+dx,it.a[1]*s+dy];
+        if(nObs.some(o=>boxHit(c,o,s))){bad=true;break;}
+        if(nPl.some(o=>{const q=[o.a[0]*s+o.d[0],o.a[1]*s+o.d[1]];return Math.abs(q[0]-c[0])<2*R0+G&&Math.abs(q[1]-c[1])<2*R0+G;})){bad=true;break;}
+        if(nSeg.some(sg=>segDist(c[0],c[1],sg[0]*kb*s,sg[1]*kb*s,sg[2]*kb*s,sg[3]*kb*s)<R0+3)){bad=true;break;}}
+      if(!bad){got=[dx,dy];break;}}
+    if(got){placed.push({a:it.a,d:got});}
+    res.set(it.g,got);
+  }
+  ICO.key=key;ICO.res=res;return res;
+}
+function applyIcons(){
+  if(lodOf(cur.k)<2)return;
+  const res=icoLayout(),R0=18;
+  for(const [g,o] of res){
+    if(!o){g.style.display="none";continue;}
+    g.style.display="";const ic=g.querySelector(".ic"),ld=g.querySelector(".ld");
+    if(g.__o!==o){g.__o=o;ic.setAttribute("transform",`translate(${o[0]},${o[1]})`);const L=Math.hypot(o[0],o[1]),s=(L-R0)/L;
+      ld.setAttribute("x1",o[0]*0.22);ld.setAttribute("y1",o[1]*0.22);ld.setAttribute("x2",o[0]*s);ld.setAttribute("y2",o[1]*s);}
+  }
+}
+
 let dt;
 const zoom=d3.zoom().scaleExtent([1,160]).on("zoom",e=>{cur=e.transform;gMap.attr("transform",cur);place();clearTimeout(dt);dt=setTimeout(declutter,110);});
 svg.call(zoom);
@@ -1134,8 +1208,10 @@ function select(el){
     panel.innerHTML=`<div class="k"><span class="tag ${t.key}">${esc(t.key==="eu"?"ヨーロッパ一周":"エジプト・ケニア")}</span><h2>${esc(s.name)}</h2><time>${esc(s.d)}</time></div>
       <p>${esc(s.note)}</p><p class="m"><span class="mode ${s.lm}">${MODEJ[s.lm]}</span>${esc(s.lt)}</p>`;
   }else{
-    const k=el.dataset.k,w=wpInfo[k];
-    panel.innerHTML=`<div class="k"><span class="tag g">経由地${KNOWN.has(k)?"":"（推測）"}</span><h2>${esc(WPN[k])}</h2></div>
+    const k=el.dataset.k,w=wpInfo[k],dt=DAYT[k];
+    if(dt)panel.innerHTML=`<div class="k"><span class="tag ${w.trip}">日帰り</span><h2>${esc(WPN[k])}</h2><time>${esc(dt.d)}</time></div>
+      <p class="m"><span class="mode ${dt.m}">${MODEJ[dt.m]}</span>${esc(dt.t)}</p>`;
+    else panel.innerHTML=`<div class="k"><span class="tag g">経由地${KNOWN.has(k)?"":"（推測）"}</span><h2>${esc(WPN[k])}</h2></div>
       <p class="m"><span class="mode ${w.mode}">${MODEJ[w.mode]}</span>${esc(w.from)} → ${esc(w.to)}${w.kind==="trip"?"（日帰り）":""}の途中</p>`;
   }
   panel.insertAdjacentHTML("afterbegin",'<button type="button" class="pclose" aria-label="解説を閉じて地図に戻る" title="閉じる">✕</button>');
@@ -1151,9 +1227,9 @@ function closePanel(){
 addEventListener("keydown",e=>{if(e.key==="Escape"&&!panel.classList.contains("empty"))closePanel();});
 
 // jump targets
-const JUMP={all:allKeys,eu:EU.stops.map(s=>s.k).concat(["GLF"]),nordic:["ARN","HEL","RVN"],uk:["LON","EDI","FTW","GLF","OXF","CHC","CAR"],
+const JUMP={all:allKeys,eu:EU.stops.map(s=>s.k).concat(["GLF"]),nordic:["ARN","HEL","RVN","AUR","RNZ"],uk:["LON","EDI","FTW","GLF","OXF","CHC","CAR"],
  med:["BCN","MRS","NCE","MCO","GEN","MIL"],alps:["MIL","STM","TIR","VCE","BZO","CHI","INN"],de:["MUC","FUS","NOE","ROT","NUE","WUE","FRA"],
- riv:["NCE","MCO","MEN","VTM","SRM","CNS"],detour:["NCE","SRM","SAV","TUR","LAM","MIL"],strike:["VCE","MES","VRN","TRE","BZO"],af:AF.stops.map(s=>s.k),eg:["CAI","GIZ","LXR","HRG","QEN","SAF","DEN"],ke:["NBO","AMB","KIL","KAJ"]};
+ riv:["NCE","MCO","MEN","VTM","SRM","CNS"],detour:["NCE","SRM","SAV","TUR","LAM","MIL"],strike:["VCE","MES","VRN","TRE","BZO"],af:AF.stops.map(s=>s.k),eg:["CAI","GIZ","LXR","HRG","QEN","SAF","DEN","PDI"],ke:["NBO","AMB","KIL","KAJ"]};
 function kFor(key){const pts=JUMP[key].map(k=>proj(P[k]));const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);return Math.max(1,Math.min(160,0.8/Math.max((Math.max(...xs)-Math.min(...xs))/W,(Math.max(...ys)-Math.min(...ys))/H,1e-3)));}
 let _kr=null,_krW=0;function kRef(){if(_krW!==W*10000+H){_kr=kFor("eu");_krW=W*10000+H;}return _kr;}
 function jump(key,anim=true){
@@ -1178,8 +1254,8 @@ document.getElementById("zin").addEventListener("click",()=>svg.transition().dur
 document.getElementById("zout").addEventListener("click",()=>svg.transition().duration(300).call(zoom.scaleBy,.5));
 
 function build(){W=stage.clientWidth;H=stage.clientHeight;svg.attr("viewBox",`0 0 ${W} ${H}`);fitBase();
-  zoom.extent([[0,0],[W,H]]).translateExtent([[-W*0.5,-H*0.5],[W*1.5,H*1.5]]);
-  drawBase();drawOverlay();gMap.attr("transform",cur);place();declutter();if(window.__playRedraw)window.__playRedraw();}
+  zoom.extent([[0,0],[W,H]]).translateExtent([[-W*1.1,-H*1.1],[W*2.1,H*2.1]]);
+  drawBase();drawOverlay();gMap.attr("transform",cur);place();declutter();if(window.__playRedraw)window.__playRedraw();if(window.__globeRedraw)window.__globeRedraw();if(window.__vehRedraw)window.__vehRedraw("f");}
 build();
 let rt,lw=W,lh=H;
 new ResizeObserver(()=>{if(Math.abs(stage.clientWidth-lw)<8&&Math.abs(stage.clientHeight-lh)<8)return;lw=stage.clientWidth;lh=stage.clientHeight;
@@ -1209,6 +1285,9 @@ const PLAYS=(()=>{
     S("FRA",[["air",["NRT",...PL.slice().reverse(),"FRA"]]],{d:"1/2",t:"成田 → フランクフルト",n:"初めての海外へ。14時間15分のフライト"}),
     S("ARN",[["air",["FRA","ARN"]]],{d:"1/3"}),
     S("RVN",[["air",["ARN","HEL","RVN"]]]),
+    S("AUR",[["van",["RVN","AUR"]]],{d:"1/4",t:"オーロラを見た林道",n:"初日の夜、ツアー車で林道へ"}),
+    S("RNZ",[["van",["AUR","RVN"]],["bus",["RVN","RNZ"]]],{d:"1/5",t:"ラヌア動物園",n:"バスで約1時間。ヘラジカの大きさに衝撃"}),
+    S("RVN",[["bus",["RNZ","RVN"]]],{d:"1/5",t:"ロヴァニエミへ戻る",n:""}),
     S("LON",[["air",["RVN","HEL","HEA"]]]),
     S("OXF",[["train",["LON","HWY","BIC","OXF"]]],{d:"ロンドン滞在中",t:"オックスフォード",n:"列車で日帰り"}),
     S("BOU",[["bus",["LON","BIB","STO","BOU","CHC","LON"]]]),
@@ -1239,14 +1318,15 @@ const PLAYS=(()=>{
     S("GIZ",[["taxi",["CAI","GIZ"]]]),
     S("LXR",[["air",["CAI","LXR"]]]),
     S("HRG",[["bus",["LXR","QEN","SAF","HRG"]]]),
-    S("CAI",[["air",["HRG","CAI"]]],{d:"12/28",t:"カイロへ",n:"フルガダから飛行機"}),
+    S("PDI",[["boat",["HRG","PDI"]]],{d:"12/27",t:"パラダイス島",n:"船で紅海の島へ。シュノーケル"}),
+    S("CAI",[["boat",["PDI","HRG"]],["air",["HRG","CAI"]]],{d:"12/28",t:"カイロへ",n:"フルガダから飛行機"}),
     S("NBO",[["air",["CAI","DOH"]],["air",["DOH","NBO"]]],{d:"12/29"}),
     S("AMB",[["car",["NBO","KAJ","NAM","AMB"]]]),
     S("NBO",[["car",["AMB","NAM","KAJ","NBO"]]],{d:"1/1",t:"ナイロビへ戻る",n:""}),
     S("HND",[["air",["NBO","BAH"]],["air",["BAH","GZ"]],["air",["GZ","HND"]]],{d:"1/2–1/3",t:"帰国",n:"バーレーンと広州で乗り継いで羽田へ"})];
   return {eu,af};
 })();
-const MCOL={air:"var(--air)",train:"var(--train)",bus:"var(--bus)",boat:"var(--boat)",car:"var(--car)",taxi:"var(--taxi)",walk:"var(--walk)"};
+const MCOL={air:"var(--air)",train:"var(--train)",bus:"var(--bus)",boat:"var(--boat)",car:"var(--car)",van:"var(--car)",taxi:"var(--taxi)",walk:"var(--walk)"};
 const gPlayH=svg.insert("g",()=>gOver.node()).attr("class","playh");
 const gPlay=svg.insert("g",()=>gOver.node()).attr("class","playl");
 const gPulse=svg.append("g").attr("class","playp");
@@ -1271,10 +1351,12 @@ function fitLegs(legs){const pts=legs.flatMap(([,ks])=>ks.map(k=>proj(P[k])));co
 function setCap(step,i,n){pDate.textContent=step.d;pName.textContent=step.t;pNote.textContent=step.n;pNote.hidden=!step.n;pBar.style.width=((i+1)/n*100)+"%";}
 async function runStep(i,tok){
   const steps=PLAYS[PS.trip],step=steps[i];
-  gPlay.selectAll(`[data-s="${i}"]`).remove();gPlayH.selectAll(`[data-s="${i}"]`).remove();
-  setCap(step,i,steps.length);PS.pulse=null;gPulse.selectAll("*").remove();
+  gPlay.selectAll(`[data-s="${i}"]`).remove();gPlayH.selectAll(`[data-s="${i}"]`).remove();gPlayG.selectAll(`[data-s="${i}"]`).remove();
+  setCap(step,i,steps.length);PS.pulse=null;gPulse.selectAll("*").remove();if(typeof hideVeh==="function")hideVeh();
+  if(step.legs.some(([,ks])=>ks.includes("PL1")))return await globeFlight(step,i,tok);
   const t=fitLegs(step.legs);
-  if(RM())svg.call(zoom.transform,t);else{try{await svg.transition("play").duration(900/PS.speed).ease(d3.easeCubicInOut).call(zoom.transform,t).end();}catch(e){return false;}}
+  if(GL.on){await exitGlobe(null,null,{T:t,mdur:900/PS.speed});if(tok!==PS.tok)return false;}
+  else if(RM())svg.call(zoom.transform,t);else{try{await svg.transition("play").duration(900/PS.speed).ease(d3.easeCubicInOut).call(zoom.transform,t).end();}catch(e){return false;}}
   if(tok!==PS.tok)return false;
   for(const [m,ks] of step.legs){
     const c=JSON.stringify(ks),d=path({type:"LineString",coordinates:ks.map(k=>P[k])});
@@ -1282,11 +1364,12 @@ async function runStep(i,tok){
     const el=gPlay.append("path").attr("data-s",i).attr("data-c",c).attr("d",d).attr("class","ph-line "+m).style("stroke",MCOL[m]||"var(--eu)");
     syncPlay();
     const L=el.node().getTotalLength();const px=L*cur.k;
-    const fin=()=>{hl.attr("stroke-dasharray",null).attr("stroke-dashoffset",null);el.attr("stroke-dasharray",null).attr("stroke-dashoffset",null).classed("done",true);syncPlay();};
+    const fin=()=>{hl.attr("stroke-dasharray",null).attr("stroke-dashoffset",null);el.attr("stroke-dasharray",null).attr("stroke-dashoffset",null).classed("done",true);syncPlay();VS.frac=1;drawVeh();};
+    setVeh("f",el.node(),m,0,ks);
     if(RM()||L<0.01){fin();continue;}
     hl.attr("stroke-dasharray",`${L} ${L}`).attr("stroke-dashoffset",L);el.attr("stroke-dasharray",`${L} ${L}`).attr("stroke-dashoffset",L);
     const dur=Math.max(450,Math.min(1600,350+px*1.6))/PS.speed;
-    try{await Promise.all([hl.transition("play").duration(dur).ease(d3.easeLinear).attr("stroke-dashoffset",0).end(),el.transition("play").duration(dur).ease(d3.easeLinear).attr("stroke-dashoffset",0).end()]);}catch(e){return false;}
+    try{await Promise.all([hl.transition("play").duration(dur).ease(d3.easeLinear).attr("stroke-dashoffset",0).end(),el.transition("play").duration(dur).ease(d3.easeLinear).attr("stroke-dashoffset",0).tween("veh",()=>t=>{VS.frac=t;drawVeh();}).end()]);}catch(e){return false;}
     if(tok!==PS.tok)return false;
     fin();
   }
@@ -1298,21 +1381,21 @@ async function loop(tok){
   while(PS.i<steps.length){const ok=await runStep(PS.i,tok);if(!ok||tok!==PS.tok)return;PS.i++;}
   if(tok!==PS.tok)return;
   PS.paused=true;pPause.textContent="↺";pPause.setAttribute("aria-label","最初から再生");playEl.classList.add("done");
-  pDate.textContent=PS.trip==="eu"?"2025.1.2 – 2.4":"2025.12.20 – 2026.1.3";pName.textContent="おしまい";pNote.textContent="イラストをタップすると、思い出と写真が見られる";pNote.hidden=false;
-  jump(PS.trip);
+  pDate.textContent=PS.trip==="eu"?"2025.1.2 – 2.4":"2025.12.20 – 2026.1.3";pName.textContent="おしまい";pNote.textContent="イラストをタップすると、思い出と写真が見られる";pNote.hidden=false;hideVeh();
+  if(GL.on)exitGlobe(null,null,{T:jumpT(PS.trip)});jump(PS.trip);
 }
 function startPlay(trip){
   if(typeof closePanel==="function")closePanel();
   PS.trip=trip;PS.i=0;PS.on=true;PS.paused=false;PS.tok++;
-  gPlay.selectAll("*").remove();gPlayH.selectAll("*").remove();gPulse.selectAll("*").remove();
+  gPlay.selectAll("*").remove();gPlayH.selectAll("*").remove();gPulse.selectAll("*").remove();gPlayG.selectAll("*").remove();if(typeof hideVeh==="function")hideVeh();
   stage.classList.add("playing");playEl.hidden=false;playEl.classList.toggle("af",trip==="af");gPulse.classed("af",trip==="af");playEl.classList.remove("done");pPause.textContent="❚❚";pPause.setAttribute("aria-label","一時停止");
   if(MOBILE.matches&&!document.body.classList.contains("isfull")){const r=stage.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)stage.scrollIntoView({block:"start",behavior:"smooth"});}
   loop(PS.tok);
 }
-function pausePlay(){if(!PS.on||PS.paused)return;PS.paused=true;PS.tok++;svg.interrupt("play");gPlay.selectAll("path").interrupt("play");gPlayH.selectAll("path").interrupt("play");pPause.textContent="▶";pPause.setAttribute("aria-label","再開");playEl.classList.add("paused");}
+function pausePlay(){if(!PS.on||PS.paused)return;PS.paused=true;PS.tok++;svg.interrupt("play");gsv.interrupt("grot");gPlayG.selectAll("path").interrupt("play");gPlay.selectAll("path").interrupt("play");gPlayH.selectAll("path").interrupt("play");pPause.textContent="▶";pPause.setAttribute("aria-label","再開");playEl.classList.add("paused");}
 function resumePlay(){if(!PS.on)return;if(playEl.classList.contains("done")){startPlay(PS.trip);return;}PS.paused=false;PS.tok++;pPause.textContent="❚❚";pPause.setAttribute("aria-label","一時停止");playEl.classList.remove("paused");loop(PS.tok);}
 function stopPlay(){PS.on=false;PS.paused=false;PS.tok++;svg.interrupt("play");gPlay.selectAll("path").interrupt("play");gPlayH.selectAll("path").interrupt("play");
-  gPlay.selectAll("*").remove();gPlayH.selectAll("*").remove();gPulse.selectAll("*").remove();PS.pulse=null;stage.classList.remove("playing");playEl.hidden=true;playEl.classList.remove("done","paused");}
+  gPlay.selectAll("*").remove();gPlayH.selectAll("*").remove();gPulse.selectAll("*").remove();gPlayG.selectAll("*").remove();PS.pulse=null;if(typeof hideVeh==="function")hideVeh();if(RIDE)RIDE.cancel=true;stage.classList.remove("playing");playEl.hidden=true;playEl.classList.remove("done","paused");}
 pPause.addEventListener("click",()=>PS.paused?resumePlay():pausePlay());
 pSpeed.addEventListener("click",()=>{PS.speed=PS.speed===1?2:1;pSpeed.textContent=PS.speed+"×";pSpeed.setAttribute("aria-label",`速さ ${PS.speed}倍`);});
 pStop.addEventListener("click",stopPlay);
@@ -1326,6 +1409,315 @@ playLabel();document.querySelectorAll(".seg .chip").forEach(b=>b.addEventListene
 playBtn.addEventListener("click",()=>{const t=selTrip();if(t==="all"){setMenu(playMenu.hidden);return;}startPlay(t);});
 playMenu.querySelectorAll("[data-play]").forEach(b=>b.addEventListener("click",()=>{setMenu(false);startPlay(b.dataset.play);}));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&PS.on&&!stage.classList.contains("full"))stopPlay();});
+// ---- globe view (zoomed out) ----
+const GL={on:false,rot:[-62,-32,0],R0:1,R:1,last:d3.zoomIdentity,quiet:false,byPlay:false};
+const gsv=d3.select(stage).insert("svg",()=>svg.node().nextSibling).attr("class","globe").attr("role","img").attr("aria-label","2つの旅の地球儀。ドラッグで回せる").style("display","none");
+const gdefs=gsv.append("defs");
+const grd=gdefs.append("radialGradient").attr("id","gSea").attr("cx","38%").attr("cy","32%").attr("r","75%");
+grd.append("stop").attr("offset","0%").attr("class","gs0");grd.append("stop").attr("offset","100%").attr("class","gs1");
+const grd2=gdefs.append("radialGradient").attr("id","gShine").attr("cx","34%").attr("cy","28%").attr("r","60%");
+grd2.append("stop").attr("offset","0%").attr("stop-color","#fff").attr("stop-opacity",.55);grd2.append("stop").attr("offset","100%").attr("stop-color","#fff").attr("stop-opacity",0);
+const gpj=d3.geoOrthographic().clipAngle(90).precision(.6);
+const gp=d3.geoPath(gpj);
+const gAir=gsv.append("circle").attr("class","gatm");
+const gSph=gsv.append("path").attr("class","gsph");
+const gGrat=gsv.append("path").attr("class","ggrat");
+const gLand=gsv.append("g");
+const gSeg=gsv.append("g");
+const gPlayG=gsv.append("g").attr("class","gplay");
+const gShine=gsv.append("circle").attr("class","gshine").attr("fill","url(#gShine)");
+const gEdge=gsv.append("path").attr("class","gedge");
+const gPts=gsv.append("g");
+// lighter land for smooth rotation
+function thin(geom,n,minLen){const th=r=>r.length>n*4?r.filter((p,i)=>i%n===0||i===r.length-1):r;
+  const keep=r=>!!r&&r.length>=4&&(minLen?d3.geoLength({type:"LineString",coordinates:r})>minLen:true);
+  if(!geom)return null;if(geom.type==="Polygon"){const c=geom.coordinates.map(th).filter((r,i)=>i===0||keep(r));return keep(c[0])||!minLen?{type:"Polygon",coordinates:c}:null;}
+  if(geom.type==="MultiPolygon"){const c=geom.coordinates.map(p=>p.map(th)).filter(p=>keep(p[0]));return c.length?{type:"MultiPolygon",coordinates:c}:null;}return geom;}
+const fixWind=g=>{if(!g)return g;const fp=poly=>d3.geoArea({type:"Polygon",coordinates:poly})>2*Math.PI?poly.map(r=>r.slice().reverse()):poly;
+  if(g.type==="Polygon")return {type:"Polygon",coordinates:fp(g.coordinates)};if(g.type==="MultiPolygon")return {type:"MultiPolygon",coordinates:g.coordinates.map(fp)};return g;};
+const gWorld=(world||[]).filter(f=>f.id!=="ATA").map(f=>({type:"Feature",id:f.id,fine:fixWind(thin(f.geometry,3,0)),coarse:fixWind(thin(f.geometry,14,0.02)),mc:fixWind(thin(f.geometry,24,0.035))}));
+const gGroups=[["",f=>!EU.visited.has(f.id)&&!AF.visited.has(f.id)],[" v",f=>EU.visited.has(f.id)],[" v2",f=>AF.visited.has(f.id)]].map(([c,fn])=>{const fs=gWorld.filter(fn);
+  fs.forEach(f=>{if(f.fine){const b=d3.geoBounds(f.fine);f.bb=b;}});
+  const mk=k=>({type:"FeatureCollection",features:fs.filter(f=>f[k]).map(f=>({type:"Feature",geometry:f[k]}))});return {c,fs,fine:mk("fine"),coarse:mk("coarse"),mc:mk("mc")};});
+// when zoomed in, draw only the countries near the screen
+function viewBox(pj){if(!pj.invert)return null;const pts=[];for(let i=0;i<=4;i++)for(let j=0;j<=4;j++){const q=pj.invert([W*i/4,H*j/4]);if(q&&isFinite(q[0]))pts.push(q);}
+  if(pts.length<20)return null;const lo=pts.map(p=>p[0]),la=pts.map(p=>p[1]);const x0=Math.min(...lo),x1=Math.max(...lo);if(x1-x0>180)return null;
+  return [x0-6,Math.min(...la)-6,x1+6,Math.max(...la)+6];}
+function culled(g,key,vb){return {type:"FeatureCollection",features:g.fs.filter(f=>f[key]&&f.bb&&!(f.bb[1][0]<vb[0]&&f.bb[0][0]<=f.bb[1][0]||f.bb[0][0]>vb[2]&&f.bb[0][0]<=f.bb[1][0]||f.bb[1][1]<vb[1]||f.bb[0][1]>vb[3])).map(f=>({type:"Feature",geometry:f[key]}))};}
+gLand.selectAll("path").data(gGroups).join("path").attr("class",d=>"gland"+d.c);
+let gCoarse=false,gFineT=0;
+const gSegs=[];TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{if(m==="plan")return;gSegs.push({m,kind,t:t.key,geo:{type:"LineString",coordinates:ks.map(k=>P[k])}});}));
+gSeg.selectAll("path").data(gSegs).join("path").attr("class",d=>`gseg ${d.m} ${d.t}`);
+const gStops=TRIPS.flatMap(t=>t.stops.map(s=>({k:s.k,t:t.key,name:s.name})));
+const gDot=gPts.selectAll("circle").data(gStops).join("circle").attr("class",d=>"gpt "+d.t).attr("r",4.2).on("click",(e,d)=>{e.stopPropagation();exitGlobe(P[d.k],Math.max(kRef()*1.25,2));});
+const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
+const gName=gPts.selectAll("text.gname").data(gStops).join("text").attr("class",d=>"gname "+d.t).text(d=>d.name);
+const vis=c=>d3.geoDistance(c,[-GL.rot[0],-GL.rot[1]])<Math.PI/2-0.03;
+function drawWith(pj,t){
+  const pp=d3.geoPath(pj),r=pj.rotate(),ctr=[-r[0],-r[1]];
+  const vv=c=>t>0.45||d3.geoDistance(c,ctr)<Math.PI/2-0.03;
+  gAir.attr("cx",W/2).attr("cy",H/2).attr("r",GL.R+7).style("opacity",Math.max(0,1-t*2.5));
+  gShine.attr("cx",W/2).attr("cy",H/2).attr("r",GL.R).style("opacity",Math.max(0,1-t*2));
+  gSph.attr("d",pp({type:"Sphere"}));gEdge.attr("d",pp({type:"Sphere"})).style("opacity",1-t);
+  const mid=t>0&&t<1;pj.precision(mid?5:gCoarse?2:.6);
+  gGrat.attr("d",pp(d3.geoGraticule().step(mid?[30,30]:[15,15])()));const vb=t===0&&GL.R>R0()*2.5?viewBox(pj):null;const key=mid?"mc":gCoarse?"coarse":"fine";
+  gLand.selectAll("path").attr("d",d=>pp(vb?culled(d,key,vb):d[key]));
+  gSeg.selectAll("path").attr("d",d=>pp(d.geo));
+  gPlayG.selectAll("path").attr("d",function(){return pp({type:"LineString",coordinates:JSON.parse(this.dataset.c).map(k=>P[k])});});
+  gDot.each(function(d){const c=P[d.k];const q=pj(c);d3.select(this).attr("cx",q?q[0]:-99).attr("cy",q?q[1]:-99).style("display",q&&vv(c)?null:"none");});
+  const showN=t===0&&GL.R>flatS()*kRef()*0.75;
+  const nb=[];gName.each(function(d){const c=P[d.k];const q=showN&&pj(c);let ok=!!(q&&vv(c));
+    if(ok){const w=d.name.length*11.5+4,bx=[q[0]+6,q[1]-8,w,15];ok=!nb.some(o=>bx[0]<o[0]+o[2]&&bx[0]+bx[2]>o[0]&&bx[1]<o[1]+o[3]&&bx[1]+bx[3]>o[1]);if(ok)nb.push(bx);}
+    d3.select(this).attr("x",q?q[0]+7:-99).attr("y",q?q[1]+4:-99).style("display",ok?null:"none");});
+  gLbl.style("visibility",showN?"hidden":null);if(window.__vehRedraw)window.__vehRedraw("g");
+  gLbl.each(function(d){const c=P[d[0]];const q=pj(c);d3.select(this).attr("x",q?q[0]+d[3]:-99).attr("y",q?q[1]+d[4]:-99).style("display",q&&vv(c)?null:"none");});
+}
+function renderGlobe(){gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);drawWith(gpj,0);}
+// morph between the globe (t=0) and the flat map (t=1)
+// globe side of the morph: orthographic on the front, then keeps going outward past the edge (no fold-over)
+const oRaw=(x,y)=>{const cy=Math.cos(y),cc=Math.max(-1,Math.min(1,cy*Math.cos(x))),c=Math.acos(cc),sc=Math.sin(c);
+  if(c<1e-9)return [cy*Math.sin(x),Math.sin(y)];const f=c<=Math.PI/2?sc:1+(c-Math.PI/2)*0.9;const k=f/sc;return [k*cy*Math.sin(x),k*Math.sin(y)];};
+const nRaw=d3.geoNaturalEarth1Raw;
+function morphProj(t,c,rot0,R,T){
+  const rot1=proj.rotate(),r0=rot0.slice();while(r0[0]-rot1[0]>180)r0[0]-=360;while(r0[0]-rot1[0]<-180)r0[0]+=360;
+  const s0=R,s1=T.k*proj.scale(),sc=s0*Math.pow(s1/s0,t);
+  const raw=(x,y)=>{const a=oRaw(x,y),b=nRaw(x,y);return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];};
+  const pj=d3.geoProjection(raw).rotate([r0[0]+(rot1[0]-r0[0])*t,r0[1]+(rot1[1]-r0[1])*t,0]).scale(sc).angle(proj.angle()*t).translate([0,0]);
+  if(t<0.7)pj.clipAngle(90+90*t/0.7*0.7);
+  const tgt=T.apply(proj(c)),q=pj(c)||[0,0];
+  const sx=W/2+(tgt[0]-W/2)*t,sy=H/2+(tgt[1]-H/2)*t;
+  return pj.translate([sx-q[0],sy-q[1]]);
+}
+function runMorph(t0,t1,c,rot0,R,T,dur){
+  GL.morph=true;gCoarse=true;
+  return new Promise(res=>{const e=d3.easeCubicInOut;const tm=d3.timer(el=>{const u=Math.min(1,el/dur),t=t0+(t1-t0)*e(u);
+    drawWith(morphProj(t,c,rot0,R,T),t);if(u>=1){tm.stop();GL.morph=false;gCoarse=false;res();}});});
+}
+let gRaf=0;const gReq=()=>{gCoarse=true;clearTimeout(gFineT);gFineT=setTimeout(()=>{gCoarse=false;renderGlobe();},160);if(!gRaf)gRaf=requestAnimationFrame(()=>{gRaf=0;renderGlobe();});};
+const R0=()=>Math.min(W,H)*0.46;
+const flatS=()=>proj.scale();
+const KSW=1.45; // (old) switch ratio
+const swR=()=>flatS()*Math.max(KSW,kRef()*1.8); // globe stays until about 2-3 countries fill the screen
+const gzoom=d3.zoom().filter(e=>!GL.morph&&(!e.ctrlKey||e.type==="wheel")&&!e.button&&!(e.type!=="wheel"&&e.target&&e.target.closest&&e.target.closest(".veh"))).scaleExtent([0.85,40]).on("start",e=>{if(e.sourceEvent&&typeof RIDE!=="undefined"&&RIDE)RIDE.cancel=true;if(e.sourceEvent&&PS.on&&!PS.paused)pausePlay();}).on("zoom",e=>{
+  if(GL.quiet||GL.morph){GL.last=e.transform;return;}
+  const t=e.transform,dx=t.x-GL.last.x,dy=t.y-GL.last.y,kOld=GL.last.k;GL.last=t;
+  if(e.sourceEvent&&Math.abs(t.k-kOld)>1e-6){
+    // zoom toward the finger / mouse pointer: keep the place under it fixed
+    const se=e.sourceEvent;let pt;try{pt=se.touches&&se.touches.length>1?[(d3.pointer(se.touches[0],gsv.node())[0]+d3.pointer(se.touches[1],gsv.node())[0])/2,(d3.pointer(se.touches[0],gsv.node())[1]+d3.pointer(se.touches[1],gsv.node())[1])/2]:d3.pointer(se,gsv.node());}catch(err){pt=[W/2,H/2];}
+    gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);const g=gpj.invert(pt);
+    GL.R=R0()*t.k;
+    if(g&&isFinite(g[0])&&d3.geoDistance(g,[-GL.rot[0],-GL.rot[1]])<Math.PI/2){gpj.scale(GL.R);for(let it=0;it<4;it++){gpj.rotate(GL.rot);const q=gpj(g);if(!q)break;const sens=57.3/GL.R;GL.rot=[GL.rot[0]+(pt[0]-q[0])*sens,Math.max(-85,Math.min(85,GL.rot[1]-(pt[1]-q[1])*sens)),0];}}
+  }else{
+    GL.R=R0()*t.k;
+    if(e.sourceEvent){const sens=57.3/GL.R;GL.rot=[GL.rot[0]+dx*sens,Math.max(-85,Math.min(85,GL.rot[1]-dy*sens)),0];}
+  }
+  gReq();
+  if(!PS.on&&!GL.morph&&GL.R>= swR()){cancelAnimationFrame(gRaf);gRaf=0;clearTimeout(gFineT);exitGlobe([-GL.rot[0],-GL.rot[1]],GL.R/flatS());}
+});
+gsv.call(gzoom).on("dblclick.zoom",null).on("dblclick",e=>{if(PS.on)return;const c=gpj.invert(d3.pointer(e));if(c)exitGlobe(c,Math.max(kRef(),2));});
+function setGlobeZoom(k){GL.quiet=true;gsv.call(gzoom.transform,d3.zoomIdentity.translate(W/2*(1-k),H/2*(1-k)).scale(k));GL.quiet=false;}
+function showGlobe(){const zc=document.getElementById("zcomp");if(zc)zc.hidden=true;GL.on=true;window.__globeOn=true;gsv.style("display",null);svg.style("visibility","hidden");stage.classList.add("isglobe");
+  lodtag.innerHTML="<b>地球儀</b>：ドラッグで回せる。ズームするか点をタップすると、平らな地図になる";}
+async function enterGlobe(center,opt={}){
+  if(typeof closePanel==="function"&&!opt.keepPanel)closePanel();
+  const k=opt.k||1;
+  if(!GL.on){
+    const T=opt.T||cur,c0=proj.invert(T.invert([W/2,H/2]));const c=c0&&isFinite(c0[0])?c0:[-GL.rot[0],-GL.rot[1]];
+    showGlobe();GL.R=R0()*k;setGlobeZoom(k);
+    if(!opt.instant&&!RM()){gsv.interrupt("grot");await runMorph(1,0,c,[-c[0],-c[1],0],GL.R,T,opt.mdur||700);}
+    GL.rot=[-c[0],-c[1],0];
+    GL.flatQuiet=true;svg.interrupt();svg.call(zoom.transform,d3.zoomIdentity);GL.flatQuiet=false;
+  }else{GL.R=R0()*k;setGlobeZoom(k);}
+  const to=opt.reset?[-62,-32,0]:center?[-center[0],-center[1],0]:null;
+  if(to&&(opt.anim||opt.reset)&&!RM()){const r0=GL.rot.slice();while(r0[0]-to[0]>180)r0[0]-=360;while(r0[0]-to[0]<-180)r0[0]+=360;const ip=d3.interpolate(r0,to);
+    return gsv.transition("grot").duration(opt.dur||800).ease(d3.easeCubicInOut).tween("rot",()=>t=>{GL.rot=ip(t);gCoarse=t<1;renderGlobe();}).end().catch(()=>{});}
+  if(to)GL.rot=to;renderGlobe();
+}
+async function exitGlobe(center,k,opt={}){
+  if(!GL.on||GL.morph)return;gsv.interrupt("grot");
+  const c=center||[-GL.rot[0],-GL.rot[1]];
+  const kk=Math.max(1,Math.min(160,k||1)),p=proj(c);
+  const T=opt.T||d3.zoomIdentity.translate(W/2,H/2).scale(kk).translate(-p[0],-p[1]);
+  if(!RM()&&!opt.instant)await runMorph(0,1,[-GL.rot[0],-GL.rot[1]],GL.rot,GL.R,T,opt.mdur||700);
+  GL.on=false;window.__globeOn=false;
+  GL.flatQuiet=true;svg.interrupt();svg.call(zoom.transform,T);GL.flatQuiet=false;
+  gsv.style("display","none");svg.style("visibility",null);stage.classList.remove("isglobe");lastLod=0;if(typeof updCompass==="function")updCompass();
+  place();clearTimeout(dt);dt=setTimeout(declutter,30);
+  const n=svg.node();n.classList.remove("ffade");void n.getBoundingClientRect();n.classList.add("ffade");
+}
+function jumpT(key){const pts=JUMP[key].map(k=>proj(P[k]));const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const k=Math.max(1,Math.min(160,0.8/Math.max((x1-x0)/W,(y1-y0)/H,1e-3)));
+  return d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-(x0+x1)/2,-(y0+y1)/2);}
+window.__globeRedraw=()=>{if(GL.on){GL.R=R0()*GL.last.k;renderGlobe();}};
+// flat map: pinch/scroll out past the whole map -> globe
+zoom.scaleExtent([0.82,160]);
+let gPrevK=1;
+zoom.on("zoom.globe",e=>{const k=e.transform.k,out=k<gPrevK;gPrevK=k;if(GL.flatQuiet||GL.on||GL.morph||PS.on||!e.sourceEvent)return;
+  const back=kRef()*0.9;if(out&&k<back){const kg=Math.max(1,k*flatS()/R0());enterGlobe(null,{k:kg,T:e.transform});}});
+zoom.on("end.globe",e=>{if(!GL.on&&cur.k<1){svg.transition().duration(200).call(zoom.transform,d3.zoomIdentity);}});
+// buttons
+document.getElementById("zin").addEventListener("click",e=>{if(GL.morph){e.stopImmediatePropagation();return;}if(!GL.on)return;e.stopImmediatePropagation();
+  const k=GL.last.k*1.6;GL.R=R0()*k;setGlobeZoom(k);if(GL.R>= swR())exitGlobe([-GL.rot[0],-GL.rot[1]],GL.R/flatS());else renderGlobe();},true);
+document.getElementById("zout").addEventListener("click",e=>{if(GL.morph){e.stopImmediatePropagation();return;}if(GL.on){e.stopImmediatePropagation();const k=Math.max(0.85,GL.last.k/1.6);GL.R=R0()*k;setGlobeZoom(k);renderGlobe();return;}
+  if(cur.k/2<kRef()*0.9&&!PS.on&&!GL.morph){e.stopImmediatePropagation();enterGlobe(null,{k:Math.max(1,cur.k/2*flatS()/R0()),T:cur});}},true);
+document.querySelectorAll("[data-jump]").forEach(b=>{
+  b.addEventListener("click",()=>{if(PS.on||b.dataset.jump==="all"||!GL.on)return;exitGlobe(null,null,{T:jumpT(b.dataset.jump),mdur:850});},true);
+  if(b.dataset.jump==="all")b.addEventListener("click",()=>{if(!PS.on)enterGlobe(null,{reset:true,mdur:850});});});
+// playback: flights over the Arctic are shown on the globe
+async function globeFlight(step,i,tok){
+  await enterGlobe([75,72],{anim:true,dur:900/PS.speed,mdur:700/PS.speed,keepPanel:true});GL.byPlay=true;
+  if(tok!==PS.tok)return false;
+  GL.R=Math.min(W,H)*0.47;setGlobeZoom(1);renderGlobe();
+  for(const [m,ks] of step.legs){
+    const c=JSON.stringify(ks);
+    const el=gPlayG.append("path").attr("data-s",i).attr("data-c",c).attr("class","gpl "+m).attr("d",gp({type:"LineString",coordinates:ks.map(k=>P[k])}));
+    const L=el.node().getTotalLength();setVeh("g",el.node(),m,0,ks);if(RM()||L<1){VS.frac=1;drawVeh();continue;}
+    el.attr("stroke-dasharray",`${L} ${L}`).attr("stroke-dashoffset",L);
+    try{await el.transition("play").duration(2200/PS.speed).ease(d3.easeCubicInOut).attr("stroke-dashoffset",0).tween("veh",()=>t=>{VS.frac=t;drawVeh();}).end();}catch(e){return false;}
+    if(tok!==PS.tok)return false;el.attr("stroke-dasharray",null).attr("stroke-dashoffset",null);VS.frac=1;drawVeh();
+  }
+  return await wait(1500,tok);
+}
+
+// ---- map bearing (rotate the flat map; labels and icons stay upright) ----
+let BEAR=0; // degrees, clockwise on screen
+const rotg=svg.insert("g",":first-child").attr("class","rotg");
+[gMap,gPlayH,gPlay,gOver,gPulse].forEach(g=>rotg.node().appendChild(g.node()));
+const nrm=a=>((a%360)+540)%360-180;
+const R2=(v,deg)=>{const a=deg*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return [v[0]*c-v[1]*s,v[0]*s+v[1]*c];};
+const zcomp=document.getElementById("zcomp");
+function updCompass(){zcomp.hidden=Math.abs(BEAR)<0.5;zcomp.querySelector("svg").style.transform=`rotate(${BEAR}deg)`;}
+function tempBear(th,c){rotg.attr("transform",th?`rotate(${th},${c[0]},${c[1]})`:null);zcomp.hidden=Math.abs(BEAR+th)<0.5;zcomp.querySelector("svg").style.transform=`rotate(${BEAR+th}deg)`;}
+function commitBear(th,c){
+  rotg.attr("transform",null);if(Math.abs(th)<0.01){updCompass();return;}
+  const k=cur.k,b=[cur.x,cur.y],tr=proj.translate(),bc=R2([b[0]-c[0],b[1]-c[1]],th),rt=R2(tr,th);
+  const nb=[c[0]+bc[0]-k*tr[0]+k*rt[0],c[1]+bc[1]-k*tr[1]+k*rt[1]];
+  BEAR=nrm(BEAR+th);proj.angle(-BEAR);
+  drawBase();
+  GL.flatQuiet=true;svg.call(zoom.transform,d3.zoomIdentity.translate(nb[0],nb[1]).scale(k));GL.flatQuiet=false;
+  place();clearTimeout(dt);dt=setTimeout(declutter,30);if(window.__playRedraw)window.__playRedraw();updCompass();
+}
+const snap=th=>{const f=nrm(BEAR+th);return Math.abs(f)<5?th-f:th;};
+// two-finger twist
+let tw=null;const tp=t=>d3.pointer(t,svg.node());
+const tAng=e=>{const a=tp(e.touches[0]),b=tp(e.touches[1]);return Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;};
+const tMid=e=>{const a=tp(e.touches[0]),b=tp(e.touches[1]);return [(a[0]+b[0])/2,(a[1]+b[1])/2];};
+stage.addEventListener("touchstart",e=>{if(e.touches.length===2&&!GL.on&&!GL.morph&&svg.node().contains(e.target))tw={a0:tAng(e),th:0,on:false,c:tMid(e)};},{passive:true,capture:true});
+stage.addEventListener("touchmove",e=>{if(!tw||e.touches.length!==2)return;let d=nrm(tAng(e)-tw.a0);
+  if(!tw.on){if(Math.abs(d)<12)return;tw.on=true;tw.a0+=Math.sign(d)*12;d=nrm(tAng(e)-tw.a0);if(PS.on&&!PS.paused)pausePlay();}
+  tw.th=d;tempBear(d,tw.c);},{passive:true,capture:true});
+const twEnd=e=>{if(!tw||e.touches.length>=2)return;const t=tw;tw=null;if(t.on)commitBear(snap(t.th),t.c);};
+stage.addEventListener("touchend",twEnd,{passive:true,capture:true});stage.addEventListener("touchcancel",twEnd,{passive:true,capture:true});
+// PC: Shift + drag
+const onVeh=e=>e.type!=="wheel"&&e.target&&e.target.closest&&!!e.target.closest(".veh");
+zoom.filter(e=>(!e.ctrlKey||e.type==="wheel")&&!e.button&&!(e.shiftKey&&e.type==="mousedown")&&!onVeh(e));
+let md=null;const mAng=e=>{const p=d3.pointer(e,svg.node());return Math.atan2(p[1]-H/2,p[0]-W/2)*180/Math.PI;};
+svg.node().addEventListener("mousedown",e=>{if(!e.shiftKey||e.button||GL.on)return;md={a0:mAng(e),th:0};e.preventDefault();});
+addEventListener("mousemove",e=>{if(!md)return;md.th=nrm(mAng(e)-md.a0);tempBear(md.th,[W/2,H/2]);});
+addEventListener("mouseup",()=>{if(!md)return;const m=md;md=null;commitBear(snap(m.th),[W/2,H/2]);});
+// compass: back to north
+zcomp.addEventListener("click",()=>{const th=-BEAR,c=[W/2,H/2];if(RM()){commitBear(th,c);return;}
+  const tm=d3.timer(el=>{const u=Math.min(1,el/350),e=d3.easeCubicInOut(u);tempBear(th*e,c);if(u>=1){tm.stop();commitBear(th,c);}});});
+updCompass();
+
+// ---- vehicles on the route (playback) + "ride" view ----
+const VEH_NAME={air:"飛行機",train:"列車",bus:"バス",taxi:"タクシー",boat:"船",car:"サファリジープ",van:"ツアー車",walk:"徒歩"};
+const VEH_ICON={
+ air:`<path d="M-11,0 L-7,-1.8 L9,-1.8 Q12.5,0 9,1.8 L-7,1.8Z" fill="#fff" stroke="#1b2329" stroke-width="1.1"/><path d="M-0.5,-1.7 L-4.5,-10.5 L-1.8,-10.5 L4.5,-1.7Z M-0.5,1.7 L-4.5,10.5 L-1.8,10.5 L4.5,1.7Z M-8.5,-1.4 L-10.8,-5.6 L-9,-5.6 L-5.8,-1.4Z M-8.5,1.4 L-10.8,5.6 L-9,5.6 L-5.8,1.4Z" fill="var(--air)"/><circle cx="7.2" cy="0" r=".9" fill="#7fb2dc"/>`,
+ train:`<path d="M-11,-5 H6 Q11,-5 11.5,1 V4 H-11Z" fill="var(--train)" stroke="#1b2329" stroke-width="1"/><rect x="-9" y="-3.2" width="4" height="3" rx=".6" fill="#fff"/><rect x="-3.5" y="-3.2" width="4" height="3" rx=".6" fill="#fff"/><path d="M2,-3.2 H6.5 Q9,-3.2 9.6,-.2 H2Z" fill="#fff"/><path d="M-11,4 H11.5" stroke="#1b2329" stroke-width="1"/><circle cx="-6" cy="5.6" r="1.5" fill="#1b2329"/><circle cx="6" cy="5.6" r="1.5" fill="#1b2329"/>`,
+ bus:`<rect x="-11" y="-6" width="22" height="10.5" rx="2.2" fill="var(--bus)" stroke="#1b2329" stroke-width="1"/><rect x="-9" y="-4" width="3.6" height="3.4" rx=".5" fill="#fff"/><rect x="-4.4" y="-4" width="3.6" height="3.4" rx=".5" fill="#fff"/><rect x=".2" y="-4" width="3.6" height="3.4" rx=".5" fill="#fff"/><rect x="5" y="-4" width="4.4" height="6" rx=".6" fill="#fff"/><circle cx="-6" cy="5" r="2" fill="#1b2329"/><circle cx="6" cy="5" r="2" fill="#1b2329"/>`,
+ taxi:`<path d="M-11,1.5 L-9,-2.5 L-5,-3 L-2.5,-6 H4 L7,-3 L10.5,-2 L11,1.5 V4 H-11Z" fill="var(--taxi)" stroke="#1b2329" stroke-width="1"/><rect x="-1.6" y="-8.4" width="4.4" height="2.2" rx=".5" fill="#fff" stroke="#1b2329" stroke-width=".7"/><path d="M-1.6,-5 H3.4 L5.6,-3 H-3.4Z" fill="#fff"/><circle cx="-6" cy="4.4" r="2.1" fill="#1b2329"/><circle cx="6.5" cy="4.4" r="2.1" fill="#1b2329"/>`,
+ boat:`<path d="M-11,1 H11 L8,6 H-8Z" fill="var(--boat)" stroke="#1b2329" stroke-width="1"/><rect x="-6" y="-4" width="10" height="5" rx="1" fill="#fff" stroke="#1b2329" stroke-width=".9"/><rect x="-3" y="-8" width="2" height="4" fill="#1b2329"/><path d="M-12,8 Q-9,6.5 -6,8 T0,8 T6,8 T12,8" fill="none" stroke="var(--boat)" stroke-width="1"/>`,
+ car:`<path d="M-11,2 V-3 H-6 L-4,-7 H5 L7,-3 H11 V2Z" fill="var(--car)" stroke="#1b2329" stroke-width="1"/><rect x="-3" y="-5.5" width="3.4" height="2.6" fill="#fff"/><rect x="1.6" y="-5.5" width="3.4" height="2.6" fill="#fff"/><rect x="-12.5" y="-2" width="2" height="4" rx=".6" fill="#1b2329"/><circle cx="-6" cy="3.6" r="2.4" fill="#1b2329"/><circle cx="6" cy="3.6" r="2.4" fill="#1b2329"/>`,
+ van:`<path d="M-11,3 V-5 Q-11,-7 -9,-7 H5 L10,-2 Q11,-1 11,1 V3Z" fill="var(--car)" stroke="#1b2329" stroke-width="1"/><rect x="-8.6" y="-5" width="3.6" height="3" rx=".5" fill="#fff"/><rect x="-3.8" y="-5" width="3.6" height="3" rx=".5" fill="#fff"/><path d="M1,-5 H4.6 L8,-2 H1Z" fill="#fff"/><circle cx="-6" cy="3.5" r="2.4" fill="#1b2329"/><circle cx="6" cy="3.5" r="2.4" fill="#1b2329"/>`,
+ walk:`<circle cx="0" cy="-7" r="2.4" fill="#1b2329"/><path d="M0,-4 L0,2 M0,2 L-3.5,8 M0,2 L3.5,8 M0,-2.5 L-4,1 M0,-2.5 L4,0" stroke="#1b2329" stroke-width="2" stroke-linecap="round"/>`};
+const SIDE=new Set(["train","bus","taxi","boat","car","van","walk"]);
+const gVeh=rotg.append("g").attr("class","vehl");
+const gVehG=gsv.append("g").attr("class","vehl");
+const VS={el:null,m:null,frac:0,layer:null,ks:null,rot:0,ride:null,drawn:null};
+function vehNode(){const g=VS.layer==="g"?gVehG:gVeh;if(VS.drawn!==VS.layer){gVeh.selectAll("*").remove();gVehG.selectAll("*").remove();VS.drawn=VS.layer;}
+  let v=g.select("g.veh");if(v.empty()){v=g.append("g").attr("class","veh").attr("role","button").attr("tabindex",0);
+    v.append("circle").attr("class","vring").attr("r",21);v.append("circle").attr("class","vbg").attr("r",16);v.append("g").attr("class","vic");
+    v.on("click",e=>{e.stopPropagation();startRide();}).on("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();startRide();}});}return v;}
+function hideVeh(){gVeh.selectAll("*").remove();gVehG.selectAll("*").remove();VS.el=null;VS.drawn=null;VS.ride=null;}
+function setVeh(layer,el,m,frac,ks){VS.layer=layer;VS.el=el;VS.m=m;VS.frac=frac;VS.ks=ks;drawVeh();}
+function vehPt(f){const el=VS.el,L=el.getTotalLength(),e=Math.max(.5,L*.012);const tf=x=>VS.layer==="f"?cur.apply([x.x,x.y]):[x.x,x.y];
+  const p=tf(el.getPointAtLength(Math.max(0,Math.min(L,L*f))));let q;
+  if(L*f+e<=L)q=tf(el.getPointAtLength(L*f+e));else{const r=tf(el.getPointAtLength(Math.max(0,L*f-e)));q=[2*p[0]-r[0],2*p[1]-r[1]];}
+  return {p,h:Math.atan2(q[1]-p[1],q[0]-p[0])*180/Math.PI};}
+function drawVeh(){if(!VS.el)return;let p,h;
+  if(VS.ride){p=VS.ride.p;h=VS.ride.h;}else{if(!VS.el.isConnected)return;({p,h}=vehPt(VS.frac));}
+  if(!p||!isFinite(p[0]))return;
+  const v=vehNode();v.attr("transform",`translate(${p[0]},${p[1]})`).attr("class","veh "+VS.m+(VS.ride?" riding":"")).attr("aria-label",`${VEH_NAME[VS.m]||"乗り物"}の目線で見る`);
+  const ic=v.select(".vic");if(ic.attr("data-m")!==VS.m)ic.attr("data-m",VS.m).html(VEH_ICON[VS.m]||VEH_ICON.bus);
+  const vis=h+VS.rot;
+  if(SIDE.has(VS.m)){const left=Math.cos(vis*Math.PI/180)<0;ic.attr("transform",`rotate(${-VS.rot}) scale(${left?-1:1},1)`);}else ic.attr("transform",`rotate(${h})`);
+}
+zoom.on("zoom.veh",()=>{if(VS.el&&VS.layer==="f"&&!VS.ride)drawVeh();});
+window.__vehRedraw=l=>{if(VS.el&&VS.layer===l&&!VS.ride)drawVeh();};
+// ride: follow the vehicle with its heading pointing up
+let RIDE=null;
+function uprightOverlay(th){for(const it of items){const el=it.el;if(th&&el.style.display==="none")continue;
+  if(el.tagName==="text"){el.setAttribute("transform",th?`rotate(${-th},${el.getAttribute("x")},${el.getAttribute("y")})`:"");}
+  else{el.setAttribute("transform",`translate(${el.dataset.ax},${el.dataset.ay})`+(th?` rotate(${-th})`:""));}}}
+const angD=(a,b)=>nrm(b-a);
+function rideCap(on){if(on){RIDE.cap=[pDate.textContent,pName.textContent,pNote.textContent,pNote.hidden];const to=nameOf(VS.ks[VS.ks.length-1]);
+  pDate.textContent=`${VEH_NAME[VS.m]||"乗り物"}の目線`;pName.textContent=`${to}へ`;pNote.textContent="地図に触れると止まる";pNote.hidden=false;playEl.classList.add("riding");}
+  else if(RIDE&&RIDE.cap){[pDate.textContent,pName.textContent,pNote.textContent]=RIDE.cap;pNote.hidden=RIDE.cap[3];playEl.classList.remove("riding");}}
+function startRide(){if(!VS.el||RIDE||GL.morph)return;const was=PS.on&&!PS.paused;if(was)pausePlay();
+  RIDE={was,cancel:false};rideCap(true);stage.classList.add("riding");(VS.layer==="g"?rideGlobe:rideFlat)().then(()=>{rideCap(false);stage.classList.remove("riding");const w=RIDE.was&&!RIDE.cancel;RIDE=null;if(w)resumePlay();});}
+zoom.on("start.ride",e=>{if(e.sourceEvent&&RIDE)RIDE.cancel=true;});
+function rideFlat(){return new Promise(res=>{
+  const el=VS.el,L=el.getTotalLength(),S=[W/2,H*0.64];
+  const kR=Math.max(kRef()*1.6,Math.min(140,Math.min(W,H)*2.4/Math.max(L,1e-3)));
+  const D=Math.max(3800,Math.min(8000,3000+L*kR/Math.min(W,H)*900)),A=850,C=900;
+  const c0=cur.invert([W/2,H/2]),k0=cur.k,pt=f=>{const q=el.getPointAtLength(Math.max(0,Math.min(L,L*f)));return [q.x,q.y];};
+  const hd=f=>{const a=pt(f),b=pt(Math.min(1,f+0.01)),c=f>0.99?pt(f-0.01):null;return c?Math.atan2(a[1]-c[1],a[0]-c[0])*180/Math.PI:Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;};
+  let th=0,T1=null;const step=PLAYS[PS.trip]&&PLAYS[PS.trip][PS.i];
+  const apply=(c,k,t,f)=>{VS.rot=t;GL.flatQuiet=true;svg.call(zoom.transform,d3.zoomIdentity.translate(S[0],S[1]).scale(k).translate(-c[0],-c[1]));GL.flatQuiet=false;
+    rotg.attr("transform",t?`rotate(${t},${S[0]},${S[1]})`:null);uprightOverlay(t);
+    const q=cur.apply(pt(f));VS.ride={p:q,h:hd(f)};drawVeh();};
+  const fin=()=>{VS.rot=0;VS.ride=null;rotg.attr("transform",null);uprightOverlay(0);place();clearTimeout(dt);dt=setTimeout(declutter,40);VS.frac=1;drawVeh();res();};
+  const tm=d3.timer(e=>{
+    if(RIDE.cancel){tm.stop();const t=th;VS.rot=0;VS.ride=null;rotg.attr("transform",null);uprightOverlay(0);commitBear(t,S);VS.frac=1;drawVeh();res();return;}
+    if(e<A){const u=d3.easeCubicInOut(e/A),p0=pt(0),h0=-90-hd(0);th=angD(0,h0)*u;
+      const k=k0*Math.pow(kR/k0,u),c=[c0[0]+(p0[0]-c0[0])*u,c0[1]+(p0[1]-c0[1])*u];
+      VS.rot=th;GL.flatQuiet=true;svg.call(zoom.transform,d3.zoomIdentity.translate(W/2+(S[0]-W/2)*u,H/2+(S[1]-H/2)*u).scale(k).translate(-c[0],-c[1]));GL.flatQuiet=false;
+      rotg.attr("transform",th?`rotate(${th},${S[0]},${S[1]})`:null);uprightOverlay(th);VS.ride={p:cur.apply(pt(0)),h:hd(0)};drawVeh();return;}
+    if(e<A+D){const f=d3.easeSinInOut((e-A)/D),tgt=-90-hd(f);th+=angD(th,tgt)*0.08;apply(pt(f),kR,th,f);return;}
+    if(!T1){T1={t0:e,c:pt(1),th,T:step?fitLegs(step.legs):d3.zoomIdentity};}
+    const u=Math.min(1,(e-T1.t0)/C),uu=d3.easeCubicInOut(u),tt=T1.th*(1-uu);
+    const ip=d3.interpolateZoom([T1.c[0],T1.c[1],Math.min(W,H)/kR],[...T1.T.invert([W/2,H/2]),Math.min(W,H)/T1.T.k]),z=ip(uu);
+    VS.rot=tt;GL.flatQuiet=true;svg.call(zoom.transform,d3.zoomIdentity.translate(W/2,H/2).scale(Math.min(W,H)/z[2]).translate(-z[0],-z[1]));GL.flatQuiet=false;
+    rotg.attr("transform",tt?`rotate(${tt},${W/2},${H/2})`:null);uprightOverlay(tt);VS.ride=null;VS.frac=1;drawVeh();
+    if(u>=1){tm.stop();fin();}
+  });});}
+function rideGlobe(){return new Promise(res=>{
+  const ks=VS.ks,pts=ks.map(k=>P[k]),seg=[];let tot=0;for(let i=1;i<pts.length;i++){const l=d3.geoDistance(pts[i-1],pts[i]);seg.push(l);tot+=l;}
+  const at=f=>{let t=Math.max(0,Math.min(1,f))*tot;for(let i=0;i<seg.length;i++){if(t<=seg[i]||i===seg.length-1)return d3.geoInterpolate(pts[i],pts[i+1])(seg[i]?Math.min(1,t/seg[i]):0);t-=seg[i];}return pts[pts.length-1];};
+  const Rr=R0()*3.4,D=7000,A=900,C=1000,r0=GL.rot.slice(),R0v=GL.R;
+  let sg=null;const scr=(rot,R,g)=>{gpj.translate([W/2,H/2]).scale(R).rotate(rot);return gpj(g);};
+  const heading=(g,g2,rot,R)=>{const a=scr(rot,R,g),b=scr(rot,R,g2);return Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;};
+  const gam=(f,R)=>{const g=at(f),g2=at(Math.min(1,f+0.004)),base=[-g[0],-g[1],0];const h0=heading(g,g2,base,R);
+    if(sg===null){const h1=heading(g,g2,[base[0],base[1],10],R);sg=Math.sign(angD(h0,h1))||1;}return nrm((-90-h0)/sg);};
+  let gm=0,T1=null;
+  const draw=(rot,R,f)=>{GL.rot=rot;GL.R=R;gCoarse=true;renderGlobe();const g=at(f);VS.ride={p:scr(rot,R,g),h:-90};drawVeh();};
+  const tm=d3.timer(e=>{
+    if(RIDE.cancel){tm.stop();VS.ride=null;gCoarse=false;renderGlobe();res();return;}
+    if(e<A){const u=d3.easeCubicInOut(e/A),g=at(0),tg=gam(0,Rr);gm=tg*u;
+      const lon=r0[0]+angD(r0[0],-g[0])*u,lat=r0[1]+(-g[1]-r0[1])*u;draw([lon,lat,gm],R0v*Math.pow(Rr/R0v,u),0);return;}
+    if(e<A+D){const f=d3.easeSinInOut((e-A)/D),g=at(f);gm+=angD(gm,gam(f,Rr))*0.08;draw([-g[0],-g[1],gm],Rr,f);return;}
+    if(!T1)T1={t0:e,rot:GL.rot.slice()};
+    const u=Math.min(1,(e-T1.t0)/C),uu=d3.easeCubicInOut(u),to=[-75,-72,0];
+    draw([T1.rot[0]+angD(T1.rot[0],to[0])*uu,T1.rot[1]+(to[1]-T1.rot[1])*uu,T1.rot[2]+angD(T1.rot[2],0)*uu],Rr*Math.pow(Math.min(W,H)*0.47/Rr,uu),1);
+    if(u>=1){tm.stop();VS.ride=null;GL.rot=[-75,-72,0];GL.R=Math.min(W,H)*0.47;setGlobeZoom(GL.R/R0());gCoarse=false;renderGlobe();VS.frac=1;drawVeh();res();}
+  });});}
+
+enterGlobe(null,{instant:true});
+
+
+
 })();
 </script>
 
