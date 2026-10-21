@@ -30,7 +30,7 @@
   --i-sand:#e3c88d; --i-sand2:#f1e2bd; --i-stone:#b9c2c9; --i-sea:#7fb2dc; --i-gold:#e5b22e; --i-ink:#1b2329; --i-snow:#ffffff;
   --i-night:#1d2b4a; --i-tree:#0f1a2e; --i-brown:#9a6a43; --i-sail:#f4ecd8; --i-red:#d4553f; --i-green:#4da36f; --i-lemon:#f2d43a;
   --i-slate:#5f7896; --i-aur1:#4fd39a; --i-aur2:#e889c0; --i-carpet:#c2338a; --i-peach:#f2a58a; --i-purple:#7d4fa8; --i-lake:#3fb39f;
-  --eu:#c23b26; --af:#2a5ea8; --hi:#c9437a; --ko:#14876a; --halo:#f2f3f0; --arc:#2b86b8; --equ:#d97a1e;
+  --eu:#c23b26; --af:#2a5ea8; --hi:#c9437a; --ko:#14876a; --ld:#7a4fb0; --halo:#f2f3f0; --arc:#2b86b8; --equ:#d97a1e;
   --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
   --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -39,13 +39,13 @@
   --bg:#0d1317; --fg:#e4eaed; --muted:#93a1aa; --rule:#2c3840; --card:#141c22;
   --sea:#111b22; --land:#1d262d; --land-edge:#36444d; --visited:#3b2723; --visited2:#22304a;
   --train:#ff7656; --bus:#45cfa8; --boat:#6fb1ea; --car:#e0a96a; --walk:#93a1aa; --air:#8fa6ba; --taxi:#e8c15a; --plan:#6f7c85;
-  --eu:#ff7656; --af:#7ea8ef; --hi:#f08ab3; --ko:#55c9a6; --halo:#1d262d; --arc:#6cc0ea; --equ:#f0a85a; color-scheme:dark;
+  --eu:#ff7656; --af:#7ea8ef; --hi:#f08ab3; --ko:#55c9a6; --ld:#b896ea; --halo:#1d262d; --arc:#6cc0ea; --equ:#f0a85a; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0d1317; --fg:#e4eaed; --muted:#93a1aa; --rule:#2c3840; --card:#141c22;
   --sea:#111b22; --land:#1d262d; --land-edge:#36444d; --visited:#3b2723; --visited2:#22304a;
   --train:#ff7656; --bus:#45cfa8; --boat:#6fb1ea; --car:#e0a96a; --walk:#93a1aa; --air:#8fa6ba; --taxi:#e8c15a; --plan:#6f7c85;
-  --eu:#ff7656; --af:#7ea8ef; --hi:#f08ab3; --ko:#55c9a6; --halo:#1d262d; --arc:#6cc0ea; --equ:#f0a85a; color-scheme:dark;
+  --eu:#ff7656; --af:#7ea8ef; --hi:#f08ab3; --ko:#55c9a6; --ld:#b896ea; --halo:#1d262d; --arc:#6cc0ea; --equ:#f0a85a; color-scheme:dark;
 }
 body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
@@ -85,7 +85,7 @@ body.isfull .panel.empty{display:none}
 .panel p{margin:0;font-size:14px}
 .panel .m{color:var(--muted);font-size:13px}
 .tag{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;color:#fff}
-.tag.eu{background:var(--eu)}.tag.af{background:var(--af)}.tag.hi{background:var(--hi)}.tag.ko{background:var(--ko)}.tag.g{background:var(--muted)}
+.tag.eu{background:var(--eu)}.tag.af{background:var(--af)}.tag.hi{background:var(--hi)}.tag.ko{background:var(--ko)}.tag.ld{background:var(--ld)}.tag.g{background:var(--muted)}
 .mode{font-family:var(--mono);font-size:11px;padding:0 5px;border-radius:3px;color:#fff;margin-right:6px}
 .mode.air{background:var(--air)}.mode.train{background:var(--train)}.mode.bus{background:var(--bus)}.mode.car{background:var(--car)}.mode.van{background:var(--car)}.mode.mix{background:var(--muted)}.mode.boat{background:var(--boat)}.mode.walk{background:var(--walk)}
 .foot{font-size:12px;color:var(--muted);margin:0}
@@ -215,11 +215,11 @@ body.isfull .panel.empty{display:none}
 .ggrat{fill:none;stroke:var(--land-edge);stroke-opacity:.35;stroke-width:.5}
 .gland{fill:var(--land);stroke:var(--land-edge);stroke-width:.45}.gland.v{fill:var(--visited)}.gland.v2{fill:var(--visited2)}
 .gseg{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2;pointer-events:none}
-.gseg.air{stroke-width:1.4;stroke-dasharray:4 3.5}.gseg.air.eu{stroke:var(--eu)}.gseg.air.af{stroke:var(--af)}.gseg.air.hi{stroke:var(--hi)}.gseg.air.ko{stroke:var(--ko)}
-.gseg.eu:not(.air){stroke:var(--eu)}.gseg.af:not(.air){stroke:var(--af)}.gseg.hi:not(.air){stroke:var(--hi)}.gseg.ko:not(.air){stroke:var(--ko)}.gseg.walk{display:none}
+.gseg.air{stroke-width:1.4;stroke-dasharray:4 3.5}.gseg.air.eu{stroke:var(--eu)}.gseg.air.af{stroke:var(--af)}.gseg.air.hi{stroke:var(--hi)}.gseg.air.ko{stroke:var(--ko)}.gseg.air.ld{stroke:var(--ld)}
+.gseg.eu:not(.air){stroke:var(--eu)}.gseg.af:not(.air){stroke:var(--af)}.gseg.hi:not(.air){stroke:var(--hi)}.gseg.ko:not(.air){stroke:var(--ko)}.gseg.ld:not(.air){stroke:var(--ld)}.gseg.walk{display:none}
 .gshine{pointer-events:none}
-.gpt{stroke:var(--card);stroke-width:1.6;cursor:pointer}.gpt.eu{fill:var(--eu)}.gpt.af{fill:var(--af)}.gpt.hi{fill:var(--hi)}.gpt.ko{fill:var(--ko)}
-.glbl{font:800 15px var(--display);paint-order:stroke;stroke:var(--card);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none;fill:var(--fg)}.glbl.eu{fill:var(--eu)}.glbl.af{fill:var(--af)}.glbl.hi{fill:var(--hi)}.glbl.ko{fill:var(--ko)}
+.gpt{stroke:var(--card);stroke-width:1.6;cursor:pointer}.gpt.eu{fill:var(--eu)}.gpt.af{fill:var(--af)}.gpt.hi{fill:var(--hi)}.gpt.ko{fill:var(--ko)}.gpt.ld{fill:var(--ld)}
+.glbl{font:800 15px var(--display);paint-order:stroke;stroke:var(--card);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none;fill:var(--fg)}.glbl.eu{fill:var(--eu)}.glbl.af{fill:var(--af)}.glbl.hi{fill:var(--hi)}.glbl.ko{fill:var(--ko)}.glbl.ld{fill:var(--ld)}
 .gname{font:700 11.5px var(--body);fill:var(--fg);paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
 .gpl{fill:none;stroke:var(--eu);stroke-width:3.4;stroke-linecap:round;pointer-events:none}
 @media (max-width:600px){.glbl{font-size:12.5px}}
@@ -280,11 +280,11 @@ body.isfull .panel.empty{display:none}
 /* low zoom: color by trip */
 .lo .seg.eu:not(.air){stroke:var(--eu);stroke-width:2.6;stroke-dasharray:none}
 .lo .seg.af:not(.air){stroke:var(--af);stroke-width:2.6;stroke-dasharray:none}
-.lo .seg.air.eu{stroke:var(--eu)}.lo .seg.air.hi{stroke:var(--hi)}.lo .seg.air.ko{stroke:var(--ko)}.lo .seg.air.af{stroke:var(--af)}
+.lo .seg.air.eu{stroke:var(--eu)}.lo .seg.air.hi{stroke:var(--hi)}.lo .seg.air.ko{stroke:var(--ko)}.lo .seg.air.ld{stroke:var(--ld)}.lo .seg.air.af{stroke:var(--af)}
 .lo .seg.walk{display:none}
 .stop .hit{fill:transparent}
 .stop .pt{stroke:var(--halo);stroke-width:2}
-.stop.eu .pt{fill:var(--eu)}.stop.af .pt{fill:var(--af)}.stop.hi .pt{fill:var(--hi)}.stop.ko .pt{fill:var(--ko)}
+.stop.eu .pt{fill:var(--eu)}.stop.af .pt{fill:var(--af)}.stop.hi .pt{fill:var(--hi)}.stop.ko .pt{fill:var(--ko)}.stop.ld .pt{fill:var(--ld)}
 .stop{cursor:pointer}.stop:focus{outline:none}
 .stop:focus-visible .pt,.stop.on .pt{stroke:var(--fg);stroke-width:3}
 .wp{cursor:pointer}.wp .pt{fill:var(--card);stroke:var(--muted);stroke-width:1.3}.wp .hit{fill:transparent}
@@ -295,7 +295,7 @@ body.isfull .panel.empty{display:none}
 .lbl.stopn{font-weight:700}
 .lbl.sm{font-size:11.5px;fill:var(--muted);font-weight:400}
 .lbl.wpn{font-size:11px;fill:var(--muted);font-weight:400}
-.lbl.big{font:800 16px var(--display)}.lbl.big.eu{fill:var(--eu)}.lbl.big.af{fill:var(--af)}.lbl.big.hi{fill:var(--hi)}.lbl.big.ko{fill:var(--ko)}
+.lbl.big{font:800 16px var(--display)}.lbl.big.eu{fill:var(--eu)}.lbl.big.af{fill:var(--af)}.lbl.big.hi{fill:var(--hi)}.lbl.big.ko{fill:var(--ko)}.lbl.big.ld{fill:var(--ld)}
 .dur{font:600 11px var(--mono);paint-order:stroke;stroke:var(--halo);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
 .dur.air{fill:var(--air)}.dur.train{fill:var(--train)}.dur.bus{fill:var(--bus)}.dur.car{fill:var(--car)}.dur.van{fill:var(--car)}
 /* level of detail */
@@ -313,6 +313,7 @@ body.isfull .panel.empty{display:none}
       <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--af)" stroke-width="2.6" stroke-linecap="round"/></svg>エジプト・ケニア</span>
       <span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--hi)"/></svg>ハワイ（ミナとお母さん）</span>
       <span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--ko)"/></svg>韓国（ミナ）</span>
+      <span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--ld)"/></svg>ロンドン（ミナ）</span>
       <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="6 5"/></svg>飛行機</span>
     </div>
   </header>
@@ -332,6 +333,7 @@ body.isfull .panel.empty{display:none}
       <button class="chip" type="button" data-jump="af" data-trip="af" aria-pressed="false"><span class="sw" style="background:var(--af)"></span>アフリカ旅</button>
       <button class="chip" type="button" data-jump="hi" data-trip="hi" aria-pressed="false"><span class="sw" style="background:var(--hi)"></span>ハワイ（ミナとお母さん）</button>
       <button class="chip" type="button" data-jump="ko" data-trip="ko" aria-pressed="false"><span class="sw" style="background:var(--ko)"></span>韓国（ミナ）</button>
+      <button class="chip" type="button" data-jump="ld" data-trip="ld" aria-pressed="false"><span class="sw" style="background:var(--ld)"></span>ロンドン（ミナ）</button>
     </div>
     </div>
     <button class="chip playbtn" type="button" id="playbtn" aria-expanded="false" aria-controls="playmenu">▶ 再生</button>
@@ -393,7 +395,7 @@ body.isfull .panel.empty{display:none}
   <section class="gal" id="gal" aria-labelledby="galh">
     <div class="galhd"><div><h2 id="galh">イラスト一覧</h2><p id="galsub">押すと、思い出の解説と写真が出る</p></div>
     </div>
-    <div class="gtabs" id="gtabs" role="group" aria-label="旅で絞り込む"><button class="chip" type="button" data-gv="all" aria-pressed="true">すべて</button><button class="chip" type="button" data-gv="eu" aria-pressed="false">ヨーロッパ旅</button><button class="chip" type="button" data-gv="af" aria-pressed="false">エジプト・ケニア旅</button><button class="chip" type="button" data-gv="hi" aria-pressed="false">ハワイ</button><button class="chip" type="button" data-gv="ko" aria-pressed="false">韓国</button><button class="chip" type="button" data-gv="cty" aria-pressed="false" aria-expanded="false" aria-controls="gcty">国ごと <span aria-hidden="true">▾</span></button></div>
+    <div class="gtabs" id="gtabs" role="group" aria-label="旅で絞り込む"><button class="chip" type="button" data-gv="all" aria-pressed="true">すべて</button><button class="chip" type="button" data-gv="eu" aria-pressed="false">ヨーロッパ旅</button><button class="chip" type="button" data-gv="af" aria-pressed="false">エジプト・ケニア旅</button><button class="chip" type="button" data-gv="hi" aria-pressed="false">ハワイ</button><button class="chip" type="button" data-gv="ko" aria-pressed="false">韓国</button><button class="chip" type="button" data-gv="ld" aria-pressed="false">ロンドン（ミナ）</button><button class="chip" type="button" data-gv="cty" aria-pressed="false" aria-expanded="false" aria-controls="gcty">国ごと <span aria-hidden="true">▾</span></button></div>
     <div class="gtabs gcty" id="gcty" role="group" aria-label="国を選ぶ" hidden></div>
     <div id="galbody"></div>
   </section>
@@ -480,6 +482,7 @@ const P={
  CAI:[31.24,30.04],LXR:[32.64,25.70],QEN:[32.72,26.16],SAF:[33.94,26.75],HRG:[33.81,27.26],
  NBO:[36.82,-1.29],KAJ:[36.78,-1.85],NAM:[36.79,-2.55],AMB:[37.26,-2.65],KIL:[37.36,-3.07],
  ICN:[126.4407,37.4602],SEL:[126.9780,37.5665],GBG:[126.9770,37.5796],FLK:[126.9796,37.5826],MDG:[126.9850,37.5636],NDM:[126.9776,37.5592],
+ ECT:[-0.1950,51.4915],BKP:[-0.1410,51.5016],HPC:[-0.1524,51.5030],PRW:[-0.1958,51.4868],MMW:[-0.1306,51.5104],PCC:[-0.1337,51.5101],
  HNL:[-157.8271,21.2766],MOR:[-157.8137,21.2680],DHD:[-157.8055,21.2615],KKC:[-157.6914,21.2814],MKP:[-157.6493,21.3104],HIA:[170.49,33.07],HIW:[-158.35,21.75],HIE:[-157.55,21.2],
  EGN:[34.9,31.6],EGS:[30.2,24.6],KEN:[36.3,-0.9],KES:[37.8,-3.3]
 };
@@ -626,7 +629,7 @@ const WPN={HEA:"ヒースロー空港",BHM:"バーミンガム",MAN:"マンチ�
  ROV:"ロヴェレート",TRE:"トレント",BRX:"ブリクセン",STZ:"シュテルツィング",BRN:"ブレンナー峠",INN:"インスブルック",KUF:"クーフシュタイン",
  ROS:"ローゼンハイム",SCH:"ショーンガウ",STG:"シュタインガーデン",HSW:"ホーエンシュヴァンガウ",AUG:"アウクスブルク",DON:"ドナウヴェルト",
  TRL:"トロイヒトリンゲン",ANS:"アンスバッハ",STE:"シュタイナッハ",HEI:"ハイルスブロン",FUE:"フュルト",NEA:"ノイシュタット・アン・デア・アイシュ",
- KIT:"キッツィンゲン",GEM:"ゲミュンデン",ASC:"アシャッフェンブルク",HAN:"ハーナウ",QEN:"ケナ",SAF:"サファガ",AUR:"オーロラを見た林道",GBG:"景福宮",FLK:"国立民俗博物館",MDG:"明洞",NDM:"南大門市場",DHD:"ダイヤモンド・ヘッド",KKC:"ココ・クレーター",MKP:"マカプウ岬",RNZ:"ラヌア動物園",PDI:"パラダイス島",KAJ:"カジアド",NAM:"ナマンガ"};
+ KIT:"キッツィンゲン",GEM:"ゲミュンデン",ASC:"アシャッフェンブルク",HAN:"ハーナウ",QEN:"ケナ",SAF:"サファガ",AUR:"オーロラを見た林道",BKP:"バッキンガム宮殿",HPC:"ハイド・パーク・コーナー駅",PRW:"ザ・プリンス（ウェスト・ブロンプトン）",MMW:"M&M'Sワールド（レスター・スクエア）",PCC:"ピカデリー・サーカス",GBG:"景福宮",FLK:"国立民俗博物館",MDG:"明洞",NDM:"南大門市場",DHD:"ダイヤモンド・ヘッド",KKC:"ココ・クレーター",MKP:"マカプウ岬",RNZ:"ラヌア動物園",PDI:"パラダイス島",KAJ:"カジアド",NAM:"ナマンガ"};
 const TRN={ICN:"仁川空港",HEL:"ヘルシンキ（乗り継ぎ）",PEK:"北京（乗り継ぎ）",DOH:"ドーハ（乗り継ぎ）",BAH:"バーレーン（乗り継ぎ）",GZ:"広州（乗り継ぎ）",NRT:"成田",HND:"羽田"};
 const KNOWN=new Set(["DHD","KKC","MKP","OXF","BIB","STO","CHC","GLF","TIR","HSW","MES","SRM","TUR","LAM","VRN","NAP","AUR","RNZ","PDI"]);
 // day-trip destinations: date and how we got there (shown in the panel)
@@ -643,6 +646,12 @@ const EVENTS=[
 // ---- illustrations: original line drawings, 24x24 box centered at 0,0 ----
 const arches=(()=>{let d="M-12,-1 H12 M-12,1.5 H12";for(let x=-12;x<12;x+=4){d+=` M${x},9 V3.5 Q${x+2},0.6 ${x+4},3.5 V9`;}return d;})();
 const ICONS={
+ phonebox:`<path class="i-red" d="M-6,11 V-8.5 Q0,-13.5 6,-8.5 V11 Z"/><rect class="i-ink" x="-4.6" y="-8" width="9.2" height="2.2"/><rect class="i-sky" x="-4" y="-4" width="8" height="12.5"/><path class="i-l" d="M-6,11 V-8.5 Q0,-13.5 6,-8.5 V11 Z M-4,-4 H4 V8.5 H-4 Z M0,-4 V8.5 M-4,0 H4 M-4,4.2 H4 M-12,11 H12"/><circle class="i-gold" cx="0" cy="-11.4" r="1.1"/>`,
+ candyjar:`<path class="i-l" d="M-12,10 H12"/><rect class="i-red" x="-11.5" y="-5" width="7" height="2.6" rx=".8"/><rect class="i-snow" x="-11" y="-2.4" width="6" height="12" rx="1"/><rect class="i-green" x="-3.5" y="-9" width="7" height="2.6" rx=".8"/><rect class="i-snow" x="-3" y="-6.4" width="6" height="16" rx="1"/><rect class="i-sea" x="4.5" y="-5" width="7" height="2.6" rx=".8"/><rect class="i-snow" x="5" y="-2.4" width="6" height="12" rx="1"/><circle class="i-red" cx="-9.5" cy="2" r="1"/><circle class="i-gold" cx="-6.8" cy="4" r="1"/><circle class="i-red" cx="-8.6" cy="6.6" r="1"/><circle class="i-green" cx="-1.4" cy="-3" r="1"/><circle class="i-green" cx="1.4" cy="0" r="1"/><circle class="i-lemon" cx="-1" cy="3" r="1"/><circle class="i-green" cx="1.2" cy="6" r="1"/><circle class="i-sea" cx="6.6" cy="2" r="1"/><circle class="i-purple" cx="9.2" cy="4.4" r="1"/><circle class="i-sea" cx="7" cy="7" r="1"/><path class="i-l" d="M-11,-2.4 H-5 V9.6 H-11 Z M-3,-6.4 H3 V9.6 H-3 Z M5,-2.4 H11 V9.6 H5 Z"/>`,
+ cocktail:`<rect class="i-night" x="-12" y="-12" width="24" height="24" rx="12"/><path d="M-11,-3 L-2,-11 M-6,-1 L4,-11 M0,-1 L9,-9" stroke="var(--i-carpet)" stroke-width="1.6" stroke-linecap="round" opacity=".9"/><path d="M-9,4 Q-6,0 -8,-4 M9,3 Q6,0 8,-4" fill="none" stroke="var(--i-purple)" stroke-width="2" stroke-linecap="round"/><path d="M-6,-1 H6 L0,5.5 Z" fill="var(--i-carpet)" opacity=".85"/><path d="M-6,-1 H6 L0,5.5 Z M0,5.5 V10 M-3.6,10 H3.6" fill="none" stroke="var(--i-snow)" stroke-width="1.3" stroke-linejoin="round"/>`,
+ pub:`<path class="i-slate" d="M-11,10 V-5 L-6,-10 H6 L11,-5 V10 Z"/><path class="i-l" d="M-11,10 V-5 L-6,-10 H6 L11,-5 V10 M-12,10 H12"/><rect class="i-snow" x="-8" y="-5" width="4" height="4"/><rect class="i-snow" x="4" y="-5" width="4" height="4"/><rect class="i-snow" x="-8" y="2" width="4" height="4"/><rect class="i-ink" x="-1.6" y="2" width="4.6" height="8"/><path class="i-l" d="M-8,-5 h4 v4 h-4 Z M4,-5 h4 v4 h-4 Z M-8,2 h4 v4 h-4 Z"/><path class="i-l" d="M11,-2 H14 M13,-2 V0"/><rect class="i-gold" x="11.2" y="0" width="3.6" height="4.4" rx=".6"/><path class="i-green" d="M-11,0 Q-9,-2.5 -7,0 Q-5,-2.5 -3,0 Q-1,-2.5 1,0 Q3,-2.5 5,0 Q7,-2.5 9,0 Q10,-2 11,0 V1 H-11 Z"/>`,
+ palacegate:`<rect class="i-stone" x="-12" y="-5" width="4.4" height="15"/><rect class="i-stone" x="7.6" y="-5" width="4.4" height="15"/><path class="i-ink" d="M-7.6,10 V-2 Q0,-9 7.6,-2 V10 Z"/><path d="M-4.6,10 V-4.2 M-1.6,10 V-5.8 M1.6,10 V-5.8 M4.6,10 V-4.2 M-7.6,4 H7.6" stroke="var(--i-stone)" stroke-width=".7"/><circle class="i-gold" cx="0" cy="0" r="3"/><path class="i-gold" d="M-2.6,-6.6 L-1.4,-9 L0,-7.2 L1.4,-9 L2.6,-6.6 Z"/><path class="i-l" d="M-12,10 V-5 H-7.6 V10 M7.6,10 V-5 H12 V10 M-7.6,10 V-2 Q0,-9 7.6,-2 V10 M-13,10 H13 M-11.2,-5 V-8 H-8.4 V-5 M8.4,-5 V-8 H11.2 V-5"/><circle class="i-lemon" cx="-9.8" cy="-9.6" r="1.4"/><circle class="i-lemon" cx="9.8" cy="-9.6" r="1.4"/>`,
+ tubesign:`<rect class="i-snow" x="-12" y="-11" width="24" height="17"/><path class="i-red" d="M-12,-1 H12 V1.2 H-12 Z M-12,3 H12 V4.4 H-12 Z"/><rect class="i-sea" x="-12" y="-11" width="24" height="2"/><rect class="i-sky" x="-9" y="-7" width="18" height="4.4"/><path d="M-7,-4.8 H7" stroke="var(--i-ink)" stroke-width="1.6" stroke-dasharray="2.2 .8"/><path class="i-l" d="M-12,-11 H12 V6 H-12 Z M-9,-7 H9 V-2.6 H-9 Z"/><path d="M-10,9 H10 M-8,9 V11 M8,9 V11" stroke="var(--fg)" stroke-width="1.4" fill="none"/><path d="M-11,6.5 V9 M11,6.5 V9" stroke="var(--i-lemon)" stroke-width="1.8" stroke-linecap="round"/>`,
  pajeon:`<ellipse class="i-sky" cx="-1" cy="4" rx="11" ry="6"/><ellipse class="i-sand" cx="-1" cy="3" rx="8.5" ry="4.5"/><path d="M-6,2 L-2,4 M0,1 L4,3 M-3,5 L1,6" stroke="var(--i-green)" stroke-width="1.4" fill="none"/><path class="i-l" d="M-12,4 A11,6 0 1,0 10,4 A11,6 0 1,0 -12,4"/><rect class="i-snow" x="7" y="-11" width="4.5" height="12" rx="1.5"/><path class="i-l" d="M7,-11 H11.5 V1 H7 Z M8,-13 H10.5 V-11"/>`,
  pagoda:`<path class="i-stone" d="M-11,10 H11 V6 H-11 Z"/><path class="i-slate" d="M-8,-1 L0,-3 L8,-1 L6,1 H-6 Z M-7,3 L0,1 L7,3 L5,5 H-5 Z M-6,-5 L0,-7 L6,-5 L4,-3 H-4 Z M-5,-9 L0,-10.5 L5,-9 L3,-7.5 H-3 Z"/><path class="i-red" d="M-4,-3 H4 V-1 H-4 Z M-5,1 H5 V3 H-5 Z" opacity=".8"/><path class="i-l" d="M-11,10 H11 V6 H-11 Z M0,-10.5 V-13 M-4,5 V6 M4,5 V6"/>`,
  hanbok:`<circle class="i-sand2" cx="0" cy="-8" r="3"/><path class="i-ink" d="M-3.2,-9 Q0,-13.5 3.2,-9 Q0,-10.5 -3.2,-9 Z"/><path class="i-sail" d="M-4.5,-5 H4.5 L5,-1 H-5 Z"/><path d="M0,-4 L-2,1 M0,-4 L2,1" stroke="var(--i-red)" stroke-width="1.3" fill="none"/><path class="i-carpet" d="M-5,-1 H5 L10,11 H-10 Z"/><path class="i-l" d="M-4.5,-5 H4.5 L5,-1 H-5 Z M-5,-1 L-10,11 H10 L5,-1"/>`,
@@ -860,13 +869,22 @@ const ICONS={
  tram:`<rect class="i-gold" x="-9" y="-5" width="18" height="11" rx="2"/><path class="i-l" d="M-9,-3 Q-9,-5 -7,-5 H7 Q9,-5 9,-3 V6 H-9 Z M-7,-3 H-2 V1 H-7 Z M0,-3 H7 V1 H0 Z M0,-5 L-3,-11 H3 M-6,6 V8 M6,6 V8 M-12,9 H12"/>`
 };
 const PHOTO1="photos/af_gem_liver.jpg";
-const PH={ko_pajeon:"photos/ko_pajeon.webp",ko_folk:"photos/ko_folk.webp",ko_bistop:"photos/ko_bistop.webp",ko_hanbok:"photos/ko_hanbok.webp",ko_juk:"photos/ko_juk.webp",ko_bbq:"photos/ko_bbq.webp",ko_strawb:"photos/ko_strawb.webp",ko_namdae:"photos/ko_namdae.webp",ko_chicken:"photos/ko_chicken.webp",ko_dakgal:"photos/ko_dakgal.webp",ko_linebear:"photos/ko_linebear.webp",ko_myeong:"photos/ko_myeong.webp",ko_tteok:"photos/ko_tteok.webp",ko_board:"photos/ko_board.webp",hi_pancake:"photos/hi_pancake.webp",hi_bagel:"photos/hi_bagel.webp",hi_sunset:"photos/hi_sunset.webp",hi_waffle:"photos/hi_waffle.webp",hi_pool:"photos/hi_pool.webp",hi_bus:"photos/hi_bus.webp",hi_makapuu:"photos/hi_makapuu.webp",hi_wing:"photos/hi_wing.webp",hi_waikiki:"photos/hi_waikiki.webp",hi_duke:"photos/hi_duke.webp",hgsnork:"photos/hgsnork.webp",hgsign:"photos/hgsign.webp",hgbeach:"photos/hgbeach.webp",firnlynx:"photos/firnlynx.webp",firnrein:"photos/firnrein.webp",firngate:"photos/firngate.webp",fiaurpro:"photos/fiaurpro.webp",fi6681:"photos/fi6681.webp",cw7667:"photos/cw7667.webp",sc8050:"photos/sc8050.webp",mc9005:"photos/mc9005.webp",ch9882:"photos/ch9882.webp",ch9906:"photos/ch9906.webp",vc9982:"photos/vc9982.webp",vc9950:"photos/vc9950.webp",de0394:"photos/de0394.webp",de0546:"photos/de0546.webp",rt0711:"photos/rt0711.webp",se6457:"photos/se6457.webp",fi6539:"photos/fi6539.webp",ox7292:"photos/ox7292.webp",mr8901:"photos/mr8901.webp",mi9531:"photos/mi9531.webp",mj9610:"photos/mj9610.webp",mj9634:"photos/mj9634.webp",ch9801:"photos/ch9801.webp",bz0231:"photos/bz0231.webp",de0385:"photos/de0385.webp",ox7356:"photos/ox7356.webp",es8404:"photos/es8404.webp",es8620:"photos/es8620.webp",mn9215:"photos/mn9215.webp",vc0066:"photos/vc0066.webp",bz0124:"photos/bz0124.webp",degable:"photos/degable.webp",rt0613:"photos/rt0613.webp",fr6225:"photos/fr6225.webp",fr0857:"photos/fr0857.webp",fr0868:"photos/fr0868.webp",fr0882:"photos/fr0882.webp",wz0801:"photos/wz0801.webp",wz0804:"photos/wz0804.webp",wz0808:"photos/wz0808.webp",wz0811:"photos/wz0811.webp",wz0827:"photos/wz0827.webp",wz0834:"photos/wz0834.webp",nu0779:"photos/nu0779.webp",nu0780:"photos/nu0780.webp",nu0781:"photos/nu0781.webp",nu0736:"photos/nu0736.webp",nu0749:"photos/nu0749.webp",nu0770:"photos/nu0770.webp",nupuzzle:"photos/nupuzzle.webp",nu0776:"photos/nu0776.webp",rt0637:"photos/rt0637.webp",rt0615:"photos/rt0615.webp",rt0651:"photos/rt0651.webp",rt0674:"photos/rt0674.webp",de0571:"photos/de0571.webp",de0543:"photos/de0543.webp",de0576:"photos/de0576.webp",de0389:"photos/de0389.webp",de0498:"photos/de0498.webp",de0594:"photos/de0594.webp",de0374:"photos/de0374.webp",de0381:"photos/de0381.webp",de0387:"photos/de0387.webp",de0407:"photos/de0407.webp",de0434:"photos/de0434.webp",de0538:"photos/de0538.webp",de0583:"photos/de0583.webp",de0592:"photos/de0592.webp",bz0123:"photos/bz0123.webp",bz0136:"photos/bz0136.webp",bz0143:"photos/bz0143.webp",bz0190:"photos/bz0190.webp",bz0247:"photos/bz0247.webp",bz0255:"photos/bz0255.webp",bz0336:"photos/bz0336.webp",vc0011:"photos/vc0011.webp",vc0054:"photos/vc0054.webp",vc0060:"photos/vc0060.webp",vc0062:"photos/vc0062.webp",vc0067:"photos/vc0067.webp",vc9944:"photos/vc9944.webp",vc9948:"photos/vc9948.webp",vc9957:"photos/vc9957.webp",vc9978:"photos/vc9978.webp",mj9471:"photos/mj9471.webp",mj9478:"photos/mj9478.webp",mj9547:"photos/mj9547.webp",mj9555:"photos/mj9555.webp",mj9620:"photos/mj9620.webp",mj9647:"photos/mj9647.webp",mj9651:"photos/mj9651.webp",ch9779:"photos/ch9779.webp",sr9465:"photos/sr9465.webp",sr9448:"photos/sr9448.webp",sr9457:"photos/sr9457.webp",ch9922:"photos/ch9922.webp",ch9700:"photos/ch9700.webp",ch9784:"photos/ch9784.webp",ch9785:"photos/ch9785.webp",ch9824:"photos/ch9824.webp",ch9915:"photos/ch9915.webp",mi9475:"photos/mi9475.webp",mi9504:"photos/mi9504.webp",mi9506:"photos/mi9506.webp",mi9524:"photos/mi9524.webp",mi9527:"photos/mi9527.webp",mi9565:"photos/mi9565.webp",mi9589:"photos/mi9589.webp",mc9001:"photos/mc9001.webp",mc9013:"photos/mc9013.webp",mc9053:"photos/mc9053.webp",mc9072:"photos/mc9072.webp",mc9100:"photos/mc9100.webp",mc9153:"photos/mc9153.webp",cn9402:"photos/cn9402.webp",nc9428:"photos/nc9428.webp",nc9283:"photos/nc9283.webp",nc9350:"photos/nc9350.webp",nc9373:"photos/nc9373.webp",nc9374:"photos/nc9374.webp",nc9418:"photos/nc9418.webp",mn9243:"photos/mn9243.webp",mn9260:"photos/mn9260.webp",mn9261:"photos/mn9261.webp",nc9199:"photos/nc9199.webp",mr8898:"photos/mr8898.webp",mr8739:"photos/mr8739.webp",mr8875:"photos/mr8875.webp",mr8882:"photos/mr8882.webp",es8340:"photos/es8340.webp",es8369:"photos/es8369.webp",es8378:"photos/es8378.webp",es8488:"photos/es8488.webp",es8552:"photos/es8552.webp",es8569:"photos/es8569.webp",es8598:"photos/es8598.webp",es8614:"photos/es8614.webp",es8675:"photos/es8675.webp",es8677:"photos/es8677.webp",sc8284:"photos/sc8284.webp",sc8062:"photos/sc8062.webp",sc8210:"photos/sc8210.webp",sc8265:"photos/sc8265.webp",sc8280:"photos/sc8280.webp",uk7983:"photos/uk7983.webp",uk8026:"photos/uk8026.webp",ukpasta:"photos/ukpasta.webp",cw7565:"photos/cw7565.webp",cw7567:"photos/cw7567.webp",cw7650:"photos/cw7650.webp",cw7709:"photos/cw7709.webp",cw7760:"photos/cw7760.webp",ox7318:"photos/ox7318.webp",ox7373:"photos/ox7373.webp",ox7439:"photos/ox7439.webp",uk7036:"photos/uk7036.webp",uk7841:"photos/uk7841.webp",uk7856:"photos/uk7856.webp",uk7892:"photos/uk7892.webp",fi6673:"photos/fi6673.webp",fi6591:"photos/fi6591.webp",fi6726:"photos/fi6726.webp",fi6749:"photos/fi6749.webp",fi6835:"photos/fi6835.webp",fi6920:"photos/fi6920.webp",fimoose:"photos/fimoose.webp",se6444:"photos/se6444.webp",se6352:"photos/se6352.webp",se6386:"photos/se6386.webp",se6411:"photos/se6411.webp",se6420:"photos/se6420.webp",se6463:"photos/se6463.webp"};
+const PH={ld_bus:"photos/ld_bus.webp",ld_market:"photos/ld_market.webp",ld_fish:"photos/ld_fish.webp",ld_prince:"photos/ld_prince.webp",ld_bar:"photos/ld_bar.webp",ld_mms:"photos/ld_mms.webp",ld_hydepark:"photos/ld_hydepark.webp",ld_palace:"photos/ld_palace.webp",ld_phonebox:"photos/ld_phonebox.webp",ko_pajeon:"photos/ko_pajeon.webp",ko_folk:"photos/ko_folk.webp",ko_bistop:"photos/ko_bistop.webp",ko_hanbok:"photos/ko_hanbok.webp",ko_juk:"photos/ko_juk.webp",ko_bbq:"photos/ko_bbq.webp",ko_strawb:"photos/ko_strawb.webp",ko_namdae:"photos/ko_namdae.webp",ko_chicken:"photos/ko_chicken.webp",ko_dakgal:"photos/ko_dakgal.webp",ko_linebear:"photos/ko_linebear.webp",ko_myeong:"photos/ko_myeong.webp",ko_tteok:"photos/ko_tteok.webp",ko_board:"photos/ko_board.webp",hi_pancake:"photos/hi_pancake.webp",hi_bagel:"photos/hi_bagel.webp",hi_sunset:"photos/hi_sunset.webp",hi_waffle:"photos/hi_waffle.webp",hi_pool:"photos/hi_pool.webp",hi_bus:"photos/hi_bus.webp",hi_makapuu:"photos/hi_makapuu.webp",hi_wing:"photos/hi_wing.webp",hi_waikiki:"photos/hi_waikiki.webp",hi_duke:"photos/hi_duke.webp",hgsnork:"photos/hgsnork.webp",hgsign:"photos/hgsign.webp",hgbeach:"photos/hgbeach.webp",firnlynx:"photos/firnlynx.webp",firnrein:"photos/firnrein.webp",firngate:"photos/firngate.webp",fiaurpro:"photos/fiaurpro.webp",fi6681:"photos/fi6681.webp",cw7667:"photos/cw7667.webp",sc8050:"photos/sc8050.webp",mc9005:"photos/mc9005.webp",ch9882:"photos/ch9882.webp",ch9906:"photos/ch9906.webp",vc9982:"photos/vc9982.webp",vc9950:"photos/vc9950.webp",de0394:"photos/de0394.webp",de0546:"photos/de0546.webp",rt0711:"photos/rt0711.webp",se6457:"photos/se6457.webp",fi6539:"photos/fi6539.webp",ox7292:"photos/ox7292.webp",mr8901:"photos/mr8901.webp",mi9531:"photos/mi9531.webp",mj9610:"photos/mj9610.webp",mj9634:"photos/mj9634.webp",ch9801:"photos/ch9801.webp",bz0231:"photos/bz0231.webp",de0385:"photos/de0385.webp",ox7356:"photos/ox7356.webp",es8404:"photos/es8404.webp",es8620:"photos/es8620.webp",mn9215:"photos/mn9215.webp",vc0066:"photos/vc0066.webp",bz0124:"photos/bz0124.webp",degable:"photos/degable.webp",rt0613:"photos/rt0613.webp",fr6225:"photos/fr6225.webp",fr0857:"photos/fr0857.webp",fr0868:"photos/fr0868.webp",fr0882:"photos/fr0882.webp",wz0801:"photos/wz0801.webp",wz0804:"photos/wz0804.webp",wz0808:"photos/wz0808.webp",wz0811:"photos/wz0811.webp",wz0827:"photos/wz0827.webp",wz0834:"photos/wz0834.webp",nu0779:"photos/nu0779.webp",nu0780:"photos/nu0780.webp",nu0781:"photos/nu0781.webp",nu0736:"photos/nu0736.webp",nu0749:"photos/nu0749.webp",nu0770:"photos/nu0770.webp",nupuzzle:"photos/nupuzzle.webp",nu0776:"photos/nu0776.webp",rt0637:"photos/rt0637.webp",rt0615:"photos/rt0615.webp",rt0651:"photos/rt0651.webp",rt0674:"photos/rt0674.webp",de0571:"photos/de0571.webp",de0543:"photos/de0543.webp",de0576:"photos/de0576.webp",de0389:"photos/de0389.webp",de0498:"photos/de0498.webp",de0594:"photos/de0594.webp",de0374:"photos/de0374.webp",de0381:"photos/de0381.webp",de0387:"photos/de0387.webp",de0407:"photos/de0407.webp",de0434:"photos/de0434.webp",de0538:"photos/de0538.webp",de0583:"photos/de0583.webp",de0592:"photos/de0592.webp",bz0123:"photos/bz0123.webp",bz0136:"photos/bz0136.webp",bz0143:"photos/bz0143.webp",bz0190:"photos/bz0190.webp",bz0247:"photos/bz0247.webp",bz0255:"photos/bz0255.webp",bz0336:"photos/bz0336.webp",vc0011:"photos/vc0011.webp",vc0054:"photos/vc0054.webp",vc0060:"photos/vc0060.webp",vc0062:"photos/vc0062.webp",vc0067:"photos/vc0067.webp",vc9944:"photos/vc9944.webp",vc9948:"photos/vc9948.webp",vc9957:"photos/vc9957.webp",vc9978:"photos/vc9978.webp",mj9471:"photos/mj9471.webp",mj9478:"photos/mj9478.webp",mj9547:"photos/mj9547.webp",mj9555:"photos/mj9555.webp",mj9620:"photos/mj9620.webp",mj9647:"photos/mj9647.webp",mj9651:"photos/mj9651.webp",ch9779:"photos/ch9779.webp",sr9465:"photos/sr9465.webp",sr9448:"photos/sr9448.webp",sr9457:"photos/sr9457.webp",ch9922:"photos/ch9922.webp",ch9700:"photos/ch9700.webp",ch9784:"photos/ch9784.webp",ch9785:"photos/ch9785.webp",ch9824:"photos/ch9824.webp",ch9915:"photos/ch9915.webp",mi9475:"photos/mi9475.webp",mi9504:"photos/mi9504.webp",mi9506:"photos/mi9506.webp",mi9524:"photos/mi9524.webp",mi9527:"photos/mi9527.webp",mi9565:"photos/mi9565.webp",mi9589:"photos/mi9589.webp",mc9001:"photos/mc9001.webp",mc9013:"photos/mc9013.webp",mc9053:"photos/mc9053.webp",mc9072:"photos/mc9072.webp",mc9100:"photos/mc9100.webp",mc9153:"photos/mc9153.webp",cn9402:"photos/cn9402.webp",nc9428:"photos/nc9428.webp",nc9283:"photos/nc9283.webp",nc9350:"photos/nc9350.webp",nc9373:"photos/nc9373.webp",nc9374:"photos/nc9374.webp",nc9418:"photos/nc9418.webp",mn9243:"photos/mn9243.webp",mn9260:"photos/mn9260.webp",mn9261:"photos/mn9261.webp",nc9199:"photos/nc9199.webp",mr8898:"photos/mr8898.webp",mr8739:"photos/mr8739.webp",mr8875:"photos/mr8875.webp",mr8882:"photos/mr8882.webp",es8340:"photos/es8340.webp",es8369:"photos/es8369.webp",es8378:"photos/es8378.webp",es8488:"photos/es8488.webp",es8552:"photos/es8552.webp",es8569:"photos/es8569.webp",es8598:"photos/es8598.webp",es8614:"photos/es8614.webp",es8675:"photos/es8675.webp",es8677:"photos/es8677.webp",sc8284:"photos/sc8284.webp",sc8062:"photos/sc8062.webp",sc8210:"photos/sc8210.webp",sc8265:"photos/sc8265.webp",sc8280:"photos/sc8280.webp",uk7983:"photos/uk7983.webp",uk8026:"photos/uk8026.webp",ukpasta:"photos/ukpasta.webp",cw7565:"photos/cw7565.webp",cw7567:"photos/cw7567.webp",cw7650:"photos/cw7650.webp",cw7709:"photos/cw7709.webp",cw7760:"photos/cw7760.webp",ox7318:"photos/ox7318.webp",ox7373:"photos/ox7373.webp",ox7439:"photos/ox7439.webp",uk7036:"photos/uk7036.webp",uk7841:"photos/uk7841.webp",uk7856:"photos/uk7856.webp",uk7892:"photos/uk7892.webp",fi6673:"photos/fi6673.webp",fi6591:"photos/fi6591.webp",fi6726:"photos/fi6726.webp",fi6749:"photos/fi6749.webp",fi6835:"photos/fi6835.webp",fi6920:"photos/fi6920.webp",fimoose:"photos/fimoose.webp",se6444:"photos/se6444.webp",se6352:"photos/se6352.webp",se6386:"photos/se6386.webp",se6411:"photos/se6411.webp",se6420:"photos/se6420.webp",se6463:"photos/se6463.webp"};
 const DROP_AF=new Set(["koshari","museum","soup","burger","steak","spa","house","elephant","giraffe"]);
-const TOP0=new Set(["景福宮と韓服","ワイキキビーチ","オーロラ","ガムラスタン","ビッグベン","エディンバラ城","サグラダ・ファミリア","モンテカルロ・カジノ","ベネチアの水路","ノイシュバンシュタイン城","ギザのピラミッド","キリマンジャロ"]);
+const TOP0=new Set(["赤い電話ボックス","景福宮と韓服","ワイキキビーチ","オーロラ","ガムラスタン","ビッグベン","エディンバラ城","サグラダ・ファミリア","モンテカルロ・カジノ","ベネチアの水路","ノイシュバンシュタイン城","ギザのピラミッド","キリマンジャロ"]);
 const TOP1AF=new Set(["ルクソール神殿","パラダイス島でシュノーケル","巨大バッファロー","ハン・ハリーリ市場"]);
-const TOP=new Set(["景福宮と韓服","明洞の通り","国立民俗博物館","チヂミとマッコリ","ワイキキビーチ","デューク・カハナモク像","オーロラ","ガムラスタン","ビッグベン","エディンバラ城","グレンフィナン高架橋","サグラダ・ファミリア","ウニ","カンヌのレッドカーペット","モンテカルロ・カジノ","ミラノのドゥオーモ","ベルニナ鉄道","ベネチアの水路","カレッツァ湖","ノイシュバンシュタイン城","ローテンブルクの街並み"]);
+const TOP=new Set(["赤い電話ボックス","バッキンガム宮殿の門","M&M'Sワールド","ユニオンジャックの観光バス","景福宮と韓服","明洞の通り","国立民俗博物館","チヂミとマッコリ","ワイキキビーチ","デューク・カハナモク像","オーロラ","ガムラスタン","ビッグベン","エディンバラ城","グレンフィナン高架橋","サグラダ・ファミリア","ウニ","カンヌのレッドカーペット","モンテカルロ・カジノ","ミラノのドゥオーモ","ベルニナ鉄道","ベネチアの水路","カレッツァ湖","ノイシュバンシュタイン城","ローテンブルクの街並み"]);
 const PICK_EXTRA=new Set(["カンヌのレッドカーペット","ウニ","フラメンコ","ピサラディエール","一蘭"]);
 const ILLS=[
+ {k:"ECT",ic:"phonebox",name:"赤い電話ボックス",trip:"ld",cap:"赤レンガの建物が並ぶ通りに、赤い電話ボックス",photos:[PH.ld_phonebox]},
+ {k:"BKP",ic:"palacegate",name:"バッキンガム宮殿の門",trip:"ld",cap:"黒い鉄の門に、金の紋章と飾り。屋根の上にはユニオンジャック",photos:[PH.ld_palace]},
+ {k:"PCC",ic:"dblbus",name:"ユニオンジャックの観光バス",trip:"ld",cap:"国旗柄の2階建て観光バスと、黒いタクシー。ピカデリー・サーカスのあたり",photos:[PH.ld_bus]},
+ {k:"MMW",ic:"candyjar",name:"M&M'Sワールド",trip:"ld",cap:"色ごとに分かれたM&M'Sの入れ物が、壁一面にずらり",photos:[PH.ld_mms]},
+ {k:"HPC",ic:"tubesign",name:"ハイド・パーク・コーナー駅",trip:"ld",cap:"地下鉄のホームの壁に、大きな駅名のタイル。旅のお供は、日本でいうSuicaのオイスターカード",photos:[PH.ld_hydepark]},
+ {k:"ECT",ic:"stall",name:"通りの八百屋",trip:"ld",cap:"アールズ・コートの通りに、果物と野菜の屋台。スイカもメロンも山積み",photos:[PH.ld_market]},
+ {k:"PRW",ic:"pub",name:"パブ「ザ・プリンス」",trip:"ld",cap:"紺色の壁のパブ。毎日パブに行っては、いい意味で何かと絡まれた",photos:[PH.ld_prince]},
+ {k:"ECT",ic:"fishchips",name:"パブのフィッシュ・アンド・チップス",trip:"ld",cap:"ビールと一緒に。ソースとサラダつき",lv:3,photos:[PH.ld_fish]},
+ {k:"ECT",ic:"cocktail",name:"紫に光るバー",trip:"ld",cap:"ガラスの天井が、ピンクと紫にライトアップされたバー",lv:3,photos:[PH.ld_bar]},
  {k:"NRT",ic:"board",name:"成田の出発案内板",trip:"ko",cap:"2019年3月17日の朝8時43分、成田空港 第1ターミナル北ウイング。ここから韓国へ",lv:3,photos:[PH.ko_board]},
  {k:"GBG",ic:"hanbok",name:"景福宮と韓服",trip:"ko",cap:"色とりどりの韓服で、景福宮を歩く。建物の柱や軒の模様もカラフル",photos:[PH.ko_hanbok]},
  {k:"FLK",ic:"pagoda",name:"国立民俗博物館",trip:"ko",cap:"景福宮の中にある、塔のような建物。前では韓服の人たちが記念撮影",photos:[PH.ko_folk]},
@@ -1122,8 +1140,12 @@ const HI={key:"hi",title:"ハワイ（ミナとお母さん）",accent:"hi",visi
 const KO={key:"ko",title:"韓国（ミナ）",accent:"ko",visited:new Set(),
  stops:[{n:1,k:"SEL",name:"ソウル",d:"2019/3/17〜",note:"ミナが韓国へ。景福宮、国立民俗博物館、明洞、南大門市場。食べ歩きもたくさん",lm:"air",lt:"2019年3月17日の朝、成田空港 第1ターミナル北ウイングから飛行機。成田からソウルへの便は仁川空港に着くので、仁川空港までの線を引いている（便は不明）"}],
  seg:[["air","main",["NRT","ICN"]]],dur:[]};
-const TRIPNAME={eu:"ヨーロッパ一周",af:"エジプト・ケニア",hi:"ハワイ（ミナとお母さん）",ko:"韓国（ミナ）"};
-const TRIPS=[EU,AF,HI,KO];
+// ミナのロンドン旅行（2019/3/8〜3/13。ninomの旅ではない）
+const LD={key:"ld",title:"ロンドン（ミナ）",accent:"ld",visited:new Set(),
+ stops:[{n:1,k:"ECT",name:"ロンドン（アールズ・コート）",d:"2019/3/8–3/13",note:"ミナがロンドンへ。イギリスで暮らしていた人に案内してもらい、観光客があまり行かない場所にも連れて行ってもらった。1週間の滞在が1か月くらいの濃さだった",lm:"air",lt:"日本から飛行機。空港と便は分からないので、成田からヒースロー空港までの線を仮に引いている。アールズ・コート駅を拠点に、オイスターカードで移動した"}],
+ seg:[["air","main",["NRT","HEA"]]],dur:[]};
+const TRIPNAME={eu:"ヨーロッパ一周",af:"エジプト・ケニア",hi:"ハワイ（ミナとお母さん）",ko:"韓国（ミナ）",ld:"ロンドン（ミナ）"};
+const TRIPS=[EU,AF,HI,KO,LD];
 const nameOf=k=>{for(const t of TRIPS){const s=t.stops.find(s=>s.k===k);if(s)return s.name;}return WPN[k]||TRN[k]||k;};
 
 // waypoint -> which leg it belongs to
@@ -1144,7 +1166,7 @@ const stage=document.getElementById("stage"),panel=document.getElementById("pane
 if(!window.d3){stage.insertAdjacentHTML("afterbegin",'<p style="padding:16px">地図を読み込めなかった。ページを開き直してみて。</p>');return;}
 
 let W=stage.clientWidth,H=stage.clientHeight;
-const allKeys=[...EU.stops.map(s=>s.k),...AF.stops.map(s=>s.k),...HI.stops.map(s=>s.k),...KO.stops.map(s=>s.k),"NRT","HND","PEK","GZ"];
+const allKeys=[...EU.stops.map(s=>s.k),...AF.stops.map(s=>s.k),...HI.stops.map(s=>s.k),...KO.stops.map(s=>s.k),...LD.stops.map(s=>s.k),"NRT","HND","PEK","GZ"];
 const proj=d3.geoNaturalEarth1().rotate([-60,0]);
 const path=d3.geoPath(proj);
 function fitBase(){const an=proj.angle();proj.angle(0).fitExtent([[24,24],[W-24,H-24]],{type:"MultiPoint",coordinates:allKeys.map(k=>P[k])});proj.angle(an);}
@@ -1195,7 +1217,7 @@ function addItem(el,geo,dx,dy,anchor){items.push({el,geo,dx,dy,anchor});}
 function drawOverlay(){
   gOver.selectAll("*").remove();items=[];
   // region labels (only when zoomed out)
-  [["RVN","ヨーロッパ一周 2025.1–2","eu",12,4],["NBO","エジプト・ケニア 2025.12–2026.1","af",16,26],["HNL","ハワイ（ミナとお母さん）","hi",12,-12],["SEL","韓国（ミナ）","ko",-104,-10],["NRT","日本","",10,-10]].forEach(([k,t,c,dx,dy])=>{
+  [["RVN","ヨーロッパ一周 2025.1–2","eu",12,4],["NBO","エジプト・ケニア 2025.12–2026.1","af",16,26],["HNL","ハワイ（ミナとお母さん）","hi",12,-12],["SEL","韓国（ミナ）","ko",-104,-10],["ECT","ロンドン（ミナ）","ld",-118,18],["NRT","日本","",10,-10]].forEach(([k,t,c,dx,dy])=>{
     const el=gOver.append("text").attr("class",`lbl big ${c} l1`).attr("data-pr",0).attr("data-must",1).attr("data-d",6).text(t).node();addItem(el,P[k],dx,dy,"start");});
   // waypoints
   Object.keys(wpInfo).forEach(k=>{
@@ -1402,7 +1424,7 @@ addEventListener("keydown",e=>{if(e.key==="Escape"&&!panel.classList.contains("e
 // jump targets
 const JUMP={all:allKeys,eu:EU.stops.map(s=>s.k).concat(["GLF"]),nordic:["ARN","HEL","RVN","AUR","RNZ"],uk:["LON","EDI","FTW","GLF","OXF","CHC","CAR"],
  med:["BCN","MRS","NCE","MCO","GEN","MIL"],alps:["MIL","STM","TIR","VCE","BZO","CHI","INN"],de:["MUC","FUS","NOE","ROT","NUE","WUE","FRA"],
- riv:["NCE","MCO","MEN","VTM","SRM","CNS"],detour:["NCE","SRM","SAV","TUR","LAM","MIL"],strike:["VCE","MES","VRN","TRE","BZO"],af:AF.stops.map(s=>s.k),hi:["HNL","HIW","HIE"],ko:["ICN","GBG","MDG","NDM","FLK"],eg:["CAI","GIZ","LXR","HRG","QEN","SAF","DEN","PDI"],ke:["NBO","AMB","KIL","KAJ"]};
+ riv:["NCE","MCO","MEN","VTM","SRM","CNS"],detour:["NCE","SRM","SAV","TUR","LAM","MIL"],strike:["VCE","MES","VRN","TRE","BZO"],af:AF.stops.map(s=>s.k),hi:["HNL","HIW","HIE"],ko:["ICN","GBG","MDG","NDM","FLK"],ld:["ECT","BKP","HPC","PRW","MMW","PCC"],eg:["CAI","GIZ","LXR","HRG","QEN","SAF","DEN","PDI"],ke:["NBO","AMB","KIL","KAJ"]};
 function kFor(key){const pts=JUMP[key].map(k=>proj(P[k]));const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);return Math.max(1,Math.min(160,0.8/Math.max((Math.max(...xs)-Math.min(...xs))/W,(Math.max(...ys)-Math.min(...ys))/H,1e-3)));}
 let _kr=null,_krW=0;function kRef(){if(_krW!==W*10000+H){_kr=kFor("eu");_krW=W*10000+H;}return _kr;}
 function jump(key,anim=true){
@@ -1576,7 +1598,7 @@ const curTrip=()=>{const b=document.querySelector('.seg .chip[aria-pressed="true
 const playMenu=document.getElementById("playmenu");
 const selTrip=()=>{const b=document.querySelector('.seg .chip[aria-pressed="true"]');return (b&&b.dataset.trip)||"all";};
 const setMenu=on=>{playMenu.hidden=!on;playBtn.setAttribute("aria-expanded",on?"true":"false");};
-const playLabel=()=>{const t=selTrip();playBtn.hidden=t==="hi"||t==="ko";playBtn.innerHTML=t==="all"?`<span aria-hidden="true">▶</span> 再生`:`<span aria-hidden="true">▶</span> ${t==="af"?"アフリカ旅":"ヨーロッパ旅"}を再生`;
+const playLabel=()=>{const t=selTrip();playBtn.hidden=t==="hi"||t==="ko"||t==="ld";playBtn.innerHTML=t==="all"?`<span aria-hidden="true">▶</span> 再生`:`<span aria-hidden="true">▶</span> ${t==="af"?"アフリカ旅":"ヨーロッパ旅"}を再生`;
   if(t==="all")playBtn.setAttribute("aria-controls","playmenu");else{playBtn.removeAttribute("aria-controls");playBtn.removeAttribute("aria-expanded");}};
 playLabel();document.querySelectorAll(".seg .chip").forEach(b=>b.addEventListener("click",()=>{if(PS.on)stopPlay();setMenu(false);playLabel();}));
 playBtn.addEventListener("click",()=>{const t=selTrip();if(t==="all"){setMenu(playMenu.hidden);return;}startPlay(t);});
@@ -1625,7 +1647,7 @@ const gSegs=[];TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{if(m==="plan")retu
 gSeg.selectAll("path").data(gSegs).join("path").attr("class",d=>`gseg ${d.m} ${d.t}`);
 const gStops=TRIPS.flatMap(t=>t.stops.map(s=>({k:s.k,t:t.key,name:s.name})));
 const gDot=gPts.selectAll("circle").data(gStops).join("circle").attr("class",d=>"gpt "+d.t).attr("r",4.2).on("click",(e,d)=>{e.stopPropagation();exitGlobe(P[d.k],Math.max(kRef()*1.25,2));});
-const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["HNL","ハワイ（ミナとお母さん）","hi",10,-10],["SEL","韓国（ミナ）","ko",-96,-8],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
+const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["HNL","ハワイ（ミナとお母さん）","hi",10,-10],["SEL","韓国（ミナ）","ko",-96,-8],["ECT","ロンドン（ミナ）","ld",-112,16],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
 const gName=gPts.selectAll("text.gname").data(gStops).join("text").attr("class",d=>"gname "+d.t).text(d=>d.name);
 const vis=c=>d3.geoDistance(c,[-GL.rot[0],-GL.rot[1]])<Math.PI/2-0.03;
 function drawWith(pj,t){
@@ -1920,14 +1942,14 @@ function rideGlobe(){return new Promise(res=>{
     euFRA:[{d:"1/2",at:"first",names:["初めて海外で買ったパン"]},{d:"2/3",at:"last",names:"*"}],
     afCAI:[{d:"12/21–12/24",at:"first",names:"*"}]};
   const visitOf=il=>{const v=VISIT[il.trip+il.k];if(!v)return null;return v.find(x=>x.names!=="*"&&x.names.includes(il.name))||v.find(x=>x.names==="*");};
-  const ordOf=(tr,k,at)=>{if(tr==="ko")return -2;if(tr==="hi")return -1;if(at==="last"&&pos[tr+k])return pos[tr+k][pos[tr+k].length-1];if(tr+k in ord)return ord[tr+k];let best=1e9,bd=9;for(const key in ord){if(!key.startsWith(tr))continue;const q=P[key.slice(2)];if(!q)continue;const d=d3.geoDistance(q,P[k]);if(d<bd){bd=d;best=ord[key];}}return best+0.5;};
+  const ordOf=(tr,k,at)=>{if(tr==="ld")return -3;if(tr==="ko")return -2;if(tr==="hi")return -1;if(at==="last"&&pos[tr+k])return pos[tr+k][pos[tr+k].length-1];if(tr+k in ord)return ord[tr+k];let best=1e9,bd=9;for(const key in ord){if(!key.startsWith(tr))continue;const q=P[key.slice(2)];if(!q)continue;const d=d3.geoDistance(q,P[k]);if(d<bd){bd=d;best=ord[key];}}return best+0.5;};
   const groups=new Map();
   ILLS.forEach((il,i)=>{const v=visitOf(il);const id=il.trip+(/^PL\d/.test(il.k)?"PL":il.k)+(v?"@"+v.d:"");if(!groups.has(id))groups.set(id,{tr:il.trip,k:il.k,o:ordOf(il.trip,il.k,v&&v.at),vd:v&&v.d,items:[]});groups.get(id).items.push(i);});
   const list=[...groups.values()].sort((a,b)=>a.o-b.o||(a.tr<b.tr?-1:1));
   const GNAME={HIA:"機内（日本 → ホノルル）",MOR:"カフェ・モーリーズ（ダイヤモンド・ヘッド）",NRT:"成田",PL:"機内（成田 → フランクフルト）",KZS:"カレッツァ湖",FIE:"フィエ・アッロ・シリアル",ORT:"オルティゼーイ",GEM:"大エジプト博物館",DEN:"デンデラ神殿",KCP:"サファリキャンプ"},GDATE={PL:"1/2"},gk=k=>/^PL\d/.test(k)?"PL":k;
   const place=g=>{if(GNAME[gk(g.k)])return GNAME[gk(g.k)];const s=stopOf(g.k);return s?s.name:((WPN[g.k]||TRN[g.k]||nameOf(g.k)).replace(/（[^）]*）$/,""));};
   // dates with the year: the Europe trip is all 2025; the Africa trip is December 2025 and January 2026
-  const yr=(d,tr)=>{if(tr==="ko"||tr==="hi")return d;let last=null;return d.replace(/(\d{1,2})\/(\d{1,2})/g,(m,mo)=>{const y=tr==="af"&&+mo<6?2026:2025;const out=y!==last?`${y}/${m}`:m;last=y;return out;});};
+  const yr=(d,tr)=>{if(tr==="ko"||tr==="hi"||tr==="ld")return d;let last=null;return d.replace(/(\d{1,2})\/(\d{1,2})/g,(m,mo)=>{const y=tr==="af"&&+mo<6?2026:2025;const out=y!==last?`${y}/${m}`:m;last=y;return out;});};
   const date=g=>yr(date0(g),g.tr);
   const date0=g=>{if(g.vd)return g.vd;if(GDATE[gk(g.k)])return GDATE[gk(g.k)];const s=stopOf(g.k);return s?s.d:(DAYT[g.k]?DAYT[g.k].d:"");};
   body.innerHTML=list.map(g=>`<div class="ggrp" data-tr="${g.tr}"><h3>${esc(place(g))}${date(g)?`<time>${esc(date(g))}</time>`:""}</h3><div class="ggrid">${g.items.map(i=>{const il=ILLS[i],pn=phList(il).length;
@@ -1935,7 +1957,7 @@ function rideGlobe(){return new Promise(res=>{
   const sub=document.getElementById("galsub");
   // countries, in route order
   const CTYS=[["KR","韓国"],["US","アメリカ（ハワイ）"],["JP","日本・機内"],["SE","スウェーデン"],["FI","フィンランド"],["GB","イギリス"],["ES","スペイン"],["FR","フランス"],["MC","モナコ"],["IT","イタリア"],["CH","スイス"],["DE","ドイツ"],["EG","エジプト"],["KE","ケニア"]];
-  const KEYCTY={SEL:"KR",GBG:"KR",FLK:"KR",MDG:"KR",NDM:"KR",ICN:"KR",HNL:"US",MOR:"US",DHD:"US",KKC:"US",MKP:"US",HIA:"JP",NRT:"JP",PL:"JP",ARN:"SE",RVN:"FI",AUR:"FI",RNZ:"FI",LON:"GB",OXF:"GB",BOU:"GB",EDI:"GB",FTW:"GB",GLF:"GB",BCN:"ES",MRS:"FR",CNS:"FR",NCE:"FR",EZE:"FR",MEN:"FR",MCO:"MC",
+  const KEYCTY={ECT:"GB",BKP:"GB",HPC:"GB",PRW:"GB",MMW:"GB",PCC:"GB",SEL:"KR",GBG:"KR",FLK:"KR",MDG:"KR",NDM:"KR",ICN:"KR",HNL:"US",MOR:"US",DHD:"US",KKC:"US",MKP:"US",HIA:"JP",NRT:"JP",PL:"JP",ARN:"SE",RVN:"FI",AUR:"FI",RNZ:"FI",LON:"GB",OXF:"GB",BOU:"GB",EDI:"GB",FTW:"GB",GLF:"GB",BCN:"ES",MRS:"FR",CNS:"FR",NCE:"FR",EZE:"FR",MEN:"FR",MCO:"MC",
     BOR:"IT",SRM:"IT",LAM:"IT",MIL:"IT",VAR:"IT",CHI:"IT",TIR:"IT",VCE:"IT",BZO:"IT",KZS:"IT",FIE:"IT",ORT:"IT",STM:"CH",BRU:"CH",
     MUC:"DE",HSW:"DE",FUS:"DE",NOE:"DE",ROT:"DE",NUE:"DE",WUE:"DE",FRA:"DE",CAI:"EG",GIZ:"EG",GEM:"EG",LXR:"EG",DEN:"EG",HRG:"EG",PDI:"EG",NBO:"KE",AMB:"KE",KCP:"KE"};
   const ISO={KOR:"KR",USA:"US",SWE:"SE",FIN:"FI",GBR:"GB",ESP:"ES",FRA:"FR",MCO:"MC",ITA:"IT",CHE:"CH",DEU:"DE",EGY:"EG",KEN:"KE",JPN:"JP"};
@@ -2012,4 +2034,3 @@ enterGlobe(null,{instant:true});
 
 </body>
 </html>
-
