@@ -30,7 +30,7 @@
   --i-sand:#e3c88d; --i-sand2:#f1e2bd; --i-stone:#b9c2c9; --i-sea:#7fb2dc; --i-gold:#e5b22e; --i-ink:#1b2329; --i-snow:#ffffff;
   --i-night:#1d2b4a; --i-tree:#0f1a2e; --i-brown:#9a6a43; --i-sail:#f4ecd8; --i-red:#d4553f; --i-green:#4da36f; --i-lemon:#f2d43a;
   --i-slate:#5f7896; --i-aur1:#4fd39a; --i-aur2:#e889c0; --i-carpet:#c2338a; --i-peach:#f2a58a; --i-purple:#7d4fa8; --i-lake:#3fb39f;
-  --eu:#c23b26; --af:#2a5ea8; --halo:#f2f3f0;
+  --eu:#c23b26; --af:#2a5ea8; --halo:#f2f3f0; --arc:#2b86b8; --equ:#d97a1e;
   --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
   --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -39,13 +39,13 @@
   --bg:#0d1317; --fg:#e4eaed; --muted:#93a1aa; --rule:#2c3840; --card:#141c22;
   --sea:#111b22; --land:#1d262d; --land-edge:#36444d; --visited:#3b2723; --visited2:#22304a;
   --train:#ff7656; --bus:#45cfa8; --boat:#6fb1ea; --car:#e0a96a; --walk:#93a1aa; --air:#8fa6ba; --taxi:#e8c15a; --plan:#6f7c85;
-  --eu:#ff7656; --af:#7ea8ef; --halo:#1d262d; color-scheme:dark;
+  --eu:#ff7656; --af:#7ea8ef; --halo:#1d262d; --arc:#6cc0ea; --equ:#f0a85a; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0d1317; --fg:#e4eaed; --muted:#93a1aa; --rule:#2c3840; --card:#141c22;
   --sea:#111b22; --land:#1d262d; --land-edge:#36444d; --visited:#3b2723; --visited2:#22304a;
   --train:#ff7656; --bus:#45cfa8; --boat:#6fb1ea; --car:#e0a96a; --walk:#93a1aa; --air:#8fa6ba; --taxi:#e8c15a; --plan:#6f7c85;
-  --eu:#ff7656; --af:#7ea8ef; --halo:#1d262d; color-scheme:dark;
+  --eu:#ff7656; --af:#7ea8ef; --halo:#1d262d; --arc:#6cc0ea; --equ:#f0a85a; color-scheme:dark;
 }
 body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
@@ -92,6 +92,13 @@ body.isfull .panel.empty{display:none}
 /* map */
 .land{fill:var(--land);stroke:var(--land-edge);stroke-width:.6;vector-effect:non-scaling-stroke}
 .land.v{fill:var(--visited)}.land.v2{fill:var(--visited2)}
+.par{fill:none;stroke-width:1.4;stroke-dasharray:10 4 2 4;stroke-linecap:butt;vector-effect:non-scaling-stroke;opacity:.9;pointer-events:none}
+.par.arc,.gpar.arc{stroke:var(--arc)}.par.eq,.gpar.eq{stroke:var(--equ)}
+.gpar{fill:none;stroke-width:1.3;stroke-dasharray:9 4 2 4;opacity:.9;pointer-events:none}
+.parlbl{font:700 11.5px var(--body);paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round;pointer-events:none}
+.parlbl.arc{fill:var(--arc)}.parlbl.eq{fill:var(--equ)}
+.globe .parlbl{stroke:var(--card)}
+.stage.riding .parlbl{visibility:hidden}
 .grat{fill:none;stroke:var(--land-edge);stroke-opacity:.35;stroke-width:.5;vector-effect:non-scaling-stroke}
 .seg{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .seg.train{stroke:var(--train)}.seg.bus{stroke:var(--bus)}.seg.boat{stroke:var(--boat)}.seg.car{stroke:var(--car)}.seg.van{stroke:var(--car)}.seg.walk{stroke:var(--walk)}
@@ -306,6 +313,8 @@ body.isfull .panel.empty{display:none}
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--taxi)" stroke-width="3" stroke-linecap="round"/></svg>タクシー</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--plan)" stroke-width="1.8" stroke-dasharray="2 5"/></svg>予定していたルート（運休）</span>
     <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="var(--card)" stroke="var(--fg)" stroke-width="1.2"/><path d="M5,5L11,11M11,5L5,11" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/></svg>運休・乗り遅れ</span>
+    <span><svg width="28" height="8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--arc)" stroke-width="1.6" stroke-dasharray="7 3 2 3"/></svg>北極圏</span>
+    <span><svg width="28" height="8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--equ)" stroke-width="1.6" stroke-dasharray="7 3 2 3"/></svg>赤道</span>
     <span style="color:var(--muted)">※ズームすると陸路が乗り物の色に変わる</span>
   </div>
   <p class="hint" id="hint">ダブルタップ（PCはダブルクリック）かピンチで拡大、1本指で移動。右上の ⤢ で全画面になる。2本指でひねると地図の向きを回せる（パソコンは Shift を押しながらドラッグ）。回したら、右上のコンパスで北が上に戻る。旅の再生中は、ルートの上を走る乗り物を押すと、その乗り物の目線で行き先まで進む。右上に赤い点があるイラストは写真つき（数字は写真の枚数。横にスワイプか矢印で切り替え）。</p>
@@ -1008,14 +1017,38 @@ fitBase();
 const svg=d3.select(stage).insert("svg",":first-child").attr("role","img").attr("aria-label","2つの旅のズームできる地図");
 const gMap=svg.append("g");
 const gOver=svg.append("g");
+const gParL=svg.insert("g",()=>gOver.node()).attr("class","parl");
+// keep each line's name at the left end of the part on screen (upright, clear of the buttons)
+function placePar(fin){
+  const c0=-proj.rotate()[0],sc=q=>cur.apply(proj(q));
+  const sr=stage.getBoundingClientRect();
+  const obs=[...[".zbtns",".lodtag",".pcap",".pctl"].map(q=>document.querySelector(q)),...gOver.node().querySelectorAll(fin?".stop .pt,.tr .pt,.ev .bg,text:not(.ill text),.ill .ic .bg":".stop .pt,text.stopn,text.big")].filter(e=>e&&e.getClientRects().length&&e.style.display!=="none").map(e=>{const r=e.getBoundingClientRect();return [r.left-sr.left-4,r.top-sr.top-4,r.right-sr.left+4,r.bottom-sr.top+4];});
+  gParL.selectAll("text").data(PARS).join("text").attr("class",d=>"parlbl "+d.c).text(d=>d.name).each(function(d){
+    const A=sc([c0,d.lat]),B=sc([c0+90,d.lat]),u=[(B[0]-A[0])/90,(B[1]-A[1])/90];
+    let lo=-179.5,hi=179.5;const M=[10,26,W-10,H-10];
+    [[0,M[0],1],[0,M[2],-1],[1,M[1],1],[1,M[3],-1]].forEach(([i,m,sg])=>{const a=A[i],b=u[i];
+      if(Math.abs(b)<1e-9){if(sg*(a-m)<0){lo=1;hi=0;}return;}const r=(m-a)/b;if(sg*b>0)lo=Math.max(lo,r);else hi=Math.min(hi,r);});
+    const el=d3.select(this);if(!(hi>lo)){el.style("display","none");return;}
+    const left=(A[0]+u[0]*lo)<=(A[0]+u[0]*hi)?1:-1,len=Math.hypot(u[0],u[1])||1;
+    el.style("display",null).attr("text-anchor","start");
+    for(let s=0;s<60;s++){const r=left>0?lo+s*24/len:hi-s*24/len;if(r<lo||r>hi){el.style("display","none");break;}
+      const x=A[0]+u[0]*r+2,y=A[1]+u[1]*r-6;el.attr("x",x).attr("y",y);
+      const bb=this.getBBox();if(bb.x+bb.width>W-6)continue;
+      if(!obs.some(o=>bb.x<o[2]&&bb.x+bb.width>o[0]&&bb.y<o[3]&&bb.y+bb.height>o[1]))break;}
+  });
+}
 let cur=d3.zoomIdentity;
 
+// Arctic Circle (66°33'49" N, 2026) and the Equator
+const PARS=[{c:"arc",lat:66.5636,name:"北極圏（北緯66°34′）"},{c:"eq",lat:0,name:"赤道（緯度0°）"}];
+const parGeo=lat=>({type:"LineString",coordinates:d3.range(-180,180.001,1).map(x=>[x,lat])});
 function drawBase(){
   if(typeof ICO!=="undefined"){ICO.segKey="";ICO.key="";}
   gMap.selectAll("*").remove();
   gMap.append("path").attr("class","grat").attr("d",path(d3.geoGraticule().step([10,10])()));
   if(world)gMap.append("g").selectAll("path").data(world).join("path")
     .attr("class",d=>"land"+(EU.visited.has(d.id)?" v":AF.visited.has(d.id)?" v2":"")).attr("d",path);
+  PARS.forEach(p=>gMap.append("path").attr("class","par "+p.c).attr("d",path(parGeo(p.lat))));
   TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{
     gMap.append("path").attr("class",`seg ${m} ${m==="air"?"":kind} ${t.key}`).attr("d",path({type:"LineString",coordinates:ks.map(k=>P[k])}));}));
 }
@@ -1082,6 +1115,7 @@ function place(){
     if(it.el.tagName==="text"){it.el.setAttribute("x",x+(it.dx||0));it.el.setAttribute("y",y+(it.dy||0));it.el.setAttribute("text-anchor",it.anchor||"start");
       it.el.dataset.ax=x;it.el.dataset.ay=y;it.el.style.display="";}
     else{it.el.setAttribute("transform",`translate(${x},${y})`);it.el.dataset.ax=x;it.el.dataset.ay=y;}});
+  placePar();
   const lod=lodOf(cur.k);
   svg.attr("class",`z${lod}${lod<3?" lo":""}`);
   if(lod!==lastLod&&!window.__globeOn){lodtag.innerHTML=LODTXT[lod];lastLod=lod;}
@@ -1112,6 +1146,7 @@ function declutter(){
     if(!done){t.setAttribute("x",o[0]);t.setAttribute("y",o[1]);t.setAttribute("text-anchor",o[2]);
       if(t.classList.contains("big"))placed.push(R(t));else t.style.display="none";}
   }
+  placePar(true);
 }
 // ---- stable illustration layout ----
 // Positions are worked out per zoom step (every x1.41) in map space, so they don't depend on panning,
@@ -1422,12 +1457,14 @@ const gp=d3.geoPath(gpj);
 const gAir=gsv.append("circle").attr("class","gatm");
 const gSph=gsv.append("path").attr("class","gsph");
 const gGrat=gsv.append("path").attr("class","ggrat");
+const gPar=gsv.append("g");
 const gLand=gsv.append("g");
 const gSeg=gsv.append("g");
 const gPlayG=gsv.append("g").attr("class","gplay");
 const gShine=gsv.append("circle").attr("class","gshine").attr("fill","url(#gShine)");
 const gEdge=gsv.append("path").attr("class","gedge");
 const gPts=gsv.append("g");
+const gParT=gsv.append("g");
 // lighter land for smooth rotation
 function thin(geom,n,minLen){const th=r=>r.length>n*4?r.filter((p,i)=>i%n===0||i===r.length-1):r;
   const keep=r=>!!r&&r.length>=4&&(minLen?d3.geoLength({type:"LineString",coordinates:r})>minLen:true);
@@ -1462,6 +1499,7 @@ function drawWith(pj,t){
   const mid=t>0&&t<1;pj.precision(mid?5:gCoarse?2:.6);
   gGrat.attr("d",pp(d3.geoGraticule().step(mid?[30,30]:[15,15])()));const vb=t===0&&GL.R>R0()*2.5?viewBox(pj):null;const key=mid?"mc":gCoarse?"coarse":"fine";
   gLand.selectAll("path").attr("d",d=>pp(vb?culled(d,key,vb):d[key]));
+  gPar.selectAll("path").data(PARS).join("path").attr("class",d=>"gpar "+d.c).attr("d",d=>pp(parGeo(d.lat)));
   gSeg.selectAll("path").attr("d",d=>pp(d.geo));
   gPlayG.selectAll("path").attr("d",function(){return pp({type:"LineString",coordinates:JSON.parse(this.dataset.c).map(k=>P[k])});});
   gDot.each(function(d){const c=P[d.k];const q=pj(c);d3.select(this).attr("cx",q?q[0]:-99).attr("cy",q?q[1]:-99).style("display",q&&vv(c)?null:"none");});
@@ -1471,6 +1509,15 @@ function drawWith(pj,t){
     d3.select(this).attr("x",q?q[0]+7:-99).attr("y",q?q[1]+4:-99).style("display",ok?null:"none");});
   gLbl.style("visibility",showN?"hidden":null);if(window.__vehRedraw)window.__vehRedraw("g");
   gLbl.each(function(d){const c=P[d[0]];const q=pj(c);d3.select(this).attr("x",q?q[0]+d[3]:-99).attr("y",q?q[1]+d[4]:-99).style("display",q&&vv(c)?null:"none");});
+  // names of the Arctic Circle and the Equator: a free spot on the front, near the middle
+  const gob=[];gPts.selectAll("circle,text").each(function(){if(this.style.display==="none"||this.style.visibility==="hidden"||+this.getAttribute("x")===-99||+this.getAttribute("cx")===-99)return;const b=this.getBBox();if(b.width)gob.push([b.x-3,b.y-3,b.x+b.width+3,b.y+b.height+3]);});
+  gParT.selectAll("text").data(PARS).join("text").attr("class",d=>"parlbl "+d.c).attr("text-anchor","middle").text(d=>d.name).each(function(d){
+    const el=d3.select(this);let ok=false,first=null;
+    if(t===0)outer:for(const o of [-28,-14,0,14,28,-42,42,-56,56,-70,70,-84,84])for(const dy of [-6,15]){const c=[ctr[0]+o,d.lat];if(!vv(c))continue;const p=pj(c);if(!(p&&p[0]>70&&p[0]<W-70&&p[1]>22&&p[1]<H-24))continue;
+      el.attr("x",p[0]).attr("y",p[1]+dy).style("display",null);if(!first)first=p;const b=this.getBBox();
+      if(!gob.some(o=>b.x<o[2]&&b.x+b.width>o[0]&&b.y<o[3]&&b.y+b.height>o[1])){ok=true;break outer;}}
+    if(!ok&&first)el.attr("x",first[0]).attr("y",first[1]-6);
+    el.style("display",first?null:"none");});
 }
 function renderGlobe(){gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);drawWith(gpj,0);}
 // morph between the globe (t=0) and the flat map (t=1)
@@ -1723,3 +1770,4 @@ enterGlobe(null,{instant:true});
 
 </body>
 </html>
+
