@@ -431,7 +431,7 @@ body.isfull .panel.empty{display:none}
     </div>
     </div>
     <button class="chip playbtn" type="button" id="playbtn" aria-expanded="false" aria-controls="playmenu">▶ 再生</button>
-    <div class="tgrp" role="group" aria-label="地図に出す旅（1つずつ）"><button class="chip ttab" type="button" data-grp="sg" style="--c:var(--eu)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--eu)></i></span><b>ヨーロッパ一周</b><small>シゲルの旅・2025.1</small></button><button class="chip ttab" type="button" data-grp="fu" style="--c:var(--af)" aria-pressed="true"><span class="mdots" aria-hidden="true"><i style=background:var(--af)></i></span><b>エジプト・<wbr>ケニア</b><small>ふたり旅・2025.12</small></button><button class="chip ttab" type="button" data-grp="mina" style="--c:var(--ld)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--hi)></i><i style=background:var(--ko)></i><i style=background:var(--ld)></i></span><b>ハワイ・<wbr>韓国・<wbr>ロンドン</b><small>ミナの旅</small></button><button class="chip ttab" type="button" data-grp="th" style="--c:var(--th)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--th)></i></span><b>タイ</b><small>ふたり旅・予定</small></button></div>
+    <div class="tgrp" role="group" aria-label="地図に出す旅（複数選べる）"><button class="chip ttab" type="button" data-grp="sg" style="--c:var(--eu)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--eu)></i></span><b>ヨーロッパ一周</b><small>シゲルの旅・2025.1</small></button><button class="chip ttab" type="button" data-grp="fu" style="--c:var(--af)" aria-pressed="true"><span class="mdots" aria-hidden="true"><i style=background:var(--af)></i></span><b>エジプト・<wbr>ケニア</b><small>ふたり旅・2025.12</small></button><button class="chip ttab" type="button" data-grp="mina" style="--c:var(--ld)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--hi)></i><i style=background:var(--ko)></i><i style=background:var(--ld)></i></span><b>ハワイ・<wbr>韓国・<wbr>ロンドン</b><small>ミナの旅</small></button><button class="chip ttab" type="button" data-grp="th" style="--c:var(--th)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--th)></i></span><b>タイ</b><small>ふたり旅・予定</small></button></div>
     <button class="chip tplay" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
     <div class="areas playmenu" id="playmenu" role="group" aria-label="再生する旅を選ぶ" hidden>
       <span class="lab">再生</span>
@@ -465,7 +465,7 @@ body.isfull .panel.empty{display:none}
         <li><b>向きを回す</b>2本指でひねる（パソコンは Shift を押しながらドラッグ）。右上のコンパスで北が上に戻る</li>
         <li><b>旅の再生</b>ルートの上を走る乗り物を押すと、その乗り物の目線で行き先まで進む</li>
         <li><b>写真</b>右上に赤い点があるイラストは写真つき。数字は写真の枚数。横にスワイプか矢印で切り替え</li>
-        <li><b>旅のタブ</b>地図の上の「ヨーロッパ一周」「エジプト・ケニア」「ハワイ・韓国・ロンドン」で、見る旅を切り替える。1つずつ表示する</li>
+        <li><b>旅のタブ</b>地図の上の「ヨーロッパ一周」「エジプト・ケニア」「ハワイ・韓国・ロンドン」で、見る旅を選ぶ。押すたびに足す・外すができて、2つ以上選ぶと地球儀で全部が入る（最低1つは残る）</li>
         <li><b>イラスト一覧</b>地図の下に全部並んでいる。押すと解説と写真が出る。「地図で見る」でその場所に飛ぶ</li>
       </ul>
     </div>
@@ -2199,7 +2199,7 @@ function rideGlobe(){return new Promise(res=>{
   ctyRow.addEventListener("click",e=>{const b=e.target.closest("[data-gc]");if(b)setView("cty",b.dataset.gc);});
   // the trip buttons above the map also switch the list
   document.querySelectorAll('.seg .chip[data-trip]').forEach(b=>b.addEventListener("click",()=>setView(b.dataset.trip)));
-  setView("all");window.__galRefresh=()=>setView(curV,curC);
+  setView("all");window.__galRefresh=()=>setView(curV,curC);window.__galAll=()=>setView("all");
   let mark=null;
   window.__goIll=i=>goIll(i);
   async function goIll(i){
@@ -2246,31 +2246,46 @@ function rideGlobe(){return new Promise(res=>{
   list.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{set(false);window.__tripLbl(b);btn.focus({preventScroll:true});}));
   document.addEventListener("click",e=>{if(!list.hidden&&!e.target.closest(".tripsel"))set(false);});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!list.hidden){set(false);btn.focus({preventScroll:true});}});})();
-// ---- 旅のタブ（1つずつ表示） ----
+// ---- 旅のタブ（複数選べる。押すたびに足す／外す。最低1つは残る） ----
 (()=>{const tp=document.getElementById("tplay"),PLAYK={sg:"eu",fu:"af"},NAME={sg:"ヨーロッパ一周",fu:"エジプト・ケニア",mina:"ハワイ・韓国・ロンドン"};
-  let curG="fu";
-  const syncTP=()=>{const k=PLAYK[curG];tp.hidden=!k;if(k)tp.setAttribute("aria-label",`${NAME[curG]}の旅を再生`);};syncTP();
-  document.querySelectorAll(".ttab").forEach(b=>b.addEventListener("click",()=>{const g=b.dataset.grp,same=g===curG;curG=g;
-    Object.keys(SHOW).forEach(k=>{SHOW[k]=GRPS[g].includes(k);});syncShow();
-    document.querySelectorAll(".ttab").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));syncTP();
+  const tabs=[...document.querySelectorAll(".ttab")];let sel=new Set(["fu"]);
+  const only=()=>sel.size===1?[...sel][0]:null;
+  const syncTP=()=>{const g=only(),k=g&&PLAYK[g];tp.hidden=!k;if(k)tp.setAttribute("aria-label",`${NAME[g]}の旅を再生`);};syncTP();
+  // 選んだ旅の寄港地の重心（複数のときの地球儀の向き）
+  const centroid=()=>{const pts=[];TRIPS.filter(t=>tripOn(t.key)).forEach(t=>t.stops.forEach(s=>{if(P[s.k])pts.push(P[s.k]);}));
+    const c=pts.length?d3.geoCentroid({type:"MultiPoint",coordinates:pts}):[20,30];return c&&isFinite(c[0])?c:[20,30];};
+  const apply=(next,force)=>{
+    const prev=[...sel].sort().join(),now=[...next].sort().join();if(prev===now&&!force)return;
+    sel=next;
+    const keys=new Set();sel.forEach(g=>GRPS[g].forEach(k=>keys.add(k)));
+    Object.keys(SHOW).forEach(k=>{SHOW[k]=keys.has(k);});syncShow();
+    tabs.forEach(x=>x.setAttribute("aria-pressed",sel.has(x.dataset.grp)?"true":"false"));syncTP();
     ICO.key="";ICO.segKey="";
-    if(PS.on&&!tripOn(PS.trip))stopPlay();
+    if(PS.on&&(sel.size>1||!tripOn(PS.trip)))stopPlay();
     if(selEl&&!selEl.getClientRects().length&&typeof closePanel==="function")closePanel();
+    if(sel.size>1&&window.__galAll)window.__galAll();
     if(window.__galRefresh)window.__galRefresh();
+    const g=only();
+    if(!g){enterGlobe(centroid(),{anim:true,mdur:850});return;}   // 2つ以上：全部が入る地球儀
     const go=PLAYK[g]||(g==="th"?"th":null);
     if(go){const c=document.querySelector(`#triplist [data-trip="${go}"]`);if(c)c.click();return;}
     // ハワイ・韓国・ロンドンは平らな地図の1画面に収まらないので、地球儀で見せる
     // 経度110°・北緯42°を正面にすると、ロンドン・ソウル・ハワイが全部表側に入る
-    enterGlobe([110,42],{anim:true,mdur:850});}));
-  tp.addEventListener("click",()=>{const k=PLAYK[curG];if(k)startPlay(k);});})();
+    enterGlobe([110,42],{anim:true,mdur:850});};
+  tabs.forEach(b=>b.addEventListener("click",()=>{const g=b.dataset.grp,next=new Set(sel);
+    if(next.has(g)){if(next.size===1)return;next.delete(g);}else next.add(g);apply(next);}));
+  window.__selTab=g=>apply(new Set([g]));   // #ill= のリンク用：その旅だけにする
+  window.__tabOn=g=>sel.has(g);
+  tp.addEventListener("click",()=>{const g=only(),k=g&&PLAYK[g];if(k)startPlay(k);});})();
 enterGlobe(null,{instant:true});
 // ---- URLの #ill=イラスト名（noteの記事などから） ----
 (()=>{const GRP_OF={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th"};
   const open=()=>{const m=/^#ill=(.+)$/.exec(location.hash);if(!m)return;let name;try{name=decodeURIComponent(m[1]);}catch(e){return;}
     const i=ILLS.findIndex(x=>x.name===name);if(i<0)return;const il=ILLS[i];
     const tab=document.querySelector(`.ttab[data-grp="${GRP_OF[il.trip]}"]`);
-    if(tab&&tab.getAttribute("aria-pressed")!=="true")tab.click();
-    setTimeout(()=>window.__goIll&&window.__goIll(i),tab?950:0);};
+    const had=tab&&window.__tabOn&&window.__tabOn(GRP_OF[il.trip]);
+    if(tab&&!had)window.__selTab(GRP_OF[il.trip]);
+    setTimeout(()=>window.__goIll&&window.__goIll(i),tab&&!had?950:0);};
   addEventListener("hashchange",open);setTimeout(open,300);})();
 
 
