@@ -104,6 +104,29 @@ body.isfull .panel.empty{display:none}
 .help .hx{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:0;background:transparent;color:var(--fg);font:500 17px/1 system-ui,sans-serif;cursor:pointer}
 .help .hx:hover{background:var(--bg)}
 .zbtn[aria-expanded="true"]{background:var(--fg);color:var(--bg)}
+/* 旅の数字（選んでいる旅の合計。タブに連動） */
+.stats{display:grid;gap:10px;margin-top:8px;padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--card)}
+.stathd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
+.stathd h2{margin:0;font:800 22px var(--display)}
+.stathd p{margin:0;font-size:12.5px;color:var(--muted)}
+.stiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px}
+.stile{display:grid;gap:1px;align-content:start;padding:9px 11px;border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
+.stile small{font-size:11.5px;color:var(--muted)}
+.stile b{font:800 24px/1.15 var(--display);letter-spacing:.01em}
+.stile b i{font:600 12.5px var(--display);font-style:normal;margin-left:3px;color:var(--muted)}
+.stile em{font-style:normal;font-size:11.5px;color:var(--muted)}
+.stile.wide{grid-column:span 2}
+@media(max-width:600px){.stiles{grid-template-columns:repeat(2,1fr)}.stile:nth-last-child(2):nth-child(odd){grid-column:span 2}}
+.sbar{display:flex;height:12px;border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--rule);background:var(--bg)}
+.sbar i{display:block;height:100%;min-width:3px}
+.smodes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:4px 18px;font-size:13px}
+.smodes li{display:flex;align-items:center;gap:8px}
+.smodes .sw{flex:0 0 auto;width:12px;height:12px;border-radius:3px}
+.smodes .nm{flex:1 1 auto}
+.smodes .km{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.smodes .n{color:var(--muted);font-size:12px;min-width:3.6em;text-align:right;font-variant-numeric:tabular-nums}
+.sttrips{margin:0;font-size:12.5px;color:var(--muted)}
+.snote{margin:0;font-size:11.5px;color:var(--muted);line-height:1.6}
 .gal{display:grid;gap:8px;margin-top:8px}
 .galhd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
 .galhd h2{margin:0;font:800 22px var(--display)}
@@ -499,6 +522,14 @@ body.isfull .panel.empty{display:none}
     <span><svg width="28" height="8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--equ)" stroke-width="1.6" stroke-dasharray="7 3 2 3"/></svg>赤道</span>
     <span style="color:var(--muted)">※ズームすると陸路が乗り物の色に変わる</span>
   </div>
+  <section class="stats" id="stats" aria-labelledby="stath">
+    <div class="stathd"><h2 id="stath">旅の数字</h2><p id="statsub">いま地図に出している旅の合計</p></div>
+    <div class="stiles" id="stiles"></div>
+    <div class="sbar" id="sbar" aria-hidden="true"></div>
+    <ul class="smodes" id="smodes" aria-label="乗り物ごとの距離と回数"></ul>
+    <p class="sttrips" id="stttrips" hidden></p>
+    <p class="snote" id="snote"></p>
+  </section>
   <section class="gal" id="gal" aria-labelledby="galh">
     <div class="galhd"><div><h2 id="galh">イラスト一覧</h2><p id="galsub">押すと、思い出の解説と写真が出る</p></div>
     </div>
@@ -2301,6 +2332,7 @@ function rideGlobe(){return new Promise(res=>{
     Object.keys(SHOW).forEach(k=>{SHOW[k]=keys.has(k);});syncShow();
     tabs.forEach(x=>x.setAttribute("aria-pressed",sel.has(x.dataset.grp)?"true":"false"));syncTP();
     ICO.key="";ICO.segKey="";
+    if(window.__statsRefresh)window.__statsRefresh();
     if(PS.on&&(sel.size>1||!tripOn(PS.trip)))stopPlay();
     if(selEl&&!selEl.getClientRects().length&&typeof closePanel==="function")closePanel();
     if(sel.size>1&&window.__galAll)window.__galAll();
@@ -2317,6 +2349,50 @@ function rideGlobe(){return new Promise(res=>{
   window.__selTab=g=>apply(new Set([g]));   // #ill= のリンク用：その旅だけにする
   window.__tabOn=g=>sel.has(g);
   tp.addEventListener("click",()=>{const g=only(),k=g&&PLAYK[g];if(k)startPlay(k);});})();
+// ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
+(()=>{const EARTH=6371,LAP=40075;
+  // 国の数は、ヨーロッパ・エジプト・ケニアは visited、それ以外はここで決める（地図の色塗りには使わない）
+  const CTRY={hi:["USA"],ko:["KOR"],ld:["GBR"],th:["THA"],cn:["CHN"]};
+  // 線は1本でも、実際は往復したもの
+  const ROUND=new Set(["FRA>NRT","NBO>KCP","BKK>CNX","BJG>TSN"]),NRT2=new Set(["hi","ko","ld","cn"]);
+  // 日帰りの線のうち、行きと帰りで別の線になっている（ぐるっと回る）ので1回分で数えるもの
+  const ONEWAY=new Set(["MIL>VAR","VAR>MEG","MEG>STM","STM>TIR","TIR>MIL","MUC>HSW","HSW>FUS","FUS>STG"]);
+  const MODES=[["air","飛行機","var(--air)","便"],["train","列車","var(--train)","回"],["bus","バス","var(--bus)","回"],["taxi","タクシー","var(--taxi)","回"],
+    ["car","サファリジープ・ツアーのバン","var(--car)","回"],["boat","船","var(--boat)","回"],["walk","徒歩","var(--walk)","回"]];
+  const lenKm=ids=>{let d=0;for(let i=1;i<ids.length;i++){const a=P[ids[i-1]],b=P[ids[i]];if(!a||!b)return 0;d+=d3.geoDistance(a,b)*EARTH;}return d;};
+  const mult=(t,s)=>{const m=s[0],kind=s[1],ids=s[2],a=ids[0],z=ids[ids.length-1],key=a+">"+z;
+    if(m==="plan")return 0;                                   // 運休して乗れなかった予定のルート
+    if(ROUND.has(key))return 2;
+    if(m==="air"&&a==="NRT"&&NRT2.has(t.key))return 2;       // 帰りの線は描いていない
+    if(kind==="trip")return(a===z||ONEWAY.has(key))?1:2;      // 日帰りは往復
+    return 1;};
+  const legs=ids=>ids.filter(k=>!/^PL\d$/.test(k)).length-1;  // 北極まわりの目印は便に数えない
+  const calc=t=>{const by={};let km=0;
+    t.seg.forEach(s=>{const k=mult(t,s);if(!k)return;const mk=s[0]==="van"?"car":s[0],d=lenKm(s[2])*k,n=(s[0]==="air"?legs(s[2]):1)*k;
+      (by[mk]=by[mk]||{km:0,n:0}).km+=d;by[mk].n+=n;km+=d;});
+    return{km,by};};
+  const r10=x=>Math.round(x/10)*10,r100=x=>Math.round(x/100)*100,fmt=x=>x.toLocaleString("ja-JP");
+  const tile=(lab,val,unit,sub,wide)=>`<div class="stile${wide?" wide":""}"><small>${lab}</small><b>${val}${unit?`<i>${unit}</i>`:""}</b>${sub?`<em>${sub}</em>`:""}</div>`;
+  const sumStat=(ts,i)=>{let s=0;for(const t of ts){if(!t.stats)return null;const v=parseFloat(String(t.stats[i][0]).replace(/[^0-9.]/g,""));if(!isFinite(v))return null;s+=v;}return s;};
+  const refresh=()=>{
+    const ts=TRIPS.filter(t=>tripOn(t.key)),el=id=>document.getElementById(id);if(!ts.length)return;
+    const cs=new Set();ts.forEach(t=>(t.visited&&t.visited.size?[...t.visited]:(CTRY[t.key]||[])).forEach(c=>cs.add(c)));
+    const per=ts.map(t=>({t,r:calc(t)})),tot={};let km=0;
+    per.forEach(({r})=>{km+=r.km;Object.keys(r.by).forEach(m=>{const o=tot[m]=tot[m]||{km:0,n:0};o.km+=r.by[m].km;o.n+=r.by[m].n;});});
+    const places=ts.reduce((a,t)=>a+t.stops.length,0),days=sumStat(ts,2),hours=sumStat(ts,4),flights=(tot.air||{n:0}).n;
+    const plan=ts.every(t=>t.key==="th"),hasPlan=ts.some(t=>t.key==="th");
+    let h=tile(plan?"行く国":"訪れた国",cs.size,"か国")+tile(plan?"行く場所":"訪れた場所",places,"か所");
+    if(days!==null)h+=tile("日数",days,"日");
+    if(flights)h+=tile("飛行機",flights,"便",hours!==null?`機内に約${fmt(hours)}時間`:"");
+    h+=tile(plan?"移動する距離":"移動した距離","約"+fmt(r100(km)),"km",km?`地球${(km/LAP).toFixed(1)}周ぶん`:"",true);
+    el("stiles").innerHTML=h;
+    const ms=MODES.filter(m=>tot[m[0]]&&tot[m[0]].km>0);
+    el("sbar").innerHTML=ms.map(m=>`<i style="width:${(tot[m[0]].km/km*100).toFixed(2)}%;background:${m[2]}"></i>`).join("");
+    el("smodes").innerHTML=ms.map(m=>{const o=tot[m[0]];return`<li><span class="sw" style="background:${m[2]}"></span><span class="nm">${m[1]}</span><span class="km">約${fmt(m[0]==="air"?r100(o.km):o.km<10?Math.max(1,Math.round(o.km)):r10(o.km))} km</span><span class="n">${o.n}${m[3]}</span></li>`;}).join("");
+    const tt=el("stttrips");if(ts.length>1){tt.hidden=false;tt.textContent=per.map(({t,r})=>`${TRIPNAME[t.key]} 約${fmt(r100(r.km))} km`).join("　／　");}else{tt.hidden=true;tt.textContent="";}
+    el("statsub").textContent=ts.length>1?"いま地図に出している旅の合計":(ts[0].key==="th"?"タイ（予定の旅。計画の線から計算）":TRIPNAME[ts[0].key]);
+    el("snote").textContent="距離は、地図に描いた線の長さから計算した概算。日帰りは往復で、ぐるっと回るツアーは1周分で数えている。経由地は推測の位置なので、実際の道のりとは少しずれる。運休して乗れなかったルートは入れていない。"+(hasPlan&&!plan?"タイは予定の旅で、計画の線から計算している。":"");};
+  window.__statsRefresh=refresh;refresh();})();
 enterGlobe(null,{instant:true});
 // ---- URLの #ill=イラスト名（noteの記事などから） ----
 (()=>{const GRP_OF={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th",cn:"cn"};
