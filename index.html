@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
-<body>
+<body data-view="map">
 <title>旅の地図帳</title>
 <meta name="color-scheme" content="light">
 <script>document.documentElement.setAttribute("data-theme","light")</script>
@@ -104,6 +104,10 @@ body.isfull .panel.empty{display:none}
 .help .hx{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:0;background:transparent;color:var(--fg);font:500 17px/1 system-ui,sans-serif;cursor:pointer}
 .help .hx:hover{background:var(--bg)}
 .zbtn[aria-expanded="true"]{background:var(--fg);color:var(--bg)}
+.vsw{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap}
+.vsw .chip{padding:7px 16px;font-size:13.5px;font-weight:700}
+.vsw .chip[aria-selected="true"]{background:var(--fg);color:var(--bg);box-shadow:none}
+body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"]{display:none!important}
 /* 旅の数字（選んでいる旅の合計。タブに連動） */
 .stats{display:grid;gap:10px;margin-top:8px;padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--card)}
 .stathd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
@@ -465,13 +469,18 @@ body.isfull .panel.empty{display:none}
     </div>
     <button class="chip playbtn" type="button" id="playbtn" aria-expanded="false" aria-controls="playmenu">▶ 再生</button>
     <div class="tgrp" role="group" aria-label="地図に出す旅（複数選べる）"><button class="chip ttab" type="button" data-grp="sg" style="--c:var(--eu)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--eu)></i></span><b>ヨーロッパ一周</b><small>シゲルの旅・2025.1</small></button><button class="chip ttab" type="button" data-grp="fu" style="--c:var(--af)" aria-pressed="true"><span class="mdots" aria-hidden="true"><i style=background:var(--af)></i></span><b>エジプト・<wbr>ケニア</b><small>ふたり旅・2025.12</small></button><button class="chip ttab" type="button" data-grp="mina" style="--c:var(--ld)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--hi)></i><i style=background:var(--ko)></i><i style=background:var(--ld)></i></span><b>ハワイ・<wbr>韓国・<wbr>ロンドン</b><small>ミナの旅</small></button><button class="chip ttab" type="button" data-grp="th" style="--c:var(--th)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--th)></i></span><b>タイ</b><small>ふたり旅・予定</small></button><button class="chip ttab" type="button" data-grp="cn" style="--c:var(--cn)" aria-pressed="false"><span class="mdots" aria-hidden="true"><i style=background:var(--cn)></i></span><b>中国</b><small>小5・2009〜10</small></button></div>
-    <button class="chip tplay" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
+    <div class="vsw" role="tablist" aria-label="表示を切り替える" id="vsw">
+      <button class="chip" type="button" role="tab" id="vt-map" data-v="map" aria-selected="true" aria-controls="stage">マップ</button>
+      <button class="chip" type="button" role="tab" id="vt-stats" data-v="stats" aria-selected="false" aria-controls="stats" tabindex="-1">旅の数字</button>
+      <button class="chip" type="button" role="tab" id="vt-gal" data-v="gal" aria-selected="false" aria-controls="gal" tabindex="-1">イラスト一覧</button>
+    </div>
+    <button class="chip tplay" data-page="map" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
     <div class="areas playmenu" id="playmenu" role="group" aria-label="再生する旅を選ぶ" hidden>
       <span class="lab">再生</span>
       <button class="chip only-eu" type="button" data-play="eu"><span class="sw" style="background:var(--eu)"></span>ヨーロッパ旅を再生</button>
       <button class="chip only-af" type="button" data-play="af"><span class="sw" style="background:var(--af)"></span>アフリカ旅を再生</button>
     </div>
-    <div class="areas" data-for="eu" role="group" aria-label="ヨーロッパ旅のエリア" hidden>
+    <div class="areas" data-page="map" data-for="eu" role="group" aria-label="ヨーロッパ旅のエリア" hidden>
       <span class="lab">エリア</span>
       <button class="chip" type="button" data-jump="nordic">北欧</button>
       <button class="chip" type="button" data-jump="uk">イギリス</button>
@@ -480,14 +489,14 @@ body.isfull .panel.empty{display:none}
       <button class="chip" type="button" data-jump="alps">北イタリア・スイス</button>
       <button class="chip" type="button" data-jump="de">南ドイツ</button>
     </div>
-    <div class="areas" data-for="af" role="group" aria-label="アフリカ旅のエリア" hidden>
+    <div class="areas" data-page="map" data-for="af" role="group" aria-label="アフリカ旅のエリア" hidden>
       <span class="lab">エリア</span>
       <button class="chip" type="button" data-jump="eg">エジプト</button>
       <button class="chip" type="button" data-jump="ke">ケニア</button>
     </div>
   </nav>
-  <section class="panel empty" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
-  <div class="stage" id="stage">
+  <section class="panel empty" data-page="map" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
+  <div class="stage" data-page="map" id="stage">
     <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button><button class="zbtn" type="button" id="zhelp" aria-label="操作説明" title="操作説明" aria-expanded="false" aria-controls="help">?</button></div>
     <div class="help" id="help" role="dialog" aria-label="操作説明" hidden>
       <button type="button" class="hx" id="helpx" aria-label="操作説明を閉じる">✕</button>
@@ -508,7 +517,7 @@ body.isfull .panel.empty{display:none}
       <div class="pctl"><button type="button" class="pbtn" id="ppause" aria-label="一時停止">❚❚</button><div class="pbar" aria-hidden="true"><i></i></div><button type="button" class="pbtn sm" id="pspeed" aria-label="速さ 1倍">1×</button><button type="button" class="pbtn" id="pstop" aria-label="再生をやめる">✕</button></div>
     </div>
   </div>
-  <div class="legend" id="modelegend" aria-label="乗り物の色">
+  <div class="legend" data-page="map" id="modelegend" aria-label="乗り物の色">
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--train)" stroke-width="3" stroke-linecap="round"/></svg>列車</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--bus)" stroke-width="3" stroke-linecap="round"/></svg>バス</span>
     <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--boat)" stroke-width="2" stroke-dasharray="1.5 4.5" stroke-linecap="round"/></svg>船</span>
@@ -522,7 +531,7 @@ body.isfull .panel.empty{display:none}
     <span><svg width="28" height="8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--equ)" stroke-width="1.6" stroke-dasharray="7 3 2 3"/></svg>赤道</span>
     <span style="color:var(--muted)">※ズームすると陸路が乗り物の色に変わる</span>
   </div>
-  <section class="stats" id="stats" aria-labelledby="stath">
+  <section class="stats" data-page="stats" id="stats" aria-labelledby="stath">
     <div class="stathd"><h2 id="stath">旅の数字</h2><p id="statsub">いま地図に出している旅の合計</p></div>
     <div class="stiles" id="stiles"></div>
     <div class="sbar" id="sbar" aria-hidden="true"></div>
@@ -530,7 +539,7 @@ body.isfull .panel.empty{display:none}
     <p class="sttrips" id="stttrips" hidden></p>
     <p class="snote" id="snote"></p>
   </section>
-  <section class="gal" id="gal" aria-labelledby="galh">
+  <section class="gal" data-page="gal" id="gal" aria-labelledby="galh">
     <div class="galhd"><div><h2 id="galh">イラスト一覧</h2><p id="galsub">押すと、思い出の解説と写真が出る</p></div>
     </div>
     <div class="gtabs" id="gtabs" role="group" aria-label="旅で絞り込む"><button class="chip" type="button" data-gv="all" aria-pressed="true">すべて</button><button class="chip only-eu" type="button" data-gv="eu" aria-pressed="false">ヨーロッパ旅</button><button class="chip only-af" type="button" data-gv="af" aria-pressed="false">エジプト・ケニア旅</button><button class="chip only-hi" type="button" data-gv="hi" aria-pressed="false">ハワイ</button><button class="chip only-ko" type="button" data-gv="ko" aria-pressed="false">韓国</button><button class="chip only-ld" type="button" data-gv="ld" aria-pressed="false">ロンドン（ミナ）</button><button class="chip only-th" type="button" data-gv="th" aria-pressed="false">タイ（予定）</button><button class="chip only-cn" type="button" data-gv="cn" aria-pressed="false">中国（小5）</button><button class="chip" type="button" data-gv="cty" aria-pressed="false" aria-expanded="false" aria-controls="gcty">国ごと <span aria-hidden="true">▾</span></button></div>
@@ -1749,7 +1758,7 @@ function build(){W=stage.clientWidth;H=stage.clientHeight;svg.attr("viewBox",`0 
   drawBase();drawOverlay();gMap.attr("transform",cur);place();declutter();if(window.__playRedraw)window.__playRedraw();if(window.__globeRedraw)window.__globeRedraw();if(window.__vehRedraw)window.__vehRedraw("f");}
 build();
 let rt,lw=W,lh=H;
-new ResizeObserver(()=>{if(Math.abs(stage.clientWidth-lw)<8&&Math.abs(stage.clientHeight-lh)<8)return;lw=stage.clientWidth;lh=stage.clientHeight;
+new ResizeObserver(()=>{if(!stage.clientWidth)return;if(Math.abs(stage.clientWidth-lw)<8&&Math.abs(stage.clientHeight-lh)<8)return;lw=stage.clientWidth;lh=stage.clientHeight;
   clearTimeout(rt);rt=setTimeout(rebuildKeep,120);}).observe(stage);
 window.__zoomTo=(key,k)=>{const p=proj(P[key]);svg.call(zoom.transform,d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-p[0],-p[1]));};
 function rebuildKeep(){zoom.scaleExtent([0.82,KMAX()]);
@@ -2274,6 +2283,7 @@ function rideGlobe(){return new Promise(res=>{
   let mark=null;
   window.__goIll=i=>goIll(i);
   async function goIll(i){
+    if(window.__page&&window.__page()!=="map"){window.__setPage("map");await new Promise(r=>setTimeout(r,220));}
     const il=ILLS[i];if(typeof PS!=="undefined"&&PS.on)stopPlay();
     body.querySelectorAll(".gcard.on").forEach(c=>c.classList.remove("on"));const card=body.querySelector(`.gcard[data-i="${i}"]`);if(card)card.classList.add("on");
     if(!document.body.classList.contains("isfull"))stage.scrollIntoView({block:"start",behavior:RM()?"auto":"smooth"});
@@ -2349,6 +2359,19 @@ function rideGlobe(){return new Promise(res=>{
   window.__selTab=g=>apply(new Set([g]));   // #ill= のリンク用：その旅だけにする
   window.__tabOn=g=>sel.has(g);
   tp.addEventListener("click",()=>{const g=only(),k=g&&PLAYK[g];if(k)startPlay(k);});})();
+// ---- 表示の切り替え（マップ／旅の数字／イラスト一覧） ----
+(()=>{const sw=document.getElementById("vsw"),btns=[...sw.querySelectorAll("[data-v]")];let cur="map";
+  const set=(v,focus)=>{if(v===cur)return;
+    if(cur==="map"){if(typeof PS!=="undefined"&&PS.on)stopPlay();if(document.body.classList.contains("isfull"))setFull(false);}
+    cur=v;document.body.dataset.view=v;
+    btns.forEach(b=>{const on=b.dataset.v===v;b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;if(on&&focus)b.focus({preventScroll:true});});
+    if(v==="map"){dispatchEvent(new Event("resize"));}
+    const r=sw.getBoundingClientRect();if(r.top<0)sw.scrollIntoView({block:"start",behavior:"auto"});};
+  btns.forEach(b=>b.addEventListener("click",()=>set(b.dataset.v)));
+  sw.addEventListener("keydown",e=>{const i=btns.findIndex(b=>b.dataset.v===cur);let n=-1;
+    if(e.key==="ArrowRight")n=(i+1)%btns.length;else if(e.key==="ArrowLeft")n=(i+btns.length-1)%btns.length;else if(e.key==="Home")n=0;else if(e.key==="End")n=btns.length-1;
+    if(n>=0){e.preventDefault();set(btns[n].dataset.v,true);}});
+  window.__page=()=>cur;window.__setPage=v=>set(v);})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
   // 国の数は、ヨーロッパ・エジプト・ケニアは visited、それ以外はここで決める（地図の色塗りには使わない）
