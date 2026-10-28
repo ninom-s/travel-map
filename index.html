@@ -152,6 +152,14 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .fsm b{font-size:14px;line-height:1.35}
 .fsm span{font-size:12.5px;line-height:1.55}
 .fsm em{font-style:normal;font-size:11.5px;color:var(--muted)}
+.pwall{display:grid;gap:14px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.pph{all:unset;box-sizing:border-box;position:relative;cursor:pointer;display:block;aspect-ratio:4/3;border-radius:5px;overflow:hidden;background:var(--rule)}
+.pph img{display:block;width:100%;height:100%;object-fit:cover}
+.pph span{position:absolute;left:0;right:0;bottom:0;padding:16px 7px 4px;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.62));line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pph:hover{box-shadow:0 0 0 2px var(--fg)}
+.pph:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+@media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);gap:4px}.pph span{font-size:9.5px;padding:12px 5px 3px}}
 .gal{display:grid;gap:8px;margin-top:8px}
 .galhd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
 .galhd h2{margin:0;font:800 22px var(--display)}
@@ -494,6 +502,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <button class="chip" type="button" role="tab" id="vt-map" data-v="map" aria-selected="true" aria-controls="stage">マップ</button>
       <button class="chip" type="button" role="tab" id="vt-stats" data-v="stats" aria-selected="false" aria-controls="stats" tabindex="-1">旅の数字</button>
       <button class="chip" type="button" role="tab" id="vt-gal" data-v="gal" aria-selected="false" aria-controls="gal" tabindex="-1">イラスト一覧</button>
+      <button class="chip" type="button" role="tab" id="vt-photos" data-v="photos" aria-selected="false" aria-controls="photos" tabindex="-1">写真ウォール</button>
       <button class="chip" type="button" role="tab" id="vt-fail" data-v="fail" aria-selected="false" aria-controls="fails" tabindex="-1">やらかし図鑑</button>
     </div>
     <button class="chip tplay" data-page="map" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
@@ -560,6 +569,10 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <ul class="smodes" id="smodes" aria-label="乗り物ごとの距離と回数"></ul>
     <p class="sttrips" id="stttrips" hidden></p>
     <p class="snote" id="snote"></p>
+  </section>
+  <section class="vp" data-page="photos" id="photos" aria-labelledby="photoh">
+    <div class="stathd"><h2 id="photoh">写真ウォール</h2><p id="photosub">いま地図に出している旅の写真</p></div>
+    <div class="pwall" id="photobody"></div>
   </section>
   <section class="vp" data-page="fail" id="fails" aria-labelledby="failh">
     <div class="stathd"><h2 id="failh">やらかし図鑑</h2><p id="failsub">いま地図に出している旅の分</p></div>
@@ -2422,6 +2435,7 @@ function rideGlobe(){return new Promise(res=>{
     const g=gOver.node().querySelector(`.ev[data-ev="${i}"]`);if(!g)return;
     if(g.style.display==="none")g.style.display="";
     select(g);}
+  window.__goEv=goEv;
   const render=()=>{
     const evs=EVENTS.map((ev,i)=>({ev,i})).filter(({ev})=>tripOn(ev.trip||"eu")).sort((a,b)=>evKey(a.ev)-evKey(b.ev));
     const smalls=SMALL.map(([t,n])=>ILLS.findIndex(x=>x.trip===t&&x.name===n)).filter(i=>i>=0&&tripOn(ILLS[i].trip)).sort((a,b)=>window.__illOrd(a)-window.__illOrd(b));
@@ -2440,6 +2454,25 @@ function rideGlobe(){return new Promise(res=>{
     el("failbody").innerHTML=h;
     el("failnote").textContent="「大きなやらかし」は、時刻つきのメモが残っている出来事。「ちいさなハプニング」は、イラストの説明に書いた出来事から選んだ（説明の文はそのまま）。";};
   el("failbody").addEventListener("click",e=>{const b=e.target.closest("[data-ev]");if(b){goEv(+b.dataset.ev);return;}const c=e.target.closest(".fsm");if(c)window.__showIll(+c.dataset.i);});
+  (window.__onTrips=window.__onTrips||[]).push(render);render();})();
+// ---- 写真ウォール（選んでいる旅の写真を、置き場所ごとに並べる。押すと解説、そこから地図へ） ----
+(()=>{const el=id=>document.getElementById(id);
+  const collect=()=>{const seen=new Set(),out=[],tripMax={};
+    ILLS.forEach((il,i)=>{if(!tripOn(il.trip))return;const o=window.__illOrd(i);tripMax[il.trip]=Math.max(tripMax[il.trip]||0,o<1e8?o:0);
+      (il.photos||(il.photo?[il.photo]:[])).forEach(src=>{if(seen.has(src))return;seen.add(src);out.push({src,i,name:il.name,o,key:"i"+o});});});
+    // ✕印の写真（イラストに使っていないもの）は、その旅の最後に、出来事の見出しでまとめる
+    EVENTS.forEach((ev,e)=>{const t=ev.trip||"eu";if(!tripOn(t))return;
+      (ev.photos||[]).forEach(src=>{if(seen.has(src))return;seen.add(src);out.push({src,e,name:ev.title,o:(tripMax[t]||0)+.5,key:"e"+e,ev});});});
+    return out.sort((a,b)=>a.o-b.o);};
+  const render=()=>{const items=collect(),groups=[];
+    items.forEach(it=>{const g=groups[groups.length-1];if(g&&g.key===it.key)g.items.push(it);else groups.push({key:it.key,items:[it]});});
+    const ts=TRIPS.filter(t=>tripOn(t.key));
+    el("photosub").textContent=`${items.length}枚　${ts.length>1?"いま地図に出している旅":TRIPNAME[ts[0].key]}`;
+    el("photobody").innerHTML=groups.length?groups.map(g=>{const f=g.items[0];let head;
+      if(f.ev)head=`${esc(f.ev.title)}<time>${esc(f.ev.d)}</time>`;
+      else{const [pl,dd]=window.__illPlace(f.i);head=`${esc(pl)}${dd?`<time>${esc(dd)}</time>`:""}`;}
+      return `<div class="ggrp"><h3>${head}</h3><div class="pgrid">${g.items.map(it=>`<button class="pph" type="button" ${it.ev?`data-e="${it.e}"`:`data-i="${it.i}"`} aria-label="${esc(it.name)}の写真"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(it.src)}" alt=""><span>${esc(it.name)}</span></button>`).join("")}</div></div>`;}).join(""):`<p class="empty">この旅には、まだ写真がない。</p>`;};
+  el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
