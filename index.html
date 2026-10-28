@@ -105,11 +105,11 @@ body.isfull .panel.empty{display:none}
 .help .hx:hover{background:var(--bg)}
 .zbtn[aria-expanded="true"]{background:var(--fg);color:var(--bg)}
 .vsw{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap}
-.vsw .chip{padding:7px 16px;font-size:13.5px;font-weight:700}
+.vsw .chip{padding:7px 14px;font-size:13.5px;font-weight:700}
 .vsw .chip[aria-selected="true"]{background:var(--fg);color:var(--bg);box-shadow:none}
-body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"]{display:none!important}
+body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"],body:not([data-view="photos"]) [data-page="photos"],body:not([data-view="fail"]) [data-page="fail"],body:not([data-view="cost"]) [data-page="cost"],body:not([data-view="life"]) [data-page="life"]{display:none!important}
 /* 旅の数字（選んでいる旅の合計。タブに連動） */
-.stats{display:grid;gap:10px;margin-top:8px;padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--card)}
+.stats,.vp{display:grid;gap:10px;margin-top:8px;padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--card);min-width:0}
 .stathd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
 .stathd h2{margin:0;font:800 22px var(--display)}
 .stathd p{margin:0;font-size:12.5px;color:var(--muted)}
@@ -131,6 +131,27 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .smodes .n{color:var(--muted);font-size:12px;min-width:3.6em;text-align:right;font-variant-numeric:tabular-nums}
 .sttrips{margin:0;font-size:12.5px;color:var(--muted)}
 .snote{margin:0;font-size:11.5px;color:var(--muted);line-height:1.6}
+.vp h3.sec{margin:6px 0 0;font:800 16px var(--display)}
+.vp .secsub{margin:-4px 0 0;font-size:12px;color:var(--muted)}
+.vp .empty{margin:0;padding:14px 4px;color:var(--muted);font-size:13.5px}
+.fcards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.fcard{display:grid;gap:7px;align-content:start;padding:12px 14px;border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule);min-width:0}
+.fcard .k{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.fcard .k time{font:500 12px var(--mono);color:var(--muted)}
+.fcard h4{margin:0;font:800 17px/1.35 var(--display)}
+.fcard .fw{margin:0;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.fcard .tl{margin-top:2px}
+.fcard .fph{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px}
+.fcard .fph img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px;background:var(--rule)}
+.fcard .chip{justify-self:start}
+.fsmall{display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.fsm{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:start;padding:10px 12px;border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule);min-width:0}
+.fsm:hover{box-shadow:inset 0 0 0 1.5px var(--fg)}
+.fsm:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.fsm svg{grid-row:1 / span 3;width:44px;height:44px}
+.fsm b{font-size:14px;line-height:1.35}
+.fsm span{font-size:12.5px;line-height:1.55}
+.fsm em{font-style:normal;font-size:11.5px;color:var(--muted)}
 .gal{display:grid;gap:8px;margin-top:8px}
 .galhd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
 .galhd h2{margin:0;font:800 22px var(--display)}
@@ -473,6 +494,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <button class="chip" type="button" role="tab" id="vt-map" data-v="map" aria-selected="true" aria-controls="stage">マップ</button>
       <button class="chip" type="button" role="tab" id="vt-stats" data-v="stats" aria-selected="false" aria-controls="stats" tabindex="-1">旅の数字</button>
       <button class="chip" type="button" role="tab" id="vt-gal" data-v="gal" aria-selected="false" aria-controls="gal" tabindex="-1">イラスト一覧</button>
+      <button class="chip" type="button" role="tab" id="vt-fail" data-v="fail" aria-selected="false" aria-controls="fails" tabindex="-1">やらかし図鑑</button>
     </div>
     <button class="chip tplay" data-page="map" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
     <div class="areas playmenu" id="playmenu" role="group" aria-label="再生する旅を選ぶ" hidden>
@@ -538,6 +560,12 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <ul class="smodes" id="smodes" aria-label="乗り物ごとの距離と回数"></ul>
     <p class="sttrips" id="stttrips" hidden></p>
     <p class="snote" id="snote"></p>
+  </section>
+  <section class="vp" data-page="fail" id="fails" aria-labelledby="failh">
+    <div class="stathd"><h2 id="failh">やらかし図鑑</h2><p id="failsub">いま地図に出している旅の分</p></div>
+    <div class="stiles" id="failtiles"></div>
+    <div id="failbody"></div>
+    <p class="snote" id="failnote"></p>
   </section>
   <section class="gal" data-page="gal" id="gal" aria-labelledby="galh">
     <div class="galhd"><div><h2 id="galh">イラスト一覧</h2><p id="galsub">押すと、思い出の解説と写真が出る</p></div>
@@ -2318,6 +2346,9 @@ function rideGlobe(){return new Promise(res=>{
   addEventListener("keydown",e=>{if(e.key==="Escape"&&dlg.open)e.stopImmediatePropagation();},true);
   dlg.addEventListener("close",()=>{const c=body.querySelector(`.gcard[data-i="${dIdx}"]`);if(c)c.focus({preventScroll:true});});
   body.addEventListener("click",e=>{const c=e.target.closest(".gcard");if(c)showDlg(+c.dataset.i);});
+  // 他の表示（やらかし図鑑・写真ウォール）から使う
+  const ordOfI={};list.forEach((g,n)=>g.items.forEach(i=>{ordOfI[i]=n;}));
+  window.__showIll=showDlg;window.__illPlace=i=>placeOfI[i]||["",""];window.__illOrd=i=>ordOfI[i]??1e9;
 })();
 // ---- trip picker (旅を選ぶ ▾) ----
 (()=>{const btn=document.getElementById("tripbtn"),list=document.getElementById("triplist"),lbl=document.getElementById("triplbl");
@@ -2342,7 +2373,7 @@ function rideGlobe(){return new Promise(res=>{
     Object.keys(SHOW).forEach(k=>{SHOW[k]=keys.has(k);});syncShow();
     tabs.forEach(x=>x.setAttribute("aria-pressed",sel.has(x.dataset.grp)?"true":"false"));syncTP();
     ICO.key="";ICO.segKey="";
-    if(window.__statsRefresh)window.__statsRefresh();
+    (window.__onTrips||[]).forEach(f=>f());
     if(PS.on&&(sel.size>1||!tripOn(PS.trip)))stopPlay();
     if(selEl&&!selEl.getClientRects().length&&typeof closePanel==="function")closePanel();
     if(sel.size>1&&window.__galAll)window.__galAll();
@@ -2372,6 +2403,44 @@ function rideGlobe(){return new Promise(res=>{
     if(e.key==="ArrowRight")n=(i+1)%btns.length;else if(e.key==="ArrowLeft")n=(i+btns.length-1)%btns.length;else if(e.key==="Home")n=0;else if(e.key==="End")n=btns.length-1;
     if(n>=0){e.preventDefault();set(btns[n].dataset.v,true);}});
   window.__page=()=>cur;window.__setPage=v=>set(v);})();
+// ---- やらかし図鑑（地図の✕印の出来事と、イラストの説明に書いたハプニング） ----
+(()=>{const el=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  // 「ちいさなハプニング」：イラストの説明に、本人が書いた出来事から選んだもの（説明の文はそのまま出す）
+  const SMALL=[["eu","成田駅で降りてしまった"],["eu","クローネは売り切れ"],["eu","凍った携帯"],["eu","洗濯物"],["eu","グリニッジ天文台"],["eu","間違えた切符"],["eu","夜明け前の墓地"],["eu","空港行きのトラム"],
+    ["eu","カランク国立公園"],["eu","梯子と鎖の道"],["eu","魚のスープ"],["eu","国境でネットが切れた"],["eu","最後の晩餐の教会"],["eu","日曜日で店が閉まってる"],
+    ["af","ピラミッドの見えるホテル"],["af","キリマ サファリ キャンプ"]];
+  const evKey=ev=>{const m=/^(\d+)\/(\d+)/.exec(ev.d)||[0,0,0];let mo=+m[1];if((ev.trip||"eu")==="af"&&mo<6)mo+=12;return (ev.trip==="af"?1000:0)+mo*40+(+m[2]);};
+  async function goEv(i){
+    if(window.__page()!=="map"){window.__setPage("map");await sleep(220);}
+    const ev=EVENTS[i];if(typeof PS!=="undefined"&&PS.on)stopPlay();
+    if(!document.body.classList.contains("isfull"))stage.scrollIntoView({block:"start",behavior:RM()?"auto":"smooth"});
+    const k=Math.min(KMAX(),Math.max(cur.k,kRef()*14));
+    if(GL.on)await exitGlobe(P[ev.k],k);
+    else{const p=proj(P[ev.k]);const T=d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-p[0],-p[1]);
+      if(RM())svg.call(zoom.transform,T);else await svg.transition().duration(750).call(zoom.transform,T).end().catch(()=>{});}
+    await sleep(140);
+    const g=gOver.node().querySelector(`.ev[data-ev="${i}"]`);if(!g)return;
+    if(g.style.display==="none")g.style.display="";
+    select(g);}
+  const render=()=>{
+    const evs=EVENTS.map((ev,i)=>({ev,i})).filter(({ev})=>tripOn(ev.trip||"eu")).sort((a,b)=>evKey(a.ev)-evKey(b.ev));
+    const smalls=SMALL.map(([t,n])=>ILLS.findIndex(x=>x.trip===t&&x.name===n)).filter(i=>i>=0&&tripOn(ILLS[i].trip)).sort((a,b)=>window.__illOrd(a)-window.__illOrd(b));
+    const ts=TRIPS.filter(t=>tripOn(t.key));
+    el("failsub").textContent=ts.length>1?"いま地図に出している旅の分":TRIPNAME[ts[0].key];
+    el("failtiles").innerHTML=`<div class="stile"><small>大きなやらかし</small><b>${evs.length}<i>件</i></b><em>地図の✕印</em></div><div class="stile"><small>ちいさなハプニング</small><b>${smalls.length}<i>件</i></b><em>イラストに書いた出来事</em></div>`;
+    let h="";
+    if(evs.length){h+=`<h3 class="sec">大きなやらかし</h3><p class="secsub">運休・乗り遅れ・スト・閉館。地図の✕印と同じ出来事</p><div class="fcards">`+evs.map(({ev,i})=>
+      `<article class="fcard"><div class="k"><span class="tag ${ev.trip||"eu"}">${esc(TRIPNAME[ev.trip||"eu"])}</span><time>${esc(ev.d)}</time></div><h4>${esc(ev.title)}</h4><p class="fw"><span class="mode ev">✕</span>${esc(ev.where)}</p>
+      <ul class="tl">${ev.tl.map(([t,x])=>`<li><time>${esc(t)}</time><span>${esc(x)}</span></li>`).join("")}</ul>
+      ${ev.photos&&ev.photos.length?`<div class="fph">${ev.photos.slice(0,2).map(u=>`<img loading="lazy" src="${esc(u)}" alt="${esc(ev.title)}の写真">`).join("")}</div>`:""}
+      <button class="chip" type="button" data-ev="${i}">地図で見る</button></article>`).join("")+`</div>`;}
+    if(smalls.length){h+=`<h3 class="sec">ちいさなハプニング</h3><p class="secsub">押すと、思い出の解説と写真が出る</p><div class="fsmall">`+smalls.map(i=>{const il=ILLS[i],[pl,dd]=window.__illPlace(i);
+      return `<button class="fsm" type="button" data-i="${i}" aria-label="${esc(il.name)}"><svg viewBox="-22 -22 44 44" aria-hidden="true"><circle r="21" fill="var(--card)" stroke="var(--rule)"/><g transform="scale(1.45)">${ICONS[il.ic]||""}</g></svg><b>${esc(il.name)}</b><span>${esc(il.cap)}</span><em>${esc(pl)}${dd?`（${esc(dd)}）`:""}</em></button>`;}).join("")+`</div>`;}
+    if(!h)h=`<p class="empty">この旅には、まだやらかしの記録がない。</p>`;
+    el("failbody").innerHTML=h;
+    el("failnote").textContent="「大きなやらかし」は、時刻つきのメモが残っている出来事。「ちいさなハプニング」は、イラストの説明に書いた出来事から選んだ（説明の文はそのまま）。";};
+  el("failbody").addEventListener("click",e=>{const b=e.target.closest("[data-ev]");if(b){goEv(+b.dataset.ev);return;}const c=e.target.closest(".fsm");if(c)window.__showIll(+c.dataset.i);});
+  (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
   // 国の数は、ヨーロッパ・エジプト・ケニアは visited、それ以外はここで決める（地図の色塗りには使わない）
@@ -2415,7 +2484,7 @@ function rideGlobe(){return new Promise(res=>{
     const tt=el("stttrips");if(ts.length>1){tt.hidden=false;tt.textContent=per.map(({t,r})=>`${TRIPNAME[t.key]} 約${fmt(r100(r.km))} km`).join("　／　");}else{tt.hidden=true;tt.textContent="";}
     el("statsub").textContent=ts.length>1?"いま地図に出している旅の合計":(ts[0].key==="th"?"タイ（予定の旅。計画の線から計算）":TRIPNAME[ts[0].key]);
     el("snote").textContent="距離は、地図に描いた線の長さから計算した概算。日帰りは往復で、ぐるっと回るツアーは1周分で数えている。経由地は推測の位置なので、実際の道のりとは少しずれる。運休して乗れなかったルートは入れていない。"+(hasPlan&&!plan?"タイは予定の旅で、計画の線から計算している。":"");};
-  window.__statsRefresh=refresh;refresh();})();
+  window.__statsRefresh=refresh;(window.__onTrips=window.__onTrips||[]).push(refresh);refresh();})();
 enterGlobe(null,{instant:true});
 // ---- URLの #ill=イラスト名（noteの記事などから） ----
 (()=>{const GRP_OF={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th",cn:"cn"};
