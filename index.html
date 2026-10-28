@@ -553,7 +553,6 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
         <li><b>拡大・移動</b>ダブルタップ（パソコンはダブルクリック）かピンチで拡大。1本指（マウス）で移動。右上の ⤢ で全画面</li>
         <li><b>地球儀</b>ドラッグで回せる。ズームするか点をタップすると、平らな地図になる</li>
         <li><b>向きを回す</b>2本指でひねる（パソコンは Shift を押しながらドラッグ）。右上のコンパスで北が上に戻る</li>
-        <li><b>季節の演出</b>右上の「季」で、旅した季節の雪・オーロラ・雨・霧・日差し・砂ぼこり・ランタンを重ねる／消す（ミナの旅と中国は時期が分からないので出ない）</li>
         <li><b>旅の再生</b>ルートの上を走る乗り物を押すと、その乗り物の目線で行き先まで進む</li>
         <li><b>写真</b>右上に赤い点があるイラストは写真つき。数字は写真の枚数。横にスワイプか矢印で切り替え</li>
         <li><b>旅のタブ</b>地図の上の「ヨーロッパ一周」「エジプト・ケニア」「ハワイ・韓国・ロンドン」で、見る旅を選ぶ。押すたびに足す・外すができて、2つ以上選ぶと地球儀で全部が入る（最低1つは残る）</li>
@@ -1976,7 +1975,6 @@ playBtn.addEventListener("click",()=>{const t=selTrip();if(t==="all"){setMenu(pl
 playMenu.querySelectorAll("[data-play]").forEach(b=>b.addEventListener("click",()=>{setMenu(false);startPlay(b.dataset.play);}));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&PS.on&&!stage.classList.contains("full"))stopPlay();});
 // ---- globe view (zoomed out) ----
-let SEAPJ=null;
 const GL={on:false,rot:[-62,-32,0],R0:1,R:1,last:d3.zoomIdentity,quiet:false,byPlay:false};
 const gsv=d3.select(stage).insert("svg",()=>svg.node().nextSibling).attr("class","globe").attr("role","img").attr("aria-label","2つの旅の地球儀。ドラッグで回せる").style("display","none");
 const gdefs=gsv.append("defs");
@@ -2021,7 +2019,7 @@ const gDot=gPts.selectAll("circle").data(gStops).join("circle").attr("class",d=>
 const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["HNL","ハワイ（ミナとお母さん）","hi",10,-10],["SEL","韓国（ミナ）","ko",-96,-8],["ECT","ロンドン（ミナ）","ld",10,-8],["BKK","タイ（予定）","th",10,10],["TSN","中国（小5）","cn",10,-10],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
 const gName=gPts.selectAll("text.gname").data(gStops).join("text").attr("class",d=>"gname "+d.t).text(d=>d.name);
 const vis=c=>d3.geoDistance(c,[-GL.rot[0],-GL.rot[1]])<Math.PI/2-0.03;
-function drawWith(pj,t){SEAPJ=pj;
+function drawWith(pj,t){
   const pp=d3.geoPath(pj),r=pj.rotate(),ctr=[-r[0],-r[1]];
   const vv=c=>t>0.45||d3.geoDistance(c,ctr)<Math.PI/2-0.03;
   gAir.attr("cx",W/2).attr("cy",H/2).attr("r",GL.R+7).style("opacity",Math.max(0,1-t*2.5));
@@ -2523,133 +2521,6 @@ function rideGlobe(){return new Promise(res=>{
     el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（ミナとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
   el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".lcard");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
-// ---- 季節の演出（国ごとの雪・雨・霧・日差し・砂ぼこり・ランタン、フィンランドのオーロラ。地図の上に重ねる） ----
-(()=>{
-  // 旅の季節は、本人の話（イラストの説明）と気候のイメージ。ミナの旅（ハワイ・韓国・ロンドン）と中国は、時期がまだ分からないので演出なし
-  // wash=地面にかける薄い色、pool=粒の数、band=[南,北,西,東]（国の一部だけに限る）
-  const Z=[
-    {t:"eu",ids:["SWE"],fx:"snow",pool:280,wash:[190,215,240,.20]},
-    {t:"eu",ids:["FIN"],fx:"snow",pool:380,wash:[180,210,240,.26]},
-    {t:"eu",ids:["CHE"],fx:"snow",pool:200,wash:[195,218,240,.20]},
-    {t:"eu",ids:["DEU"],fx:"snow",pool:110,wash:[200,220,240,.14]},
-    {t:"eu",ids:["ITA"],band:[44.3,48,5,19],fx:"mist",pool:9,wash:[200,208,220,.14]},
-    {t:"eu",ids:["GBR"],fx:"rain",pool:170,wash:[150,170,195,.16]},
-    {t:"eu",ids:["ESP"],fx:"sun",pool:36,wash:[255,196,90,.13]},
-    {t:"eu",ids:["FRA"],band:[41,45.4,-2,8.6],fx:"sun",pool:30,wash:[255,196,90,.13]},
-    {t:"eu",ids:["MCO"],fx:"sun",pool:8,wash:[255,196,90,.13]},
-    {t:"af",ids:["EGY"],fx:"dust",pool:110,wash:[225,170,90,.17]},
-    {t:"af",ids:["KEN"],fx:"dust",pool:60,wash:[235,185,95,.12],light:true},
-    {t:"th",ids:["THA"],fx:"lantern",pool:24,wash:[255,150,60,.08]}
-  ];
-  const AUR={t:"eu",at:"RVN"};
-  const ON_KEY="atlas-season",el0=document.querySelector(".zbtns");
-  let on=!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
-  try{const v=localStorage.getItem(ON_KEY);if(v==="0")on=false;else if(v==="1")on=true;}catch(e){}
-  const cv=document.createElement("canvas");cv.setAttribute("aria-hidden","true");cv.className="seasonfx";
-  cv.style.cssText="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:inherit";
-  stage.insertBefore(cv,el0);
-  const ctx=cv.getContext("2d");
-  const btn=document.createElement("button");btn.type="button";btn.className="zbtn";btn.id="zsea";btn.textContent="季";btn.style.fontSize="14px";
-  const lab=()=>{btn.setAttribute("aria-pressed",on?"true":"false");btn.setAttribute("aria-label","季節の演出："+(on?"オン":"オフ"));btn.title="季節の演出（"+(on?"オン":"オフ")+"）";btn.style.background=on?"var(--fg)":"";btn.style.color=on?"var(--bg)":"";};
-  lab();el0.insertBefore(btn,document.getElementById("zhelp"));
-  const rng=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
-  // 粒は 0〜1 の位置と性質だけを持つ（画面の座標は毎フレーム計算するので、地図を動かしても追従する）
-  Z.forEach((z,i)=>{const r=rng(1000+i*77);z.ps=Array.from({length:z.pool},()=>({u:r(),v:r(),a:r(),b:r(),c:r()}));z.q="";});
-  const flatPJ={stream:s=>proj.stream({point(x,y){s.point(cur.x+cur.k*x,cur.y+cur.k*y);},lineStart(){s.lineStart();},lineEnd(){s.lineEnd();},polygonStart(){s.polygonStart();},polygonEnd(){s.polygonEnd();},sphere(){if(s.sphere)s.sphere();}})};
-  const feat=id=>gWorld.find(f=>f.id===id);
-  const geom=(z,q)=>({type:"GeometryCollection",geometries:z.ids.map(feat).filter(f=>f&&f[q]).map(f=>f[q])});
-  let sig="",lastChange=0,raf=0,W0=0,H0=0,dpr=1,aurQ=null;
-  const globeOn=()=>(GL.on||GL.morph)&&SEAPJ;
-  const sc=(pj,c)=>{if(pj===flatPJ){const p=proj(c);return p?[cur.x+cur.k*p[0],cur.y+cur.k*p[1]]:null;}
-    const r=pj.rotate(),ca=pj.clipAngle?pj.clipAngle():90;if(ca&&d3.geoDistance(c,[-r[0],-r[1]])>ca*Math.PI/180-0.02)return null;return pj(c);};
-  const active=z=>tripOn(z.t);
-  function build(pj,q){
-    Z.forEach(z=>{z.on=active(z);z.p=null;if(!z.on)return;
-      const g=geom(z,q);if(!g.geometries.length)return;
-      const p=new Path2D();d3.geoPath(pj,p)(g);const bb=d3.geoPath(pj).bounds(g);
-      if(!isFinite(bb[0][0])||!isFinite(bb[1][0]))return;
-      let b2=null;if(z.band){const [s,n,w,e]=z.band;b2=new Path2D();d3.geoPath(pj,b2)(d3.geoGraticule().extent([[w,s],[e,n]]).outline());}
-      const x0=Math.max(0,bb[0][0]),y0=Math.max(0,bb[0][1]),x1=Math.min(W0,bb[1][0]),y1=Math.min(H0,bb[1][1]);
-      if(x1-x0<3||y1-y0<3)return;
-      z.gc=null;if(z.band){const [s0,n0,w0,e0]=z.band,m=sc(pj,[(w0+e0)/2,(s0+n0)/2]),m2=sc(pj,[(w0+e0)/2,n0]);if(m&&m2){z.gc=m;z.gr=Math.max(40,Math.hypot(m2[0]-m[0],m2[1]-m[1])*1.5);}}
-      z.p=p;z.b2=b2;z.bx=x0;z.by=y0;z.bw=x1-x0;z.bh=y1-y0;z.q=q;});
-  }
-  const mod=(a,n)=>((a%n)+n)%n;
-  function drawZone(z,t){
-    const {bx,by,bw,bh}=z,n=Math.max(z.fx==="mist"?z.pool:6,Math.round(z.pool*Math.min(1,bw*bh/110000)));
-    ctx.save();ctx.clip(z.p);if(z.b2)ctx.clip(z.b2);
-    const w=z.wash;if(z.gc){const g=ctx.createRadialGradient(z.gc[0],z.gc[1],0,z.gc[0],z.gc[1],z.gr);g.addColorStop(0,`rgba(${w[0]},${w[1]},${w[2]},${Math.min(.5,w[3]*2)})`);g.addColorStop(1,`rgba(${w[0]},${w[1]},${w[2]},0)`);ctx.fillStyle=g;ctx.fillRect(bx,by,bw,bh);}else{ctx.fillStyle=`rgba(${w[0]},${w[1]},${w[2]},${w[3]})`;ctx.fillRect(bx,by,bw,bh);}
-    const ps=z.ps;
-    for(let i=0;i<Math.min(n,ps.length);i++){const p=ps[i];
-      if(z.fx==="snow"){const sp=16+26*p.a,x=bx+p.u*bw+Math.sin(t*0.8+p.b*6.28)*9,y=by+mod(p.v*bh+t*sp,bh),r=1.3+p.c*2.1;
-        ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fillStyle="rgba(255,255,255,.96)";ctx.fill();ctx.strokeStyle="rgba(110,145,185,.55)";ctx.lineWidth=.6;ctx.stroke();}
-      else if(z.fx==="rain"){const sp=240+120*p.a,x=bx+mod(p.u*bw-t*sp*0.28,bw),y=by+mod(p.v*bh+t*sp,bh),l=7+p.c*7;
-        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-l*0.28,y-l);ctx.strokeStyle="rgba(70,110,165,.55)";ctx.lineWidth=1;ctx.stroke();}
-      else if(z.fx==="dust"){const sp=(z.light?8:14)+22*p.a,x=bx+mod(p.u*bw+t*sp,bw),y=by+mod(p.v*bh+Math.sin(t*0.6+p.b*6.28)*10,bh),r=0.8+p.c*(z.light?1.3:2.1);
-        ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fillStyle=z.light?"rgba(190,140,70,.5)":"rgba(165,115,55,.6)";ctx.fill();}
-      else if(z.fx==="sun"){const x=bx+p.u*bw,y=by+p.v*bh,k=0.5+0.5*Math.sin(t*1.6+p.b*6.28),r=2+p.c*3.2;
-        if(k>0.35){ctx.globalAlpha=(k-0.35)/0.65*0.9;ctx.strokeStyle="rgba(235,150,20,1)";ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(x-r,y);ctx.lineTo(x+r,y);ctx.moveTo(x,y-r);ctx.lineTo(x,y+r);ctx.stroke();ctx.globalAlpha=1;}}
-      else if(z.fx==="mist"){const rr=Math.max(40,Math.min(130,Math.sqrt(bw*bh)*0.28))*(0.7+p.c*0.6),x=bx+mod(p.u*bw+t*(4+p.a*5),bw),y=by+p.v*bh+Math.sin(t*0.2+p.b*6.28)*8;
-        const g=ctx.createRadialGradient(x,y,0,x,y,rr);g.addColorStop(0,"rgba(238,242,248,.62)");g.addColorStop(1,"rgba(238,242,248,0)");ctx.fillStyle=g;ctx.fillRect(x-rr,y-rr,rr*2,rr*2);}
-      else if(z.fx==="lantern"){const sp=9+11*p.a,x=bx+mod(p.u*bw+Math.sin(t*0.5+p.b*6.28)*14,bw),y=by+bh-mod(p.v*bh+t*sp,bh),r=4+p.c*3.5,k=0.75+0.25*Math.sin(t*3+p.b*20);
-        const g=ctx.createRadialGradient(x,y,0,x,y,r*4);g.addColorStop(0,`rgba(255,160,40,${.95*k})`);g.addColorStop(1,"rgba(255,150,40,0)");ctx.fillStyle=g;ctx.fillRect(x-r*4,y-r*4,r*8,r*8);
-        ctx.beginPath();ctx.arc(x,y,r*0.55,0,6.283);ctx.fillStyle=`rgba(255,210,110,${k})`;ctx.fill();}
-    }
-    ctx.restore();
-  }
-  function drawAurora(pj,t){
-    if(!tripOn(AUR.t))return;
-    const c=P[AUR.at],q=sc(pj,c);if(!q)return;
-    const up=sc(pj,[c[0],c[1]+2]);if(!up)return;
-    // 北（画面の上向き）の1単位 ≒ 緯度2度ぶんの画面上の長さ
-    const ux=up[0]-q[0],uy=up[1]-q[1];let u=Math.hypot(ux,uy);if(u<2.5)return;u=Math.max(u,9);
-    const R=Math.min(Math.max(u*4.6,56),300),off=Math.min(u*0.55,R*0.5),cx=q[0]+ux/u*off,cy=q[1]+uy/u*off;
-    if(cx<-R||cy<-R||cx>W0+R||cy>H0+R)return;
-    ctx.save();
-    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);g.addColorStop(0,"rgba(18,30,78,.50)");g.addColorStop(.65,"rgba(24,40,95,.30)");g.addColorStop(1,"rgba(24,40,95,0)");
-    ctx.fillStyle=g;ctx.fillRect(cx-R,cy-R,R*2,R*2);
-    ctx.beginPath();ctx.arc(cx,cy,R*0.95,0,6.283);ctx.clip();
-    const N=34,span=R*1.7,h0=R*0.95;
-    for(let i=0;i<N;i++){const f=i/(N-1),x=cx-span/2+span*f,wav=Math.sin(f*5+t*0.7)*R*0.10+Math.sin(f*11-t*1.1)*R*0.04;
-      const a=0.5+0.5*Math.sin(t*0.9+f*9),hh=h0*(0.55+0.45*Math.sin(f*3.3+t*0.5)),y1=cy+R*0.28+wav,y0=y1-hh;
-      const lg=ctx.createLinearGradient(0,y0,0,y1);lg.addColorStop(0,"rgba(255,90,200,0)");lg.addColorStop(.25,`rgba(255,100,210,${.18*a})`);lg.addColorStop(.6,`rgba(70,255,160,${.5*a})`);lg.addColorStop(1,"rgba(70,255,160,0)");
-      ctx.fillStyle=lg;ctx.fillRect(x-span/N*0.75,y0,span/N*1.5,y1-y0);}
-    for(let i=0;i<14;i++){const sx=cx+(Math.sin(i*12.9)*0.5)*R*1.6,sy=cy+(Math.cos(i*7.3)*0.5)*R*1.6,k=0.4+0.6*Math.abs(Math.sin(t*1.3+i));
-      ctx.globalAlpha=k*0.8;ctx.fillStyle="#fff";ctx.fillRect(sx,sy,1.4,1.4);}
-    ctx.restore();
-  }
-  let lastF=0;
-  function frame(){
-    raf=0;
-    if(performance.now()-lastF<30){raf=requestAnimationFrame(frame);return;}lastF=performance.now();
-    const w=stage.clientWidth,h=stage.clientHeight;
-    if(!on||document.hidden||document.body.dataset.view!=="map"||!w||!h){clear();return;}
-    dpr=Math.min(2,window.devicePixelRatio||1);
-    if(w!==W0||h!==H0||cv.width!==Math.round(w*dpr)){W0=w;H0=h;cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);sig="";}
-    const pj=globeOn()?SEAPJ:flatPJ;
-    const gs=pj===flatPJ?"":pj.rotate().join(",")+"|"+pj.scale().toFixed(3)+"|"+pj.translate().map(v=>v.toFixed(2)).join(",")+"|"+(pj.clipAngle?pj.clipAngle():"")+"|"+(pj.angle?pj.angle():"");
-    const s=[pj===flatPJ?"f":"g",cur.x.toFixed(2),cur.y.toFixed(2),cur.k.toFixed(4),proj.angle(),proj.scale(),w,h,gs,JSON.stringify(SHOW)].join("|");
-    const now=performance.now();
-    if(s!==sig){sig=s;lastChange=now;build(pj,"coarse");}
-    else if(now-lastChange>220&&Z.some(z=>z.on&&z.p&&z.q!=="fine"))build(pj,"fine");
-    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
-    const t=now/1000;
-    let any=false;
-    Z.forEach(z=>{if(z.on&&z.p){any=true;drawZone(z,t);}});
-    if(tripOn(AUR.t)){drawAurora(pj,t);any=true;}
-    if(any||Z.some(z=>tripOn(z.t)))raf=requestAnimationFrame(frame);
-    else clear();
-  }
-  function clear(){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);}
-  const kick=()=>{if(!raf&&on)raf=requestAnimationFrame(frame);};
-  btn.addEventListener("click",()=>{on=!on;try{localStorage.setItem(ON_KEY,on?"1":"0");}catch(e){}lab();if(on){sig="";kick();}else{cancelAnimationFrame(raf);raf=0;clear();}});
-  document.addEventListener("visibilitychange",kick);
-  (window.__onTrips=window.__onTrips||[]).push(()=>{sig="";kick();});
-  // 表示の切り替え（マップに戻ったとき）でも動かす
-  new MutationObserver(kick).observe(document.body,{attributes:true,attributeFilter:["data-view"]});
-  window.__seasonKick=kick;
-  kick();
-})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
   // 国の数は、ヨーロッパ・エジプト・ケニアは visited、それ以外はここで決める（地図の色塗りには使わない）
