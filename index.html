@@ -131,6 +131,21 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .smodes .n{color:var(--muted);font-size:12px;min-width:3.6em;text-align:right;font-variant-numeric:tabular-nums}
 .smodes .nm small{display:block;font-size:11.5px;color:var(--muted)}
 #costlist{grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr))}
+.lscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.lgrid{display:grid;grid-template-columns:64px repeat(var(--n),minmax(240px,1fr));gap:8px 10px;min-width:calc(64px + var(--n) * 250px)}
+.lh{display:grid;align-content:end;gap:0;padding:0 2px 5px;border-bottom:2px solid var(--rule)}
+.lh b{font:800 20px var(--display)}.lh small{font-size:12px;color:var(--muted)}
+.ll{position:sticky;left:0;z-index:2;background:var(--card);align-self:start;padding-top:8px;font-weight:800;font-size:13px;line-height:1.3}
+.ll small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.lc{display:grid;gap:8px;align-content:start;min-height:86px;padding:6px;border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule);min-width:0}
+.lcard{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:3px;padding:9px 11px 9px 14px;border-radius:6px;background:var(--card);box-shadow:inset 0 0 0 1px var(--rule),inset 5px 0 0 var(--c);min-width:0}
+.lcard b{font-size:14.5px;line-height:1.35}
+.lcard time{font:500 12px var(--mono);color:var(--muted)}
+.lcard span{font-size:12.5px;line-height:1.55}
+.lcard em{font-style:normal;font-size:11.5px;color:var(--muted)}
+.lcard[data-on="0"]{opacity:.55}
+.lcard:hover,.lcard:focus-visible{opacity:1;box-shadow:inset 0 0 0 1.5px var(--fg),inset 5px 0 0 var(--c)}
+.lcard:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .sttrips{margin:0;font-size:12.5px;color:var(--muted)}
 .snote{margin:0;font-size:11.5px;color:var(--muted);line-height:1.6}
 .vp h3.sec{margin:6px 0 0;font:800 16px var(--display)}
@@ -507,6 +522,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <button class="chip" type="button" role="tab" id="vt-photos" data-v="photos" aria-selected="false" aria-controls="photos" tabindex="-1">写真ウォール</button>
       <button class="chip" type="button" role="tab" id="vt-fail" data-v="fail" aria-selected="false" aria-controls="fails" tabindex="-1">やらかし図鑑</button>
       <button class="chip" type="button" role="tab" id="vt-cost" data-v="cost" aria-selected="false" aria-controls="costs" tabindex="-1">費用</button>
+      <button class="chip" type="button" role="tab" id="vt-life" data-v="life" aria-selected="false" aria-controls="life" tabindex="-1">年表</button>
     </div>
     <button class="chip tplay" data-page="map" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
     <div class="areas playmenu" id="playmenu" role="group" aria-label="再生する旅を選ぶ" hidden>
@@ -572,6 +588,11 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <ul class="smodes" id="smodes" aria-label="乗り物ごとの距離と回数"></ul>
     <p class="sttrips" id="stttrips" hidden></p>
     <p class="snote" id="snote"></p>
+  </section>
+  <section class="vp" data-page="life" id="life" aria-labelledby="lifeh">
+    <div class="stathd"><h2 id="lifeh">旅の年表</h2><p id="lifesub">いま選んでいる旅は濃く出している。押すと、その旅の地図へ</p></div>
+    <div class="lscroll" id="lifescroll"><div class="lgrid" id="lifegrid"></div></div>
+    <p class="snote" id="lifenote"></p>
   </section>
   <section class="vp" data-page="cost" id="costs" aria-labelledby="costh">
     <div class="stathd"><h2 id="costh">費用</h2><p id="costsub">いま地図に出している旅の分</p></div>
@@ -2483,6 +2504,31 @@ function rideGlobe(){return new Promise(res=>{
       else{const [pl,dd]=window.__illPlace(f.i);head=`${esc(pl)}${dd?`<time>${esc(dd)}</time>`:""}`;}
       return `<div class="ggrp"><h3>${head}</h3><div class="pgrid">${g.items.map(it=>`<button class="pph" type="button" ${it.ev?`data-e="${it.e}"`:`data-i="${it.i}"`} aria-label="${esc(it.name)}の写真"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(it.src)}" alt=""><span>${esc(it.name)}</span></button>`).join("")}</div></div>`;}).join(""):`<p class="empty">この旅には、まだ写真がない。</p>`;};
   el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
+  (window.__onTrips=window.__onTrips||[]).push(render);render();})();
+// ---- 旅の年表（旅を、時期の順に3つの段で並べる。年は等間隔ではない） ----
+(()=>{const el=id=>document.getElementById(id);
+  const GRP={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th",cn:"cn"};
+  // 年ごとの列。年齢は、シゲルの年齢（ソースに生年月日は入れない）
+  const COLS=[["2009〜10年","10〜11歳"],["2019年","20歳"],["2025年","26〜27歳"],["2026年","28歳"]];
+  const LANES=[["シゲル","一人旅・家族と"],["ふたり","シゲルとミナ"],["ミナ","ミナの旅"]];
+  // [旅, 列, 段, 日付, 一言]。ハワイは時期が分かっていないので入れない
+  const T=[["cn",0,0,"2009〜10年（小5）","天津に1年間住んで、西安・上海・青島・武夷山へ出かけた"],
+    ["ld",1,2,"2019/3/8–3/13","ミナがロンドンへ。1週間の滞在が1か月くらいの濃さだった"],
+    ["ko",1,2,"2019/3/17〜","ミナが韓国へ。景福宮、明洞、南大門市場、食べ歩き"],
+    ["eu",2,0,"2025/1/2–2/4","初海外・一人旅・リュック1つ"],
+    ["af",2,1,"2025/12/20–2026/1/3","ピラミッドの国から、サバンナで年越しまで"],
+    ["th",3,1,"2026年11月（予定）","寝台列車でチェンマイへ"]];
+  const nIll=t=>ILLS.filter(x=>x.trip===t).length;
+  const nPh=t=>{const s=new Set();ILLS.filter(x=>x.trip===t).forEach(x=>(x.photos||(x.photo?[x.photo]:[])).forEach(u=>s.add(u)));EVENTS.filter(e=>(e.trip||"eu")===t).forEach(e=>(e.photos||[]).forEach(u=>s.add(u)));return s.size;};
+  const meta=t=>{const tr=TRIPS.find(x=>x.key===t),st=tr&&tr.stats,ph=nPh(t);return `${st?`${st[0][0]}か国・${st[2][0]}日　`:""}イラスト${nIll(t)}件${ph?`・写真${ph}枚`:""}`;};
+  const render=()=>{
+    const g=el("lifegrid");g.style.setProperty("--n",COLS.length);
+    let h=`<div></div>`+COLS.map(([y,a])=>`<div class="lh"><b>${y}</b><small>シゲル ${a}</small></div>`).join("");
+    LANES.forEach(([n,sub],L)=>{h+=`<div class="ll">${n}<small>${sub}</small></div>`+COLS.map((_,c)=>`<div class="lc">${T.filter(x=>x[1]===c&&x[2]===L).map(([t,,,d,x])=>
+      `<button class="lcard" type="button" data-t="${t}" data-on="${tripOn(t)?1:0}" style="--c:var(--${t})"><b>${esc(TRIPNAME[t])}</b><time>${esc(d)}</time><span>${esc(x)}</span><em>${esc(meta(t))}</em></button>`).join("")}</div>`).join("");});
+    g.innerHTML=h;
+    el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（ミナとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
+  el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".lcard");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 費用（旅程表「費用」シートの、出発前の数字。実際に使った額ではない） ----
 (()=>{const el=id=>document.getElementById(id),yen=n=>"¥"+Math.round(n).toLocaleString("ja-JP");
