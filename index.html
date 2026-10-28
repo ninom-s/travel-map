@@ -1975,7 +1975,6 @@ playBtn.addEventListener("click",()=>{const t=selTrip();if(t==="all"){setMenu(pl
 playMenu.querySelectorAll("[data-play]").forEach(b=>b.addEventListener("click",()=>{setMenu(false);startPlay(b.dataset.play);}));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&PS.on&&!stage.classList.contains("full"))stopPlay();});
 // ---- globe view (zoomed out) ----
-let LMPJ=null;
 const GL={on:false,rot:[-62,-32,0],R0:1,R:1,last:d3.zoomIdentity,quiet:false,byPlay:false};
 const gsv=d3.select(stage).insert("svg",()=>svg.node().nextSibling).attr("class","globe").attr("role","img").attr("aria-label","2つの旅の地球儀。ドラッグで回せる").style("display","none");
 const gdefs=gsv.append("defs");
@@ -2020,7 +2019,7 @@ const gDot=gPts.selectAll("circle").data(gStops).join("circle").attr("class",d=>
 const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["HNL","ハワイ（ミナとお母さん）","hi",10,-10],["SEL","韓国（ミナ）","ko",-96,-8],["ECT","ロンドン（ミナ）","ld",10,-8],["BKK","タイ（予定）","th",10,10],["TSN","中国（小5）","cn",10,-10],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
 const gName=gPts.selectAll("text.gname").data(gStops).join("text").attr("class",d=>"gname "+d.t).text(d=>d.name);
 const vis=c=>d3.geoDistance(c,[-GL.rot[0],-GL.rot[1]])<Math.PI/2-0.03;
-function drawWith(pj,t){LMPJ=pj;
+function drawWith(pj,t){
   const pp=d3.geoPath(pj),r=pj.rotate(),ctr=[-r[0],-r[1]];
   const vv=c=>t>0.45||d3.geoDistance(c,ctr)<Math.PI/2-0.03;
   gAir.attr("cx",W/2).attr("cy",H/2).attr("r",GL.R+7).style("opacity",Math.max(0,1-t*2.5));
@@ -2522,93 +2521,6 @@ function rideGlobe(){return new Promise(res=>{
     el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（ミナとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
   el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".lcard");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
-// ---- 国ごとの名所アニメーション（その国の旅で一番の思い出を、動くバッジにして地図に置く） ----
-(()=>{
-  const ON_KEY="atlas-landmarks",zb=document.querySelector(".zbtns");
-  const reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
-  let on=true;try{const v=localStorage.getItem(ON_KEY);if(v==="0")on=false;}catch(e){}
-  const NS="http://www.w3.org/2000/svg";
-  // --- SMIL の小さな部品（バッジの中の座標は、イラストと同じ -12〜12） ---
-  const SP='calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"';
-  const tr=(type,vals,dur,o="")=>`<animateTransform attributeName="transform" type="${type}" values="${vals}" dur="${dur}s" repeatCount="indefinite" ${o}/>`;
-  const bob=(vals,dur,type="translate",add=false)=>tr(type,vals,dur,SP+(add?' additive="sum"':""));
-  const an=(attr,vals,dur,o="")=>`<animate attributeName="${attr}" values="${vals}" dur="${dur}s" repeatCount="indefinite" ${o}/>`;
-  const star=(x,y,d,c="var(--i-gold)")=>`<g transform="translate(${x},${y})"><path d="M0,-2.4 L.6,-.6 L2.4,0 L.6,.6 L0,2.4 L-.6,.6 L-2.4,0 L-.6,-.6Z" fill="${c}" stroke="var(--fg)" stroke-width=".25">${tr("scale","0;1;0",2.4,'begin="'+d+'s"')}</path></g>`;
-  const puff=(x,y,d,dx=3,dy=-8)=>`<circle cx="${x}" cy="${y}" r="1" fill="#fff" stroke="var(--rule)" stroke-width=".3" opacity="0">${tr("translate",`0 0;${dx} ${dy}`,2.4,'begin="'+d+'s"')}${an("r","1;2.6",2.4,'begin="'+d+'s"')}${an("opacity",".95;0",2.4,'begin="'+d+'s"')}</circle>`;
-  const snow=(x,d,s=4)=>`<circle cx="${x}" cy="-14" r=".8" fill="#fff" stroke="#9db4c8" stroke-width=".3">${tr("translate","0 0;1.5 30",s,'begin="-'+d+'s"')}</circle>`;
-  const cloud=(y,d,dur,s=1)=>`<g transform="translate(0,${y}) scale(${s})"><g>${tr("translate","-30 0;30 0",dur,'begin="-'+d+'s"')}<ellipse cx="0" cy="0" rx="6" ry="2.2" fill="#fff" opacity=".85"/><ellipse cx="-3" cy="-1.4" rx="3.2" ry="2" fill="#fff" opacity=".85"/><ellipse cx="3" cy="-1.2" rx="3" ry="1.8" fill="#fff" opacity=".85"/></g></g>`;
-  const wave=(y,d=0,c="var(--i-sea)")=>`<g><path d="M-18,${y} q3,-2 6,0 t6,0 t6,0 t6,0 t6,0 t6,0" fill="none" stroke="${c}" stroke-width="1.2" stroke-linecap="round">${tr("translate","0 0;-12 0",2.8,'begin="-'+d+'s"')}</path></g>`;
-  const ripple=(y,d)=>`<ellipse cx="0" cy="${y}" rx="2" ry=".6" fill="none" stroke="#fff" stroke-width=".7">${an("rx","2;11",2.6,'begin="-'+d+'s"')}${an("opacity",".9;0",2.6,'begin="-'+d+'s"')}</ellipse>`;
-  const aurIcon=ICONS.aurora.replace(/<path class="(i-aur[12])" d="([^"]*)"\/>/g,(m,c,d)=>`<path class="${c}" d="${d}">${bob(c==="i-aur1"?"0 0;0 -2.2;0 0":"0 0;0 2;0 0",c==="i-aur1"?4.2:5.4)}${an("opacity",".55;1;.55",c==="i-aur1"?3.1:4)}</path>`)+
-    `<path class="i-aur1" d="M-12,3 Q-4,-6 3,1 Q8,5 12,-2" opacity=".6">${bob("0 0;0 -1.6;0 0",3.6)}</path>`+star(-8,-9,0,"#fff")+star(9,-6,1.1,"#fff")+star(2,-10,.6,"#fff");
-  // バッジ：[id, 旅, 地図の点, 画面での位置のずらし(dx,dy)、イラストの名前（押すとそこへ）、中身]
-  const S=[
-    {id:"fi",trips:["eu"],k:"AUR",dx:60,dy:26,ill:"オーロラ",in:aurIcon},
-    {id:"se",trips:["eu"],k:"ARN",dx:-44,dy:-30,ill:"ヴァーサ号",in:`<g>${bob("0 0;0 -1.2;0 0",3.2)}${bob("-3 0 8;3 0 8;-3 0 8",3.2,"rotate",true)}${ICONS.vasa}</g>`+wave(9.5)},
-    {id:"uk",trips:["eu","ld"],k:"LON",dx:-30,dy:30,ill:"ビッグベン",in:ICONS.bigben+`<circle cx="0" cy="-12.5" r="1.4" fill="none" stroke="var(--i-gold)" stroke-width=".9">${an("r","1;7",2.2)}${an("opacity",".95;0",2.2)}</circle><line x1="0" y1="-2" x2="0" y2="-4" stroke="var(--fg)" stroke-width=".7" stroke-linecap="round">${tr("rotate","0 0 -2;360 0 -2",5)}</line><line x1="0" y1="-2" x2="0" y2="-3.1" stroke="var(--fg)" stroke-width=".9" stroke-linecap="round">${tr("rotate","0 0 -2;360 0 -2",60)}</line>`},
-    {id:"sc",trips:["eu"],k:"GLF",dx:-24,dy:-54,ill:"グレンフィナン高架橋",in:`<g>${bob("0 0;0 .5;0 0",.5)}${ICONS.viaduct}</g>`+puff(-5,-11,0,4,-8)+puff(-5,-11,.8,5,-9)+puff(-5,-11,1.6,3,-9)},
-    {id:"es",trips:["eu"],k:"BCN",dx:-52,dy:14,ill:"サグラダ・ファミリア",in:ICONS.sagrada+star(-9,-10,0)+star(9,-8,.8)+star(0,-12.5,1.6)+star(11,2,.4)+star(-11,2,1.2)},
-    {id:"fr",trips:["eu"],k:"MRS",dx:-30,dy:-46,ill:"カランク国立公園",in:ICONS.calanque+wave(7.5,0,"#fff")+wave(9.2,1.4,"#fff")+`<g transform="translate(0,0)">${tr("translate","-9 0;9 0;-9 0",9)}<g>${bob("0 0;0 -.6;0 0",1.6)}<path d="M0,4.6 V-1 L3.2,3.6 Z" fill="#fff" stroke="var(--fg)" stroke-width=".4"/><path d="M-2,4.6 H3.6 L2.4,6.3 H-1 Z" fill="var(--i-red)" stroke="var(--fg)" stroke-width=".4"/></g></g>`},
-    {id:"mc",trips:["eu"],k:"MCO",dx:44,dy:44,ill:"モンテカルロ・カジノ",in:`<g>${tr("rotate","-2 0 10;2 0 10;-2 0 10",.7)}${ICONS.slot}</g>`+[0,1,2,3,4,5,6,7].map(i=>{const a=i*Math.PI/4;return `<circle cx="${(13.5*Math.cos(a)).toFixed(1)}" cy="${(13.5*Math.sin(a)).toFixed(1)}" r="1.2" fill="var(--i-gold)" stroke="var(--fg)" stroke-width=".25">${an("opacity","1;.15;1",1,'begin="-'+(i*.125)+'s"')}</circle>`;}).join("")},
-    {id:"it",trips:["eu"],k:"VCE",dx:32,dy:30,ill:"ベネチアの水路",in:`<g>${bob("-3 0;3 0;-3 0",4.5)}${bob("-2 0 6;2 0 6;-2 0 6",3,"rotate",true)}${ICONS.gondola}</g>`+ripple(8.5,0)+ripple(8.5,1.3)},
-    {id:"ch",trips:["eu"],k:"STM",dx:4,dy:34,ill:"ベルニナ鉄道",in:`<g>${bob("-1.2 0;1.2 0;-1.2 0",2.6)}${ICONS.bernina}</g>`+[-9,-5,-1,3,7,10].map((x,i)=>snow(x,i*.8+.3,3+(i%3))).join("")},
-    {id:"de",trips:["eu"],k:"HSW",dx:-30,dy:-58,ill:"ノイシュバンシュタイン城",in:cloud(-9,0,16)+cloud(-3,9,22,.8)+ICONS.neuschwanstein+star(8,-10,0,"#fff")+star(-9,-8,1.2,"#fff")},
-    {id:"eg",trips:["af"],k:"GIZ",dx:-20,dy:-34,ill:"ラクダに乗った",in:ICONS.pyramid+`<g>${tr("translate","-28 0;28 0",11)}<g transform="translate(0,7) scale(.5)"><g>${bob("0 0;0 -1.4;0 0",.8)}${ICONS.camel1}</g></g></g>`},
-    {id:"ke",trips:["af"],k:"AMB",dx:34,dy:24,ill:"キリマンジャロ",in:ICONS.kili+`<g>${tr("translate","28 0;-28 0",12)}<g transform="translate(0,6) scale(.55)"><g>${bob("-2 0 8;2 0 8;-2 0 8",1.8,"rotate")}${ICONS.elephant}</g></g></g>`},
-    {id:"th",trips:["th"],k:"CNX",dx:60,dy:40,ill:"コムローイ祭り（予定）",label:"予定",night:true,in:[[-6,9,.5,0],[4,11,.4,3],[-1,8,.7,6],[7,6,.35,8],[-8,5,.4,10]].map(([x,y,s,d])=>`<g>${tr("translate",`0 ${y+10};0 ${-24+y*0}`,11,'begin="-'+d+'s"')}${an("opacity","0;1;1;0",11,'begin="-'+d+'s" keyTimes="0;.12;.8;1"')}<g transform="translate(${x},0) scale(${s})">${ICONS.lantern}</g></g>`).join("")+star(-9,-9,0,"#fff")+star(9,-7,1,"#fff")},
-    {id:"us",trips:["hi"],k:"HNL",dx:30,dy:-26,ill:"ワイキキビーチ",in:`<g>${bob("-1.5 1 10;1.5 1 10;-1.5 1 10",3.6,"rotate")}${ICONS.palmbeach}</g>`+wave(4,0,"#fff")+wave(5.4,1.2,"#fff")+star(8,0,.5,"#fff")},
-    {id:"kr",trips:["ko"],k:"SEL",dx:-30,dy:-30,ill:"景福宮と韓服",in:`<g>${bob("-3 0 11;3 0 11;-3 0 11",3.2,"rotate")}${ICONS.hanbok}</g>`+star(-9,-8,0)+star(9,-4,1.1)+star(7,8,.5)},
-    {id:"cn",trips:["cn"],k:"SHH",dx:30,dy:-28,ill:"リニアモーターカー",in:`<g>${bob("-5 0;5 0;-5 0",2.4)}${ICONS.maglev}</g>`+[-2,1.5,5].map((y,i)=>`<line x1="-3" y1="${y}" x2="-14" y2="${y}" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".0">${an("opacity","0;.9;0",.9,'begin="-'+(i*.3)+'s"')}${tr("translate","6 0;-8 0",.9,'begin="-'+(i*.3)+'s"')}</line>`).join("")}
-  ];
-  const svg=document.createElementNS(NS,"svg");svg.setAttribute("class","lmk");svg.setAttribute("aria-label","国ごとの名所アニメーション");
-  svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:inherit";
-  svg.innerHTML=`<defs><clipPath id="lmclip"><circle r="20.4"/></clipPath></defs>`;
-  stage.insertBefore(svg,zb);
-  const idx=n=>ILLS.findIndex(i=>i.name===n);
-  S.forEach(s=>{
-    const g=document.createElementNS(NS,"g");g.setAttribute("class","lm");g.setAttribute("role","button");g.setAttribute("tabindex","0");g.style.cssText="pointer-events:all;cursor:pointer";
-    const nm=s.ill;g.setAttribute("aria-label",nm+"（アニメーション）");
-    g.innerHTML=`<title>${nm}</title><line class="lmld" stroke="var(--muted)" stroke-width="1" opacity=".55"/><circle r="21.5" fill="rgba(0,0,0,.14)" cx="0" cy="1.2"/><circle r="21" fill="${s.night?"var(--i-night)":"var(--card)"}" stroke="var(--rule)" stroke-width="1.2"/><g clip-path="url(#lmclip)"><g transform="scale(1.25)">${s.in}</g></g>${s.label?`<text y="31" text-anchor="middle" font-size="9" font-weight="700" fill="var(--fg)" stroke="var(--card)" stroke-width="2.6" paint-order="stroke">${s.label}</text>`:""}`;
-    g.addEventListener("click",e=>{e.stopPropagation();const i=idx(s.ill);if(i>=0&&window.__goIll)window.__goIll(i);});
-    g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();g.dispatchEvent(new Event("click"));}});
-    svg.appendChild(g);s.el=g;s.ld=g.querySelector(".lmld");
-  });
-  const btn=document.createElement("button");btn.type="button";btn.className="zbtn";btn.id="zlmk";btn.textContent="景";btn.style.fontSize="14px";
-  const lab=()=>{btn.setAttribute("aria-pressed",on?"true":"false");btn.setAttribute("aria-label","国ごとの名所アニメーション："+(on?"オン":"オフ"));btn.title="名所アニメーション（"+(on?"オン":"オフ")+"）";btn.style.background=on?"var(--fg)":"";btn.style.color=on?"var(--bg)":"";};
-  lab();zb.insertBefore(btn,document.getElementById("zhelp"));
-  const flatPJ={stream:s=>proj.stream({point(x,y){s.point(cur.x+cur.k*x,cur.y+cur.k*y);},lineStart(){s.lineStart();},lineEnd(){s.lineEnd();},polygonStart(){s.polygonStart();},polygonEnd(){s.polygonEnd();},sphere(){if(s.sphere)s.sphere();}})};
-  const scr=(pj,c)=>{if(pj===flatPJ){const p=proj(c);return p?[cur.x+cur.k*p[0],cur.y+cur.k*p[1]]:null;}
-    const r=pj.rotate(),ca=pj.clipAngle?pj.clipAngle():90;if(ca&&d3.geoDistance(c,[-r[0],-r[1]])>ca*Math.PI/180-0.05)return null;return pj(c);};
-  let raf=0,sig="",lastF=0;
-  const globeOn=()=>(GL.on||GL.morph)&&LMPJ;
-  function frame(){
-    raf=0;
-    const w=stage.clientWidth,h=stage.clientHeight,playing=typeof PS!=="undefined"&&PS.on;
-    if(!on||document.hidden||document.body.dataset.view!=="map"||!w||!h){svg.style.display="none";return;}
-    svg.style.display="";
-    if(performance.now()-lastF<30){raf=requestAnimationFrame(frame);return;}lastF=performance.now();
-    const gl=globeOn(),pj=gl?LMPJ:flatPJ;
-    const zk=(gl?GL.R:proj.scale()*cur.k)*Math.PI/180;window.__lmZk=zk;
-    const gs=gl?pj.rotate().join(",")+"|"+pj.scale().toFixed(2)+"|"+pj.translate().map(v=>v.toFixed(1)).join(",")+"|"+(pj.clipAngle?pj.clipAngle():""):"";
-    const s=[gl?"g":"f",cur.x.toFixed(1),cur.y.toFixed(1),cur.k.toFixed(3),proj.angle(),proj.scale(),w,h,gs,playing,JSON.stringify(SHOW)].join("|");
-    if(s!==sig){sig=s;
-      const f=Math.min(1.2,Math.max(.8,Math.pow(zk/25,.25))),op=Math.max(0,Math.min(1,(210-zk)/110))*(playing?0:1);
-      S.forEach(o=>{const vis=o.trips.some(tripOn);const q=vis&&op>.02?scr(pj,P[o.k]):null;
-        if(!q||q[0]<-40||q[1]<-40||q[0]>w+40||q[1]>h+40){o.el.style.display="none";return;}
-        const sc=.95*f,x=q[0]+o.dx*f,y=q[1]+o.dy*f;
-        o.el.style.display="";o.el.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${sc.toFixed(3)})`);o.el.style.opacity=op;
-        o.ld.setAttribute("x1",(-o.dx*f/sc).toFixed(1));o.ld.setAttribute("y1",(-o.dy*f/sc).toFixed(1));o.ld.setAttribute("x2",0);o.ld.setAttribute("y2",0);});
-    }
-    raf=requestAnimationFrame(frame);
-  }
-  const kick=()=>{if(!raf&&on){sig="";raf=requestAnimationFrame(frame);}};
-  const applyMotion=()=>{try{if(reduce||!on)svg.pauseAnimations();else svg.unpauseAnimations();}catch(e){}};
-  btn.addEventListener("click",()=>{on=!on;try{localStorage.setItem(ON_KEY,on?"1":"0");}catch(e){}lab();if(on){kick();}else{cancelAnimationFrame(raf);raf=0;svg.style.display="none";}applyMotion();});
-  document.addEventListener("visibilitychange",kick);
-  (window.__onTrips=window.__onTrips||[]).push(kick);
-  new MutationObserver(kick).observe(document.body,{attributes:true,attributeFilter:["data-view"]});
-  applyMotion();kick();
-})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
   // 国の数は、ヨーロッパ・エジプト・ケニアは visited、それ以外はここで決める（地図の色塗りには使わない）
