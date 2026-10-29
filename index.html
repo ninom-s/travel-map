@@ -512,6 +512,21 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .z1 .l1,.z2 .l2,.z3 .l3,.z4 .l4{display:inline}
 .z2 .l1x,.z3 .l1x,.z4 .l1x{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* 表示の切り替えは1本のタブバーにして、横にスクロールできるようにする（2026-10-30） */
+.vsw{flex-basis:100%;flex-wrap:nowrap;gap:2px;padding:3px;background:var(--card);border-radius:999px;box-shadow:inset 0 0 0 1px var(--rule);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;min-width:0;box-sizing:border-box}
+.vsw::-webkit-scrollbar{display:none}
+.vsw .chip{flex:0 0 auto;padding:6px 13px;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:none;background:transparent}
+.vsw .chip:hover{background:var(--bg);box-shadow:none}
+.vsw .chip[aria-selected="true"]{background:var(--fg);color:var(--bg)}
+@media (max-width:560px){
+  header .sub,header .legend{display:none}
+  .tgrp{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;gap:5px;width:100%;box-sizing:border-box;padding:1px}
+  .tgrp::-webkit-scrollbar{display:none}
+  .ttab{flex:0 0 auto;padding:5px 10px;border-radius:12px}
+  .ttab b{font-size:12.5px;white-space:nowrap}.ttab small{font-size:10.5px;white-space:nowrap}
+  .vsw .chip{padding:6px 11px}
+}
 </style>
 
 <div class="wrap">
@@ -2538,7 +2553,7 @@ function rideGlobe(){return new Promise(res=>{
   const set=(v,focus)=>{if(v===cur)return;
     if(cur==="map"){if(typeof PS!=="undefined"&&PS.on)stopPlay();if(document.body.classList.contains("isfull"))setFull(false);}
     cur=v;document.body.dataset.view=v;
-    btns.forEach(b=>{const on=b.dataset.v===v;b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;if(on&&focus)b.focus({preventScroll:true});});
+    btns.forEach(b=>{const on=b.dataset.v===v;b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;if(on&&focus)b.focus({preventScroll:true});if(on&&b.scrollIntoView)b.scrollIntoView({block:"nearest",inline:"center"});});
     if(v==="map"){dispatchEvent(new Event("resize"));}
     const r=sw.getBoundingClientRect();if(r.top<0)sw.scrollIntoView({block:"start",behavior:"auto"});};
   btns.forEach(b=>b.addEventListener("click",()=>set(b.dataset.v)));
@@ -2776,11 +2791,12 @@ function rideGlobe(){return new Promise(res=>{
   const fmt=x=>Math.round(x).toLocaleString("ja-JP"),r100=x=>Math.round(x/100)*100;
   const days=(d,tr)=>{const out=new Set();String(d||"").split("・").forEach(tok=>{const ms=[...tok.matchAll(/(\d{1,2})\/(\d{1,2})/g)];if(!ms.length)return;
     const a=ms[0],b=ms[1]||a,y=m=>tr==="af"&&m<6?2026:2025,t0=Date.UTC(y(+a[1]),a[1]-1,+a[2]),t1=Date.UTC(y(+b[1]),b[1]-1,+b[2]);for(let t=t0;t<=t1;t+=864e5)out.add(t);});return out.size;};
+  const STAYX={TSN:{days:365,txt:"ほぼ1年"}};   // 天津（小5）は日付がないので、ninomから聞いた「ほぼ1年」
   const lat=y=>y>=0?`北緯${y.toFixed(1)}°`:`南緯${(-y).toFixed(1)}°`;
   const top3=(arr,key,dir)=>arr.slice().sort((a,b)=>dir*(b[key]-a[key])).slice(0,3);
   const render=()=>{
     const ts=TRIPS.filter(t=>tripOn(t.key)&&t.key!=="th"),multi=ts.length>1,ok=new Set(ts.map(t=>t.key));
-    const stops=[];ts.forEach(t=>t.stops.forEach(s=>{const g=P[s.k];if(g)stops.push({name:s.name,k:s.k,tr:t.key,lon:g[0],lat:g[1],dist:d3.geoDistance(P.NRT||[140.4,35.8],g)*R,days:days(s.d,t.key)});}));
+    const stops=[];ts.forEach(t=>t.stops.forEach(s=>{const g=P[s.k];if(g)stops.push({name:s.name,k:s.k,tr:t.key,lon:g[0],lat:g[1],dist:d3.geoDistance(P.NRT||[140.4,35.8],g)*R,days:STAYX[s.k]?STAYX[s.k].days:days(s.d,t.key),txt:STAYX[s.k]?STAYX[s.k].txt:""});}));
     const legs=[];ts.forEach(t=>t.seg.forEach(sg=>{const m=sg[0];if(m==="plan")return;const ids=m==="air"?sg[2].filter(k=>!/^PL\d$/.test(k)):sg[2],km=lenKm(ids);if(!km)return;
       const a0=ids[0],z=ids[ids.length-1];let name=`${nameOf(a0)} → ${nameOf(z)}`;
       if(a0===z){let far=a0,fd=0;ids.forEach(k=>{const dd=d3.geoDistance(P[a0],P[k]);if(dd>fd){fd=dd;far=k;}});name=`${nameOf(a0)}発着（${nameOf(far)}まで）`;}
@@ -2794,13 +2810,13 @@ function rideGlobe(){return new Promise(res=>{
       card("いちばん北の場所",top3(stops,"lat",1).map(x=>({...x,v:lat(x.lat)}))),
       card("いちばん南の場所",top3(stops,"lat",-1).map(x=>({...x,v:lat(x.lat)}))),
       card("日本からいちばん遠い場所",top3(stops,"dist",1).map(x=>({...x,v:`日本から約${fmt(r100(x.dist))} km`}))),
-      card("いちばん長く過ごした場所",top3(stops.filter(x=>x.days>0),"days",1).map(x=>({...x,v:`${x.days}日間`}))),
+      card("いちばん長く過ごした場所",top3(stops.filter(x=>x.days>0),"days",1).map(x=>({...x,v:x.txt||`${x.days}日間`}))),
       card("いちばん長いフライト（1区間）",top3(air,"km",1).map(x=>({...x,v:`約${fmt(r100(x.km))} km`}))),
       card("いちばん長い地上の移動（1区間）",top3(gnd,"km",1).map(x=>({...x,v:`${MJ[x.m]||x.m}・約${fmt(Math.round(x.km/10)*10)} km${x.loop?"（往復ぶん）":""}`}))),
       card("思い出（イラスト）がいちばん多い場所",top3(Object.values(memo),"n",1).map(x=>({...x,v:`思い出${x.n}個${x.ph?`・写真${x.ph}枚`:""}`})))
     ].filter(Boolean);
     el("recgrid").innerHTML=cards.join("")||`<p class="empty">この旅は、まだ記録に入れるデータがない。</p>`;
-    el("recnote").textContent="場所の位置と、地図に描いた線の長さから計算した概算（飛行機は、経由地を結んだ直線の距離）。経由地は推測の位置なので、実際の道のりとは少しずれる。滞在日数は、日付のある場所だけ。予定の旅（タイ）は入れていない。場所を押すと地図で見られる。";};
+    el("recnote").textContent="場所の位置と、地図に描いた線の長さから計算した概算（飛行機は、経由地を結んだ直線の距離）。経由地は推測の位置なので、実際の道のりとは少しずれる。滞在日数は、日付のある場所と、天津（ninomから聞いた「ほぼ1年」）だけ。予定の旅（タイ）は入れていない。場所を押すと地図で見られる。";};
   el("recgrid").addEventListener("click",e=>{const li=e.target.closest("li[data-k]");if(!li)return;window.__setPage("map");setTimeout(()=>window.__focusKey&&window.__focusKey(li.dataset.k,window.__kCity()),260);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
