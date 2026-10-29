@@ -128,6 +128,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .cbadge[hidden]{display:none}.cbadge .cflag{width:34px}.cbadge small{font-weight:400;color:var(--muted);font-size:11px}
 .stage.playing .cbadge{display:none}
 .clive{margin:8px 0;display:grid;gap:6px}.cl{display:flex;flex-direction:column;gap:2px;font-size:13.5px}.cl .lb{font-size:11.5px;color:var(--muted)}.cl .v small{display:block;font-size:11px;color:var(--muted);font-weight:400}.cl .v a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.bmr{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:center;margin:2px 0 6px}.bmr .bml{font-size:12px;color:var(--muted);grid-row:span 2;align-self:start;min-width:52px;padding-top:3px}.bmi{display:flex;flex-wrap:wrap;gap:1px;line-height:0}.bmi em{font-size:11px;color:var(--muted);font-style:normal;line-height:1.2;align-self:center;margin-left:4px}.bmp{display:inline-block;overflow:hidden;line-height:0;height:19px}.bmr b{font-size:13px}
 .cflag{display:block;width:64px;height:auto;aspect-ratio:3/2;border-radius:3px;box-shadow:0 0 0 1px var(--rule);flex:0 0 auto}
 .cfl{flex:0 0 auto;padding-top:4px}.cpl{display:flex;flex-wrap:wrap;gap:4px 6px;margin:2px 0}.cpl span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
 @media(max-width:560px){.tzctl{grid-template-columns:1fr}}
@@ -2682,6 +2683,12 @@ function rideGlobe(){return new Promise(res=>{
   const fxTxt=(code,x)=>{const per=x.r[code];if(!per)throw 0;let n=1,y=1/per;while(y<1&&n<1000){n*=10;y*=10;}
     const m=10000*per,mt=m>=100?Math.round(m).toLocaleString("ja-JP"):m.toFixed(m<10?2:1);
     return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円<br>10,000円 ＝ 約${mt} ${code}`;};
+  // ハンバーガーのイラスト（1個＝1つ。端数は切って見せる）
+  const BURGER='<svg viewBox="0 0 26 22" width="22" height="19" aria-hidden="true"><path d="M3 9C3 3.5 8 1.5 13 1.5S23 3.5 23 9Z" fill="#e0a24a"/><circle cx="9" cy="5" r=".8" fill="#fbe7b4"/><circle cx="14" cy="3.6" r=".8" fill="#fbe7b4"/><circle cx="18" cy="6" r=".8" fill="#fbe7b4"/><path d="M2 10.5c2 1.8 3 .2 5 1.6s3 .2 5 1.6 3 .2 5 1.6 3 .2 5-1.2V10Z" fill="#6fb04e"/><rect x="2.5" y="13" width="21" height="3.4" rx="1.7" fill="#7a4a2e"/><path d="M3 17h20v1c0 2-1.5 3-3.5 3h-13C4.5 21 3 20 3 18Z" fill="#e0a24a"/></svg>';
+  const burgers=(v,mx)=>{const full=Math.floor(v),fr=v-full,sc=mx>30?30/mx:1;let h="",k=Math.round(full*sc);
+    h+=BURGER.repeat(Math.max(k,full&&1));if(fr>=.1&&sc===1)h+=`<span class="bmp" style="width:${Math.round(22*fr)}px">${BURGER}</span>`;
+    return h+(sc<1?`<em>（1つで約${(1/sc).toFixed(1)}個）</em>`:"");};
+  const c0name=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);return c?c.name.replace(/（.*）/,""):iso;};
   // ビッグマックの現地価格（エコノミスト誌の公開データ。国ごとの最新の行）
   let bmP=null;
   const getBM=()=>bmP||(bmP=fetch("https://raw.githubusercontent.com/TheEconomist/big-mac-data/master/output-data/big-mac-full-index.csv").then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
@@ -2697,7 +2704,9 @@ function rideGlobe(){return new Promise(res=>{
     const cu=CUR[iso];
     Promise.all([getFx(),getBM()]).then(([x,m])=>{const b=m[BMISO[iso]||iso],per=x.r[cu[0]];
       if(!b||b.cur!==cu[0]||!per){put(".bm","この国のデータはない");return;}
-      const n=10000*per/b.p;put(".bm",`約${n.toFixed(1)}個<small>現地価格 約${(b.p>=100?Math.round(b.p).toLocaleString("ja-JP"):b.p.toFixed(2))} ${esc(cu[0])}／個（${esc(b.d.slice(0,7))}時点・エコノミスト誌のビッグマック指数${BMISO[iso]?"。ユーロ圏の平均":""}）</small>`);},()=>put(".bm","取得できなかった"));
+      const n=10000*per/b.p,jp=m.JPN&&m.JPN.cur==="JPY"?10000/m.JPN.p:0,mx=Math.max(n,jp,1);
+      const row=(lb,v)=>`<span class="bmr"><span class="bml">${lb}</span><span class="bmi">${burgers(v,mx)}</span><b>約${v.toFixed(1)}個</b></span>`;
+      put(".bm",(jp?row("日本",jp):"")+row(esc(c0name(iso)),n)+`<small>現地価格 約${(b.p>=100?Math.round(b.p).toLocaleString("ja-JP"):b.p.toFixed(2))} ${esc(cu[0])}／個${jp?`、日本は約${Math.round(m.JPN.p)}円／個`:""}（${esc(b.d.slice(0,7))}時点・エコノミスト誌のビッグマック指数${BMISO[iso]?"。ユーロ圏の平均":""}）。イラストは、ふつうのハンバーガー1個＝1個ぶん</small>`);},()=>put(".bm","取得できなかった"));
     getFx().then(x=>put(".fx",`${fxTxt(cu[0],x)}<small>${esc(cu[1])}・為替レート${x.d?"（"+esc(x.d)+"時点）":""}</small>`),()=>put(".fx",`${esc(cu[1])}（${cu[0]}）<small>レートは取得できなかった</small>`));};
   const sayH=e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
     const lang=b.dataset.v,vs=spk.getVoices();
