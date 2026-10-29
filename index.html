@@ -2639,8 +2639,8 @@ function rideGlobe(){return new Promise(res=>{
     const dl=dd===0?"":`${p.month}/${p.day}（${dd<0?"前日":"翌日"}）`;
     const sl=g[s]?s:"hello";
     return `<div class="tzc">${nohd?"":`<div class="hd"><b>${esc(c.name)}</b><small>${esc(c.lang)}</small></div>`}
-      <div class="tm"><b>${hm(lm)}</b><span>${dtxt}${dl?`・${dl}`:""}</span></div>
-      <div class="tzbar" aria-hidden="true"><i style="left:${(lm/1440*100).toFixed(1)}%"></i></div>
+      ${nohd?"":`<div class="tm"><b>${hm(lm)}</b><span>${dtxt}${dl?`・${dl}`:""}</span></div>
+      <div class="tzbar" aria-hidden="true"><i style="left:${(lm/1440*100).toFixed(1)}%"></i></div>`}
       ${nohd?`<div class="tzg">${line(SL[sl],main[0],main[1],c.v)}${line("ありがとう",g.thanks[0],g.thanks[1],c.v,"sm")}${(g.extra||[]).map(e=>line(e[0],e[1],e[2],c.v,"sm")).join("")}</div>`:""}${note?`<small class="tzn">${esc(note)}</small>`:""}</div>`;
   }
   const render=()=>{
@@ -2664,28 +2664,31 @@ function rideGlobe(){return new Promise(res=>{
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
     const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
-      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">いまのニュース</span><span class="v news">読み込み中…</span></div></div>
+      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div></div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
-      ${card(c,ref,"",1)}
+      ${card(c,ref,"",2)}
       <p class="m"><button type="button" class="tzbtn gotz">ほかの国の時差も見る</button></p>`;};
   // 人口（世界銀行）と、いまのニュース1本（GDELT。だめなら Google ニュース）を、開いたときにネットから取る
   const ISO2={SWE:"SE",FIN:"FI",GBR:"GB",ESP:"ES",FRA:"FR",MCO:"MC",ITA:"IT",CHE:"CH",DEU:"DE",EGY:"EG",KEN:"KE",KOR:"KR",THA:"TH",CHN:"CN"};
-  const NQ={THA:"タイ王国 OR バンコク"};
-  const live=new Map();
+  // 通貨：[コード, 名前, 単位の呼び方]
+  const CUR={SWE:["SEK","スウェーデン・クローナ"],FIN:["EUR","ユーロ"],GBR:["GBP","英ポンド"],ESP:["EUR","ユーロ"],FRA:["EUR","ユーロ"],MCO:["EUR","ユーロ"],ITA:["EUR","ユーロ"],CHE:["CHF","スイス・フラン"],DEU:["EUR","ユーロ"],EGY:["EGP","エジプト・ポンド"],KEN:["KES","ケニア・シリング"],KOR:["KRW","ウォン"],THA:["THB","バーツ"],CHN:["CNY","人民元"]};
+  const live=new Map();let fxP=null;
   const jf=(u,ms=9000)=>{const ac=new AbortController(),t=setTimeout(()=>ac.abort(),ms);return fetch(u,{signal:ac.signal}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();}).finally(()=>clearTimeout(t));};
   const popTxt=n=>n>=1e8?`約${(n/1e8).toFixed(2).replace(/\.?0+$/,"")}億人`:n>=1e4?`約${Math.round(n/1e4).toLocaleString("ja-JP")}万人`:`約${Math.round(n).toLocaleString("ja-JP")}人`;
   const getPop=iso=>jf(`https://api.worldbank.org/v2/country/${ISO2[iso]}/indicator/SP.POP.TOTL?format=json&mrnev=1`).then(j=>{const r=j&&j[1]&&j[1][0];if(!r||r.value==null)throw 0;return{t:popTxt(r.value),y:r.date};});
-  const getNews=iso=>{const c=C.find(x=>x.id===ISO2C[iso]),q=NQ[iso]||c.name.replace(/（.*）/,"");
-    return jf(`https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent("("+q+") sourcelang:japanese")}&mode=artlist&format=json&maxrecords=5&timespan=2d&sort=hybridrel`).then(j=>{const a=j&&j.articles&&j.articles[0];if(!a)throw 0;
-      const d=String(a.seendate||"").replace(/^(\d{4})(\d\d)(\d\d).*/,"$1/$2/$3");return{title:a.title,url:a.url,src:a.domain,d};})
-    .catch(()=>jf(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent("https://news.google.com/rss/search?q="+encodeURIComponent(q+" when:2d")+"&hl=ja&gl=JP&ceid=JP:ja")}`).then(j=>{const a=j&&j.items&&j.items[0];if(!a)throw 0;
-      const m=a.title.match(/^(.*) - ([^-]+)$/);return{title:m?m[1]:a.title,url:a.link,src:m?m[2]:"Google ニュース",d:(a.pubDate||"").slice(0,10).replace(/-/g,"/")};}));};
+  // 為替：1円あたりの各通貨の量（全通貨まとめて1回取る）。1つめがだめなら2つめ
+  const getFx=()=>fxP||(fxP=jf("https://open.er-api.com/v6/latest/JPY").then(j=>{if(!j||!j.rates)throw 0;return{r:j.rates,d:(()=>{const t=new Date(j.time_last_update_utc);return isNaN(t)?"":(t.getMonth()+1)+"/"+t.getDate();})()};})
+    .catch(()=>jf("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json").then(j=>{if(!j||!j.jpy)throw 0;const r={};Object.keys(j.jpy).forEach(k=>r[k.toUpperCase()]=j.jpy[k]);return{r,d:j.date||""};}))
+    .catch(e=>{fxP=null;throw e;}));
+  const fxTxt=(code,x)=>{const per=x.r[code];if(!per)throw 0;let n=1,y=1/per;while(y<1&&n<1000){n*=10;y*=10;}
+    return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円`;};
   window.__countryLive=iso=>{
     const put=(sel,h)=>{const box=document.querySelector(`#panel .clive[data-c="${iso}"] ${sel}`);if(box)box.innerHTML=h;};
     const cache=live.get(iso)||{};live.set(iso,cache);
-    const pr=cache.pop||(cache.pop=getPop(iso)),nr=cache.news||(cache.news=getNews(iso));
+    const pr=cache.pop||(cache.pop=getPop(iso));
     pr.then(r=>put(".pop",`${esc(r.t)}<small>（${esc(r.y)}年・世界銀行）</small>`),()=>{cache.pop=null;put(".pop","取得できなかった");});
-    nr.then(r=>put(".news",`<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a><small>${esc(r.src)}${r.d?"・"+esc(r.d):""}</small>`),()=>{cache.news=null;put(".news","取得できなかった");});};
+    const cu=CUR[iso];
+    getFx().then(x=>put(".fx",`${esc(fxTxt(cu[0],x))}<small>${esc(cu[1])}・為替レート${x.d?"（"+esc(x.d)+"時点）":""}</small>`),()=>put(".fx",`${esc(cu[1])}（${cu[0]}）<small>レートは取得できなかった</small>`));};
   const sayH=e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
     const lang=b.dataset.v,vs=spk.getVoices();
     if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
