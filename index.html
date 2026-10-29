@@ -2680,8 +2680,8 @@ function rideGlobe(){return new Promise(res=>{
     .catch(()=>jf("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json").then(j=>{if(!j||!j.jpy)throw 0;const r={};Object.keys(j.jpy).forEach(k=>r[k.toUpperCase()]=j.jpy[k]);return{r,d:j.date||""};}))
     .catch(e=>{fxP=null;throw e;}));
   const fxTxt=(code,x)=>{const per=x.r[code];if(!per)throw 0;let n=1,y=1/per;while(y<1&&n<1000){n*=10;y*=10;}
-    const m=1000*per,mt=m>=100?Math.round(m).toLocaleString("ja-JP"):m.toFixed(m<10?2:1);
-    return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円<br>1,000円 ＝ 約${mt} ${code}`;};
+    const m=10000*per,mt=m>=100?Math.round(m).toLocaleString("ja-JP"):m.toFixed(m<10?2:1);
+    return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円<br>10,000円 ＝ 約${mt} ${code}`;};
   window.__countryLive=iso=>{
     const put=(sel,h)=>{const box=document.querySelector(`#panel .clive[data-c="${iso}"] ${sel}`);if(box)box.innerHTML=h;};
     const cache=live.get(iso)||{};live.set(iso,cache);
