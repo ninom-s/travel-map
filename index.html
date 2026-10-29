@@ -128,6 +128,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .cbadge[hidden]{display:none}.cbadge .cflag{width:34px}.cbadge small{font-weight:400;color:var(--muted);font-size:11px}
 .stage.playing .cbadge{display:none}
 .clive{margin:8px 0;display:grid;gap:6px}.cl{display:flex;flex-direction:column;gap:2px;font-size:13.5px}.cl .lb{font-size:11.5px;color:var(--muted)}.cl .v small{display:block;font-size:11px;color:var(--muted);font-weight:400}.cl .v a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.cash{display:flex;flex-wrap:wrap;gap:5px}.cash i{font-style:normal;font-weight:700;font-size:12px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}.cash .note{min-width:50px;height:26px;padding:0 8px;border-radius:4px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45)}.cash .coin{min-width:30px;height:30px;padding:0 5px;border-radius:999px;background:#d8dcdf;color:#333;box-shadow:inset 0 0 0 2px #b5bbbf;font-size:11px}
 .cflag{display:block;width:64px;height:auto;aspect-ratio:3/2;border-radius:3px;box-shadow:0 0 0 1px var(--rule);flex:0 0 auto}
 .cfl{flex:0 0 auto;padding-top:4px}.cpl{display:flex;flex-wrap:wrap;gap:4px 6px;margin:2px 0}.cpl span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
 @media(max-width:560px){.tzctl{grid-template-columns:1fr}}
@@ -2659,19 +2660,25 @@ function rideGlobe(){return new Promise(res=>{
   // 地図の国旗を押したときの、国の詳細（国旗・使う言語・訪れた場所・いまの現地時刻・あいさつ）
   const ISO2C={SWE:"se",FIN:"fi",GBR:"uk",ESP:"es",FRA:"fr",MCO:"mc",ITA:"it",CHE:"ch",DEU:"de",EGY:"eg",KEN:"ke",KOR:"kr",THA:"th",CHN:"cn"};
   const PLC={"マントン":"FRA"}; // 国境ぎわで、粗い国境線だと隣の国に入ってしまう場所
+  // 代表的な紙幣・硬貨（額面と色の目安だけ。実物の絵柄は描かない）
+  const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;};
+  const cash=iso=>{const cu=CUR[iso];if(!cu||!cu[2])return"";
+    return `<div class="cl"><span class="lb">紙幣（${esc(cu[0])}）</span><span class="cash">${cu[2].map(n=>{const c=n[1]||"#9aa3a8";return `<i class="note" style="background:${c};color:${lum(c)>.62?"#222":"#fff"}">${esc(n[0])}</i>`;}).join("")}</span></div>
+      <div class="cl"><span class="lb">硬貨</span><span class="cash">${cu[3].map(n=>`<i class="coin">${esc(n)}</i>`).join("")}</span></div>
+      <small class="tzn">色は紙幣の色の目安。絵柄はのせていない。デザインの更新や、いまは出回らない券種もある</small>`;};
   window.__countryName=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);return c?c.name:"";};
   window.__countryHTML=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);if(!c)return"";
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
     const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
-      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div></div>
+      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div>${cash(iso)}</div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
       ${card(c,ref,"",2)}
       <p class="m"><button type="button" class="tzbtn gotz">ほかの国の時差も見る</button></p>`;};
   // 人口（世界銀行）と、いまのニュース1本（GDELT。だめなら Google ニュース）を、開いたときにネットから取る
   const ISO2={SWE:"SE",FIN:"FI",GBR:"GB",ESP:"ES",FRA:"FR",MCO:"MC",ITA:"IT",CHE:"CH",DEU:"DE",EGY:"EG",KEN:"KE",KOR:"KR",THA:"TH",CHN:"CN"};
   // 通貨：[コード, 名前, 単位の呼び方]
-  const CUR={SWE:["SEK","スウェーデン・クローナ"],FIN:["EUR","ユーロ"],GBR:["GBP","英ポンド"],ESP:["EUR","ユーロ"],FRA:["EUR","ユーロ"],MCO:["EUR","ユーロ"],ITA:["EUR","ユーロ"],CHE:["CHF","スイス・フラン"],DEU:["EUR","ユーロ"],EGY:["EGP","エジプト・ポンド"],KEN:["KES","ケニア・シリング"],KOR:["KRW","ウォン"],THA:["THB","バーツ"],CHN:["CNY","人民元"]};
+  const CUR={SWE:["SEK","スウェーデン・クローナ",[["20"],["50"],["100"],["200"],["500"],["1000"]],["1kr","2kr","5kr","10kr"]],FIN:["EUR","ユーロ",[["5","#8f979c"],["10","#d9534f"],["20","#4a84c4"],["50","#e8913a"],["100","#4fa86a"],["200","#c9a43c"],["500","#8a5aa8"]],["1c","2c","5c","10c","20c","50c","1€","2€"]],GBR:["GBP","英ポンド",[["5","#3fb5b0"],["10","#e8913a"],["20","#8a5aa8"],["50","#d9534f"]],["1p","2p","5p","10p","20p","50p","£1","£2"]],ESP:["EUR","ユーロ",[["5","#8f979c"],["10","#d9534f"],["20","#4a84c4"],["50","#e8913a"],["100","#4fa86a"],["200","#c9a43c"],["500","#8a5aa8"]],["1c","2c","5c","10c","20c","50c","1€","2€"]],FRA:["EUR","ユーロ",[["5","#8f979c"],["10","#d9534f"],["20","#4a84c4"],["50","#e8913a"],["100","#4fa86a"],["200","#c9a43c"],["500","#8a5aa8"]],["1c","2c","5c","10c","20c","50c","1€","2€"]],MCO:["EUR","ユーロ",[["5","#8f979c"],["10","#d9534f"],["20","#4a84c4"],["50","#e8913a"],["100","#4fa86a"],["200","#c9a43c"],["500","#8a5aa8"]],["1c","2c","5c","10c","20c","50c","1€","2€"]],ITA:["EUR","ユーロ",[["5","#8f979c"],["10","#d9534f"],["20","#4a84c4"],["50","#e8913a"],["100","#4fa86a"],["200","#c9a43c"],["500","#8a5aa8"]],["1c","2c","5c","10c","20c","50c","1€","2€"]],CHE:["CHF","スイス・フラン",[["10","#e8c53a"],["20","#d9534f"],["50","#4fa86a"],["100","#4a84c4"],["200","#a0714f"],["1000","#8a5aa8"]],["5Rp","10Rp","20Rp","½Fr","1Fr","2Fr","5Fr"]],DEU:["EUR","ユーロ",[["5","#8f979c"],["10","#d9534f"],["20","#4a84c4"],["50","#e8913a"],["100","#4fa86a"],["200","#c9a43c"],["500","#8a5aa8"]],["1c","2c","5c","10c","20c","50c","1€","2€"]],EGY:["EGP","エジプト・ポンド",[["5"],["10"],["20"],["50"],["100"],["200"]],["25pt","50pt","£1"]],KEN:["KES","ケニア・シリング",[["50"],["100"],["200"],["500"],["1000"]],["1","5","10","20"]],KOR:["KRW","ウォン",[["1000","#4a84c4"],["5000","#c9833c"],["10000","#4fa86a"],["50000","#e8c53a"]],["10","50","100","500"]],THA:["THB","バーツ",[["20","#4fa86a"],["50","#4a84c4"],["100","#d9534f"],["500","#8a5aa8"],["1000","#a0714f"]],["1","2","5","10"]],CHN:["CNY","人民元",[["1","#4fa86a"],["5","#8a5aa8"],["10","#4a84c4"],["20","#a0714f"],["50","#4fa86a"],["100","#d9534f"]],["1角","5角","1元"]]};
   const live=new Map();let fxP=null;
   const jf=(u,ms=9000)=>{const ac=new AbortController(),t=setTimeout(()=>ac.abort(),ms);return fetch(u,{signal:ac.signal}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();}).finally(()=>clearTimeout(t));};
   const popTxt=n=>n>=1e8?`約${(n/1e8).toFixed(2).replace(/\.?0+$/,"")}億人`:n>=1e4?`約${Math.round(n/1e4).toLocaleString("ja-JP")}万人`:`約${Math.round(n).toLocaleString("ja-JP")}人`;
