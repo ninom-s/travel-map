@@ -2664,7 +2664,7 @@ function rideGlobe(){return new Promise(res=>{
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
     const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
-      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div></div>
+      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div><div class="cl"><span class="lb">10,000円でビッグマックは</span><span class="v bm">読み込み中…</span></div></div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
       ${card(c,ref,"",2)}`;};
   // 人口（世界銀行）と、いまのニュース1本（GDELT。だめなら Google ニュース）を、開いたときにネットから取る
@@ -2682,12 +2682,22 @@ function rideGlobe(){return new Promise(res=>{
   const fxTxt=(code,x)=>{const per=x.r[code];if(!per)throw 0;let n=1,y=1/per;while(y<1&&n<1000){n*=10;y*=10;}
     const m=10000*per,mt=m>=100?Math.round(m).toLocaleString("ja-JP"):m.toFixed(m<10?2:1);
     return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円<br>10,000円 ＝ 約${mt} ${code}`;};
+  // ビッグマックの現地価格（エコノミスト誌の公開データ。国ごとの最新の行）
+  let bmP=null;
+  const getBM=()=>bmP||(bmP=fetch("https://raw.githubusercontent.com/TheEconomist/big-mac-data/master/output-data/big-mac-full-index.csv").then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
+    const m={};t.split(/\r?\n/).slice(1).forEach(l=>{const f=l.match(/("([^"]*)"|[^,]*)(,|$)/g);if(!f||f.length<5)return;const c=f.map(x=>x.replace(/,$/,"").replace(/^"|"$/g,""));
+      const d=c[0],iso=c[1],cur=c[2],p=parseFloat(c[4]);if(!iso||!(p>0))return;if(!m[iso]||d>m[iso].d)m[iso]={d,cur,p};});
+    if(!Object.keys(m).length)throw 0;return m;}).catch(e=>{bmP=null;throw e;}));
+  const BMISO={FIN:"EUZ",ESP:"EUZ",FRA:"EUZ",ITA:"EUZ",DEU:"EUZ",MCO:"EUZ"};
   window.__countryLive=iso=>{
     const put=(sel,h)=>{const box=document.querySelector(`#panel .clive[data-c="${iso}"] ${sel}`);if(box)box.innerHTML=h;};
     const cache=live.get(iso)||{};live.set(iso,cache);
     const pr=cache.pop||(cache.pop=getPop(iso));
     pr.then(r=>put(".pop",`${esc(r.t)}<small>（${esc(r.y)}年・世界銀行）</small>`),()=>{cache.pop=null;put(".pop","取得できなかった");});
     const cu=CUR[iso];
+    Promise.all([getFx(),getBM()]).then(([x,m])=>{const b=m[BMISO[iso]||iso],per=x.r[cu[0]];
+      if(!b||b.cur!==cu[0]||!per){put(".bm","この国のデータはない");return;}
+      const n=10000*per/b.p;put(".bm",`約${n.toFixed(1)}個<small>現地価格 約${(b.p>=100?Math.round(b.p).toLocaleString("ja-JP"):b.p.toFixed(2))} ${esc(cu[0])}／個（${esc(b.d.slice(0,7))}時点・エコノミスト誌のビッグマック指数${BMISO[iso]?"。ユーロ圏の平均":""}）</small>`);},()=>put(".bm","取得できなかった"));
     getFx().then(x=>put(".fx",`${fxTxt(cu[0],x)}<small>${esc(cu[1])}・為替レート${x.d?"（"+esc(x.d)+"時点）":""}</small>`),()=>put(".fx",`${esc(cu[1])}（${cu[0]}）<small>レートは取得できなかった</small>`));};
   const sayH=e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
     const lang=b.dataset.v,vs=spk.getVoices();
