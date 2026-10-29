@@ -127,6 +127,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .cbadge{all:unset;box-sizing:border-box;position:absolute;left:10px;top:52px;z-index:4;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);padding:5px 10px 5px 6px;font-size:12.5px;font-weight:700;color:var(--fg);cursor:pointer}
 .cbadge[hidden]{display:none}.cbadge .cflag{width:34px}.cbadge small{font-weight:400;color:var(--muted);font-size:11px}
 .stage.playing .cbadge{display:none}
+.clive{margin:8px 0;display:grid;gap:6px}.cl{display:flex;flex-direction:column;gap:2px;font-size:13.5px}.cl .lb{font-size:11.5px;color:var(--muted)}.cl .v small{display:block;font-size:11px;color:var(--muted);font-weight:400}.cl .v a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .cflag{display:block;width:64px;height:auto;aspect-ratio:3/2;border-radius:3px;box-shadow:0 0 0 1px var(--rule);flex:0 0 auto}
 .cfl{flex:0 0 auto;padding-top:4px}.cpl{display:flex;flex-wrap:wrap;gap:4px 6px;margin:2px 0}.cpl span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
 @media(max-width:560px){.tzctl{grid-template-columns:1fr}}
@@ -1833,6 +1834,7 @@ function select(el){
       <p class="m"><span class="mode ev">✕</span>${esc(ev.where)}</p><ul class="tl">${ev.tl.map(([t,x])=>`<li><time>${esc(t)}</time><span>${esc(x)}</span></li>`).join("")}</ul>${ev.photos?phHTML({name:ev.title,photos:ev.photos}):""}`;if(ev.photos)initPhs();
   }else if(el.classList.contains("flg")){
     panel.innerHTML=window.__countryHTML?window.__countryHTML(el.dataset.c):"";
+    if(window.__countryLive)window.__countryLive(el.dataset.c);
   }else if(el.classList.contains("stop")){
     const t=TRIPS.find(x=>x.key===el.dataset.trip)||EU;const s=t.stops[+el.dataset.n-1];
     panel.innerHTML=`<div class="k"><span class="tag ${t.key}">${esc(TRIPNAME[t.key])}</span><h2>${esc(s.name)}</h2><time>${esc(s.d)}</time></div>
@@ -2662,9 +2664,28 @@ function rideGlobe(){return new Promise(res=>{
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
     const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
+      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">いまのニュース</span><span class="v news">読み込み中…</span></div></div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
       ${card(c,ref,"",1)}
       <p class="m"><button type="button" class="tzbtn gotz">ほかの国の時差も見る</button></p>`;};
+  // 人口（世界銀行）と、いまのニュース1本（GDELT。だめなら Google ニュース）を、開いたときにネットから取る
+  const ISO2={SWE:"SE",FIN:"FI",GBR:"GB",ESP:"ES",FRA:"FR",MCO:"MC",ITA:"IT",CHE:"CH",DEU:"DE",EGY:"EG",KEN:"KE",KOR:"KR",THA:"TH",CHN:"CN"};
+  const NQ={THA:"タイ王国 OR バンコク"};
+  const live=new Map();
+  const jf=(u,ms=9000)=>{const ac=new AbortController(),t=setTimeout(()=>ac.abort(),ms);return fetch(u,{signal:ac.signal}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();}).finally(()=>clearTimeout(t));};
+  const popTxt=n=>n>=1e8?`約${(n/1e8).toFixed(2).replace(/\.?0+$/,"")}億人`:n>=1e4?`約${Math.round(n/1e4).toLocaleString("ja-JP")}万人`:`約${Math.round(n).toLocaleString("ja-JP")}人`;
+  const getPop=iso=>jf(`https://api.worldbank.org/v2/country/${ISO2[iso]}/indicator/SP.POP.TOTL?format=json&mrnev=1`).then(j=>{const r=j&&j[1]&&j[1][0];if(!r||r.value==null)throw 0;return{t:popTxt(r.value),y:r.date};});
+  const getNews=iso=>{const c=C.find(x=>x.id===ISO2C[iso]),q=NQ[iso]||c.name.replace(/（.*）/,"");
+    return jf(`https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent("("+q+") sourcelang:japanese")}&mode=artlist&format=json&maxrecords=5&timespan=2d&sort=hybridrel`).then(j=>{const a=j&&j.articles&&j.articles[0];if(!a)throw 0;
+      const d=String(a.seendate||"").replace(/^(\d{4})(\d\d)(\d\d).*/,"$1/$2/$3");return{title:a.title,url:a.url,src:a.domain,d};})
+    .catch(()=>jf(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent("https://news.google.com/rss/search?q="+encodeURIComponent(q+" when:2d")+"&hl=ja&gl=JP&ceid=JP:ja")}`).then(j=>{const a=j&&j.items&&j.items[0];if(!a)throw 0;
+      const m=a.title.match(/^(.*) - ([^-]+)$/);return{title:m?m[1]:a.title,url:a.link,src:m?m[2]:"Google ニュース",d:(a.pubDate||"").slice(0,10).replace(/-/g,"/")};}));};
+  window.__countryLive=iso=>{
+    const put=(sel,h)=>{const box=document.querySelector(`#panel .clive[data-c="${iso}"] ${sel}`);if(box)box.innerHTML=h;};
+    const cache=live.get(iso)||{};live.set(iso,cache);
+    const pr=cache.pop||(cache.pop=getPop(iso)),nr=cache.news||(cache.news=getNews(iso));
+    pr.then(r=>put(".pop",`${esc(r.t)}<small>（${esc(r.y)}年・世界銀行）</small>`),()=>{cache.pop=null;put(".pop","取得できなかった");});
+    nr.then(r=>put(".news",`<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a><small>${esc(r.src)}${r.d?"・"+esc(r.d):""}</small>`),()=>{cache.news=null;put(".news","取得できなかった");});};
   const sayH=e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
     const lang=b.dataset.v,vs=spk.getVoices();
     if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
