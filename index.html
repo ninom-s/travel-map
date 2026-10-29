@@ -107,7 +107,24 @@ body.isfull .panel.empty{display:none}
 .vsw{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap}
 .vsw .chip{padding:7px 14px;font-size:13.5px;font-weight:700}
 .vsw .chip[aria-selected="true"]{background:var(--fg);color:var(--bg);box-shadow:none}
-body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"],body:not([data-view="photos"]) [data-page="photos"],body:not([data-view="fail"]) [data-page="fail"],body:not([data-view="life"]) [data-page="life"]{display:none!important}
+body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"],body:not([data-view="photos"]) [data-page="photos"],body:not([data-view="fail"]) [data-page="fail"],body:not([data-view="life"]) [data-page="life"],body:not([data-view="tz"]) [data-page="tz"]{display:none!important}
+.tzctl{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:10px;align-items:center}
+.tzjst b{font:800 34px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.tzrw{display:grid;gap:8px;min-width:0}.tzrw input{width:100%;accent-color:var(--fg)}
+.tzbtn{display:flex;flex-wrap:wrap;gap:6px}
+.tzgh{margin:8px 0 2px;font:800 15px var(--display)}
+.tzgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:10px}
+.tzc{display:grid;gap:8px;align-content:start;padding:11px 12px;border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule);min-width:0}
+.tzc .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.tzc .hd b{font:800 16px var(--display)}.tzc .hd small{font-size:11.5px;color:var(--muted);text-align:right}
+.tzc .tm{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap}.tzc .tm b{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}.tzc .tm span{font-size:12.5px;color:var(--muted)}
+.tzbar{position:relative;height:8px;margin:2px 0;border-radius:999px;background:linear-gradient(90deg,#27355a 0,#27355a 20%,#f6d77e 30%,#f6d77e 70%,#27355a 80%,#27355a 100%);box-shadow:inset 0 0 0 1px var(--rule)}
+.tzbar i{position:absolute;top:-4px;width:3px;height:16px;border-radius:2px;background:var(--fg);box-shadow:0 0 0 2px var(--card);transform:translateX(-1.5px)}
+.tzg{display:grid;gap:3px;padding-top:7px;border-top:1px dashed var(--rule)}
+.tzl{display:flex;align-items:baseline;gap:2px 8px;flex-wrap:wrap}.tzl .lb{flex:0 0 100%;font-size:11px;color:var(--muted)}.tzl .tx{font:700 19px/1.3 var(--display)}.tzl .ka{font-size:12.5px;color:var(--muted)}
+.tzl.sm .tx{font-size:14.5px}.tzl.sm .lb{margin-top:3px}
+.tzsay{all:unset;box-sizing:border-box;margin-left:auto;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 0 0 1px var(--rule);background:var(--card)}.tzsay:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.tzn{font-size:11.5px;color:var(--muted)}
+@media(max-width:560px){.tzctl{grid-template-columns:1fr}}
 /* 旅の数字（選んでいる旅の合計。タブに連動） */
 .stats,.vp{display:grid;gap:10px;margin-top:8px;padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--card);min-width:0}
 .stathd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
@@ -521,6 +538,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <button class="chip" type="button" role="tab" id="vt-photos" data-v="photos" aria-selected="false" aria-controls="photos" tabindex="-1">写真ウォール</button>
       <button class="chip" type="button" role="tab" id="vt-fail" data-v="fail" aria-selected="false" aria-controls="fails" tabindex="-1">事件簿</button>
       <button class="chip" type="button" role="tab" id="vt-life" data-v="life" aria-selected="false" aria-controls="life" tabindex="-1">年表</button>
+      <button class="chip" type="button" role="tab" id="vt-tz" data-v="tz" aria-selected="false" aria-controls="tzs" tabindex="-1">時差・あいさつ</button>
     </div>
     <button class="chip tplay" data-page="map" type="button" id="tplay" aria-label="エジプト・ケニアの旅を再生">▶ この旅を再生</button>
     <div class="areas playmenu" id="playmenu" role="group" aria-label="再生する旅を選ぶ" hidden>
@@ -591,6 +609,14 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <div class="stathd"><h2 id="lifeh">旅の年表</h2><p id="lifesub">いま選んでいる旅は濃く出している。押すと、その旅の地図へ</p></div>
     <div class="lscroll" id="lifescroll"><div class="lgrid" id="lifegrid"></div></div>
     <p class="snote" id="lifenote"></p>
+  </section>
+  <section class="vp" data-page="tz" id="tzs" aria-labelledby="tzh">
+    <div class="stathd"><h2 id="tzh">時差・あいさつ</h2><p id="tzsub">いま地図に出している旅の分。日本時間を動かすと、旅先の時刻とあいさつが変わる</p></div>
+    <div class="tzctl"><div class="stile tzjst"><small>日本時間</small><b id="tzt">00:00</b></div>
+      <div class="tzrw"><input type="range" id="tzr" min="0" max="1435" step="5" aria-label="日本時間（0時から24時まで）">
+        <div class="tzbtn" id="tzb"><button class="chip" type="button" data-m="now">いま</button><button class="chip" type="button" data-m="420">朝7時</button><button class="chip" type="button" data-m="720">昼12時</button><button class="chip" type="button" data-m="1320">夜22時</button></div></div></div>
+    <div id="tzbody"></div>
+    <p class="snote" id="tznote">時刻は、旅をした時期（ヨーロッパは2025年1月、エジプト・ケニアは2025年12月、タイは予定の2026年11月）の時差で計算している。ミナのロンドンは時期が分からないので冬の時刻。バーの黄色は、時計の6時から18時ごろの目安で、実際の日の出・日没ではない（1月の北欧は昼がもっと短い）。あいさつは、その国のことばの一例。「聞く」は端末の読み上げ機能を使うので、端末によっては鳴らない。</p>
   </section>
   <section class="vp" data-page="photos" id="photos" aria-labelledby="photoh">
     <div class="stathd"><h2 id="photoh">写真ウォール</h2><p id="photosub">いま地図に出している旅の写真</p></div>
@@ -2520,6 +2546,63 @@ function rideGlobe(){return new Promise(res=>{
     g.innerHTML=h;
     el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（ミナとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
   el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".lcard");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
+  (window.__onTrips=window.__onTrips||[]).push(render);render();})();
+// ---- 時差・あいさつ（日本時間を動かすと、旅先の時刻と、その時間帯のあいさつが出る） ----
+(()=>{const el=id=>document.getElementById(id);
+  // [表示, カタカナ]。slot：hello=いつでも／am=朝／day=昼／pm=夕方〜夜。pmFrom＝夜のあいさつに変わる時刻
+  const C=[
+    {id:"fi",tr:["eu"],name:"フィンランド",lang:"フィンランド語",tz:"Europe/Helsinki",v:"fi-FI",g:{hello:["Moi","モイ"],am:["Hyvää huomenta","ヒュヴァー フオメンタ"],day:["Hyvää päivää","ヒュヴァー パイヴァー"],pm:["Hyvää iltaa","ヒュヴァー イルタ"],thanks:["Kiitos","キートス"]}},
+    {id:"se",tr:["eu"],name:"スウェーデン",lang:"スウェーデン語",tz:"Europe/Stockholm",v:"sv-SE",g:{hello:["Hej","ヘイ"],am:["God morgon","グー モロン"],pm:["God kväll","グー クヴェル"],thanks:["Tack","タック"]}},
+    {id:"uk",tr:["eu","ld"],name:"イギリス",lang:"英語",tz:"Europe/London",v:"en-GB",g:{hello:["Hello","ハロー"],am:["Good morning","グッド モーニング"],day:["Good afternoon","グッド アフタヌーン"],pm:["Good evening","グッド イブニング"],thanks:["Thank you","サンキュー"],extra:[["軽い「ありがとう」","Cheers","チアーズ"]]}},
+    {id:"es",tr:["eu"],name:"スペイン",lang:"スペイン語",tz:"Europe/Madrid",v:"es-ES",pmFrom:21,g:{hello:["Hola","オラ"],am:["Buenos días","ブエノス ディアス"],day:["Buenas tardes","ブエナス タルデス"],pm:["Buenas noches","ブエナス ノーチェス"],thanks:["Gracias","グラシアス"]}},
+    {id:"fr",tr:["eu"],name:"フランス",lang:"フランス語",tz:"Europe/Paris",v:"fr-FR",g:{hello:["Bonjour","ボンジュール"],pm:["Bonsoir","ボンソワール"],thanks:["Merci","メルシー"],extra:[["くだけた「やあ」","Salut","サリュ"]]}},
+    {id:"mc",tr:["eu"],name:"モナコ",lang:"フランス語（公用語）",tz:"Europe/Monaco",v:"fr-FR",g:{hello:["Bonjour","ボンジュール"],pm:["Bonsoir","ボンソワール"],thanks:["Merci","メルシー"]}},
+    {id:"it",tr:["eu"],name:"イタリア",lang:"イタリア語",tz:"Europe/Rome",v:"it-IT",pmFrom:17,g:{hello:["Ciao","チャオ"],am:["Buongiorno","ボンジョルノ"],day:["Buongiorno","ボンジョルノ"],pm:["Buonasera","ボナセーラ"],thanks:["Grazie","グラッツィエ"],extra:[["南チロル（ボルツァーノ）ではドイツ語も","Guten Tag","グーテン ターク"]]}},
+    {id:"ch",tr:["eu"],name:"スイス",lang:"スイスドイツ語（ほか3言語）",tz:"Europe/Zurich",v:"de-DE",g:{hello:["Grüezi","グリュエッツィ"],thanks:["Danke","ダンケ"],extra:[["フランス語圏では","Bonjour","ボンジュール"],["イタリア語圏では","Buongiorno","ボンジョルノ"]]}},
+    {id:"de",tr:["eu"],name:"ドイツ",lang:"ドイツ語",tz:"Europe/Berlin",v:"de-DE",g:{hello:["Hallo","ハロー"],am:["Guten Morgen","グーテン モルゲン"],day:["Guten Tag","グーテン ターク"],pm:["Guten Abend","グーテン アーベント"],thanks:["Danke","ダンケ"],extra:[["バイエルン（ミュンヘン・フュッセン）では","Grüß Gott","グリュース ゴット"]]}},
+    {id:"eg",tr:["af"],name:"エジプト",lang:"アラビア語",tz:"Africa/Cairo",v:"ar",g:{hello:["السلام عليكم","アッサラーム アライクム"],am:["صباح الخير","サバーハ ル ヘイル"],pm:["مساء الخير","マサー ル ヘイル"],thanks:["شكرا","ショクラン"]}},
+    {id:"ke",tr:["af"],name:"ケニア",lang:"スワヒリ語",tz:"Africa/Nairobi",v:"",g:{hello:["Jambo","ジャンボ"],thanks:["Asante","アサンテ"],extra:[["元気？","Habari?","ハバリ"],["ようこそ","Karibu","カリブ"]]}},
+    {id:"us",tr:["hi"],name:"ハワイ",lang:"ハワイ語・英語",tz:"Pacific/Honolulu",v:"",g:{hello:["Aloha","アロハ"],am:["Aloha kakahiaka","アロハ カカヒアカ"],day:["Aloha ʻauinalā","アロハ アウイナラー"],pm:["Aloha ahiahi","アロハ アヒアヒ"],thanks:["Mahalo","マハロ"]}},
+    {id:"kr",tr:["ko"],name:"韓国",lang:"韓国語",tz:"Asia/Seoul",v:"ko-KR",g:{hello:["안녕하세요","アンニョンハセヨ"],thanks:["감사합니다","カムサハムニダ"]}},
+    {id:"th",tr:["th"],name:"タイ（予定）",lang:"タイ語",tz:"Asia/Bangkok",v:"th-TH",g:{hello:["สวัสดี","サワッディー"],thanks:["ขอบคุณ","コップクン"]}},
+    {id:"cn",tr:["cn"],name:"中国",lang:"中国語",tz:"Asia/Shanghai",v:"zh-CN",g:{hello:["你好","ニーハオ"],am:["早上好","ザオシャンハオ"],day:["下午好","シアウーハオ"],pm:["晚上好","ワンシャンハオ"],thanks:["谢谢","シエシエ"]}}
+  ];
+  // 旅した時期の日付（夏時間の有無を、その時期の時刻で計算するため）。ミナのロンドンは時期が分からないので冬の日
+  const REF={eu:"2025-01-15",af:"2025-12-25",hi:"2025-01-15",ko:"2025-01-15",ld:"2026-01-15",th:"2026-11-24",cn:"2010-01-15"};
+  const fmtC={};const parts=(tz,t)=>{const f=fmtC[tz]||(fmtC[tz]=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}));
+    const o={};f.formatToParts(new Date(t)).forEach(p=>{if(p.type!=="literal")o[p.type]=+p.value;});return o;};
+  const pad=n=>String(n).padStart(2,"0"),hm=m=>pad(Math.floor(m/60))+":"+pad(m%60);
+  const nowJst=()=>{const p=parts("Asia/Tokyo",Date.now());return Math.round((p.hour*60+p.minute)/5)*5%1440;};
+  let jm=nowJst();
+  const slot=(c,h)=>{const pf=c.pmFrom||18;return h>=5&&h<12?"am":h>=12&&h<pf?"day":"pm";};
+  const SL={hello:"あいさつ",am:"朝のあいさつ",day:"昼のあいさつ",pm:"夜のあいさつ"};
+  const spk=window.speechSynthesis;
+  const line=(lb,t,k,v,cls="")=>`<div class="tzl ${cls}"><span class="lb">${esc(lb)}</span><span class="tx" ${/[؀-ۿ]/.test(t)?'dir="rtl"':""}>${esc(t)}</span><span class="ka">${esc(k)}</span>${v&&spk?`<button type="button" class="tzsay" data-t="${esc(t)}" data-v="${v}" aria-label="聞く：${esc(t)}">聞く</button>`:""}</div>`;
+  function card(c,ref,note){
+    const [hh,mm]=[Math.floor(jm/60),jm%60],t=Date.parse(`${ref}T${pad(hh)}:${pad(mm)}:00+09:00`),p=parts(c.tz,t);
+    const off=(Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute)-Math.floor(t/60000)*60000)/60000,diff=off-540,[ry,rm,rd]=ref.split("-").map(Number),dd=Math.round((Date.UTC(p.year,p.month-1,p.day)-Date.UTC(ry,rm-1,rd))/864e5);
+    const lm=p.hour*60+p.minute,s=slot(c,p.hour),g=c.g,main=g[s]||g.hello;
+    const dtxt=diff===0?"日本と同じ時刻":`日本より${Math.abs(diff/60)}時間${diff<0?"遅い":"早い"}`;
+    const dl=dd===0?"":`${p.month}/${p.day}（${dd<0?"前日":"翌日"}）`;
+    const sl=g[s]?s:"hello";
+    return `<div class="tzc"><div class="hd"><b>${esc(c.name)}</b><small>${esc(c.lang)}</small></div>
+      <div class="tm"><b>${hm(lm)}</b><span>${dtxt}${dl?`・${dl}`:""}</span></div>
+      <div class="tzbar" aria-hidden="true"><i style="left:${(lm/1440*100).toFixed(1)}%"></i></div>
+      <div class="tzg">${line(SL[sl],main[0],main[1],c.v)}${line("ありがとう",g.thanks[0],g.thanks[1],c.v,"sm")}${(g.extra||[]).map(e=>line(e[0],e[1],e[2],c.v,"sm")).join("")}</div>${note?`<small class="tzn">${esc(note)}</small>`:""}</div>`;
+  }
+  const render=()=>{
+    const keys=TRIPS.map(t=>t.key).filter(tripOn),seen=new Set();let h="";
+    keys.forEach(k=>{const cs=C.filter(c=>c.tr.includes(k)&&!seen.has(c.id));if(!cs.length)return;cs.forEach(c=>seen.add(c.id));
+      h+=`<h3 class="tzgh">${esc(TRIPNAME[k])}</h3><div class="tzgrid">${cs.map(c=>card(c,REF[k]||REF.eu,k==="ld"&&c.id==="uk"?"夏時間（3月末〜10月末）は、日本より8時間遅くなる":"")).join("")}</div>`;});
+    el("tzbody").innerHTML=h||`<p class="empty">この旅の時差は、まだ入っていない。</p>`;
+    el("tzt").textContent=hm(jm);el("tzr").value=jm;
+  };
+  el("tzr").addEventListener("input",e=>{jm=+e.target.value;render();});
+  el("tzb").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;jm=b.dataset.m==="now"?nowJst():+b.dataset.m;render();});
+  el("tzbody").addEventListener("click",e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
+    const lang=b.dataset.v,vs=spk.getVoices();
+    if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
+    spk.cancel();const u=new SpeechSynthesisUtterance(b.dataset.t);u.lang=lang;u.rate=.85;spk.speak(u);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
