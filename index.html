@@ -128,9 +128,6 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .cbadge[hidden]{display:none}.cbadge .cflag{width:34px}.cbadge small{font-weight:400;color:var(--muted);font-size:11px}
 .stage.playing .cbadge{display:none}
 .clive{margin:8px 0;display:grid;gap:6px}.cl{display:flex;flex-direction:column;gap:2px;font-size:13.5px}.cl .lb{font-size:11.5px;color:var(--muted)}.cl .v small{display:block;font-size:11px;color:var(--muted);font-weight:400}.cl .v a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.cash{display:flex;flex-wrap:wrap;gap:5px}.cash i{font-style:normal;font-weight:700;font-size:12px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}.cash .note{min-width:56px;height:30px;padding:0 8px 0 22px;border-radius:4px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5);background-image:radial-gradient(circle at 12px 50%,rgba(255,255,255,.45) 0 6px,transparent 7px)}.cash .coin{min-width:30px;height:30px;padding:0 5px;border-radius:999px;background:#d8dcdf;color:#333;box-shadow:inset 0 0 0 2px #b5bbbf;font-size:11px}
-.cdesc{margin:2px 0;font-size:12.5px;line-height:1.55}
-.cimg{font-size:13px;font-weight:700;color:var(--fg);text-decoration:underline;text-underline-offset:2px}
 .cflag{display:block;width:64px;height:auto;aspect-ratio:3/2;border-radius:3px;box-shadow:0 0 0 1px var(--rule);flex:0 0 auto}
 .cfl{flex:0 0 auto;padding-top:4px}.cpl{display:flex;flex-wrap:wrap;gap:4px 6px;margin:2px 0}.cpl span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
 @media(max-width:560px){.tzctl{grid-template-columns:1fr}}
@@ -2662,20 +2659,12 @@ function rideGlobe(){return new Promise(res=>{
   // 地図の国旗を押したときの、国の詳細（国旗・使う言語・訪れた場所・いまの現地時刻・あいさつ）
   const ISO2C={SWE:"se",FIN:"fi",GBR:"uk",ESP:"es",FRA:"fr",MCO:"mc",ITA:"it",CHE:"ch",DEU:"de",EGY:"eg",KEN:"ke",KOR:"kr",THA:"th",CHN:"cn"};
   const PLC={"マントン":"FRA"}; // 国境ぎわで、粗い国境線だと隣の国に入ってしまう場所
-  // 代表的な紙幣・硬貨（額面と色の目安だけ。実物の絵柄は描かない）
-  const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;};
-  const DESC={"FIN": "紙幣は、時代ごとの建築様式（窓・門・橋）がテーマで、実在の建物ではない。硬貨は、表が全国共通のデザイン、裏が国ごとのデザイン。", "ESP": "紙幣は、時代ごとの建築様式（窓・門・橋）がテーマで、実在の建物ではない。硬貨は、表が全国共通のデザイン、裏が国ごとのデザイン。", "FRA": "紙幣は、時代ごとの建築様式（窓・門・橋）がテーマで、実在の建物ではない。硬貨は、表が全国共通のデザイン、裏が国ごとのデザイン。", "MCO": "紙幣は、時代ごとの建築様式（窓・門・橋）がテーマで、実在の建物ではない。硬貨は、表が全国共通のデザイン、裏が国ごとのデザイン。", "ITA": "紙幣は、時代ごとの建築様式（窓・門・橋）がテーマで、実在の建物ではない。硬貨は、表が全国共通のデザイン、裏が国ごとのデザイン。", "DEU": "紙幣は、時代ごとの建築様式（窓・門・橋）がテーマで、実在の建物ではない。硬貨は、表が全国共通のデザイン、裏が国ごとのデザイン。", "GBR": "紙幣は、表が君主の肖像。裏は歴史上の人物で、5ポンドはチャーチル、10ポンドはジェーン・オースティン、20ポンドはターナー、50ポンドはチューリング。", "CHE": "いまの紙幣は「スイスの多彩な顔」がテーマ。10フランは手、20フランは時間、50フランは風、100フランは水、200フランは物質、1000フランは言語を表す。", "KOR": "紙幣は人物の肖像。1000ウォンは李滉、5000ウォンは李珥、10000ウォンは世宗大王、50000ウォンは申師任堂。", "THA": "紙幣の表は、国王の肖像。", "CHN": "紙幣の表は、どれも毛沢東の肖像。", "EGY": "紙幣は、片面がモスクなどのイスラム建築、もう片面が古代エジプトの遺跡や像。", "SWE": "紙幣は、芸術家や著名人の肖像。"};
-  const cash=iso=>{const cu=CUR[iso];if(!cu||!cu[2])return"";
-    return `<div class="cl"><span class="lb">紙幣（${esc(cu[0])}）</span><span class="cash">${cu[2].map(n=>{const c=n[1]||"#9aa3a8";return `<i class="note" style="background-color:${c};color:${lum(c)>.62?"#222":"#fff"}">${esc(n[0])}</i>`;}).join("")}</span></div>
-      <div class="cl"><span class="lb">硬貨</span><span class="cash">${cu[3].map(n=>`<i class="coin">${esc(n)}</i>`).join("")}</span></div>
-      ${DESC[iso]?`<p class="cdesc">${esc(DESC[iso])}</p>`:""}
-      <small class="tzn">額面と色の目安（イラスト）。実物のデザインや券種は更新されることがある</small>`;};
   window.__countryName=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);return c?c.name:"";};
   window.__countryHTML=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);if(!c)return"";
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
     const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
-      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div>${cash(iso)}</div>
+      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div></div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
       ${card(c,ref,"",2)}
       <p class="m"><button type="button" class="tzbtn gotz">ほかの国の時差も見る</button></p>`;};
