@@ -2666,8 +2666,7 @@ function rideGlobe(){return new Promise(res=>{
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
       <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div></div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
-      ${card(c,ref,"",2)}
-      <p class="m"><button type="button" class="tzbtn gotz">ほかの国の時差も見る</button></p>`;};
+      ${card(c,ref,"",2)}`;};
   // 人口（世界銀行）と、いまのニュース1本（GDELT。だめなら Google ニュース）を、開いたときにネットから取る
   const ISO2={SWE:"SE",FIN:"FI",GBR:"GB",ESP:"ES",FRA:"FR",MCO:"MC",ITA:"IT",CHE:"CH",DEU:"DE",EGY:"EG",KEN:"KE",KOR:"KR",THA:"TH",CHN:"CN"};
   // 通貨：[コード, 名前, 単位の呼び方]
@@ -2693,7 +2692,7 @@ function rideGlobe(){return new Promise(res=>{
     const lang=b.dataset.v,vs=spk.getVoices();
     if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
     spk.cancel();const u=new SpeechSynthesisUtterance(b.dataset.t);u.lang=lang;u.rate=.85;spk.speak(u);};
-  document.getElementById("panel").addEventListener("click",e=>{sayH(e);if(e.target.closest(".gotz"))window.__setPage("tz");});
+  document.getElementById("panel").addEventListener("click",sayH);
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
