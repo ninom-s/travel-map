@@ -2680,14 +2680,15 @@ function rideGlobe(){return new Promise(res=>{
     .catch(()=>jf("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json").then(j=>{if(!j||!j.jpy)throw 0;const r={};Object.keys(j.jpy).forEach(k=>r[k.toUpperCase()]=j.jpy[k]);return{r,d:j.date||""};}))
     .catch(e=>{fxP=null;throw e;}));
   const fxTxt=(code,x)=>{const per=x.r[code];if(!per)throw 0;let n=1,y=1/per;while(y<1&&n<1000){n*=10;y*=10;}
-    return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円`;};
+    const m=1000*per,mt=m>=100?Math.round(m).toLocaleString("ja-JP"):m.toFixed(m<10?2:1);
+    return `${n.toLocaleString("ja-JP")} ${code} ＝ 約${y.toFixed(y<10?2:1)}円<br>1,000円 ＝ 約${mt} ${code}`;};
   window.__countryLive=iso=>{
     const put=(sel,h)=>{const box=document.querySelector(`#panel .clive[data-c="${iso}"] ${sel}`);if(box)box.innerHTML=h;};
     const cache=live.get(iso)||{};live.set(iso,cache);
     const pr=cache.pop||(cache.pop=getPop(iso));
     pr.then(r=>put(".pop",`${esc(r.t)}<small>（${esc(r.y)}年・世界銀行）</small>`),()=>{cache.pop=null;put(".pop","取得できなかった");});
     const cu=CUR[iso];
-    getFx().then(x=>put(".fx",`${esc(fxTxt(cu[0],x))}<small>${esc(cu[1])}・為替レート${x.d?"（"+esc(x.d)+"時点）":""}</small>`),()=>put(".fx",`${esc(cu[1])}（${cu[0]}）<small>レートは取得できなかった</small>`));};
+    getFx().then(x=>put(".fx",`${fxTxt(cu[0],x)}<small>${esc(cu[1])}・為替レート${x.d?"（"+esc(x.d)+"時点）":""}</small>`),()=>put(".fx",`${esc(cu[1])}（${cu[0]}）<small>レートは取得できなかった</small>`));};
   const sayH=e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
     const lang=b.dataset.v,vs=spk.getVoices();
     if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
