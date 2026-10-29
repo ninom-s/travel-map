@@ -124,6 +124,11 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .tzl.sm .tx{font-size:14.5px}.tzl.sm .lb{margin-top:3px}
 .tzsay{all:unset;box-sizing:border-box;margin-left:auto;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 0 0 1px var(--rule);background:var(--card)}.tzsay:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .tzn{font-size:11.5px;color:var(--muted)}
+.flg{fill-opacity:.6;stroke:var(--fg);stroke-opacity:.4;stroke-width:.7;vector-effect:non-scaling-stroke;cursor:pointer;outline:none}
+.flg:hover{fill-opacity:.78}.flg.on{fill-opacity:.82;stroke-opacity:.9;stroke-width:1.6}
+.flg:focus-visible{stroke-opacity:1;stroke-width:2}
+.cflag{display:block;width:64px;height:auto;aspect-ratio:3/2;border-radius:3px;box-shadow:0 0 0 1px var(--rule);flex:0 0 auto}
+.cfl{flex:0 0 auto;padding-top:4px}.cpl{display:flex;flex-wrap:wrap;gap:4px 6px;margin:2px 0}.cpl span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
 @media(max-width:560px){.tzctl{grid-template-columns:1fr}}
 /* 旅の数字（選んでいる旅の合計。タブに連動） */
 .stats,.vp{display:grid;gap:10px;margin-top:8px;padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--card);min-width:0}
@@ -1576,6 +1581,44 @@ const gMap=svg.append("g");
 const gOver=svg.append("g");
 let cur=d3.zoomIdentity;
 
+// ---- 国旗（旅した国を、国の形の国旗で塗る。押すと国の詳細とあいさつが出る） ----
+const FLAGX={SWE:["eu"],FIN:["eu"],GBR:["eu","ld"],ESP:["eu"],FRA:["eu"],MCO:["eu"],ITA:["eu"],CHE:["eu"],DEU:["eu"],EGY:["af"],KEN:["af"],KOR:["ko"],THA:["th"],CHN:["cn"]};
+// 海外領土など、本土から離れた島は旗で塗らない（旗が国全体の外枠に合わせて広がるため、本土だけの範囲で決める）
+const FLEXT={GBR:[-8.7,49.8,2,60.9],ESP:[-9.5,35.9,4.5,43.9],FRA:[-5.5,41,9.7,51.2],ITA:[6.5,36.5,18.7,47.2],CHN:[73,18,135,54],KEN:[33,-5,42,6]};
+const FLAGS=(()=>{
+  const R=(x,y,w,h,f)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>`;
+  const star=(cx,cy,r,dir,f)=>{const a=[];for(let i=0;i<10;i++){const q=i%2?r*.382:r,t=dir+i*Math.PI/5;a.push((cx+q*Math.cos(t)).toFixed(2)+","+(cy+q*Math.sin(t)).toFixed(2));}return `<polygon points="${a.join(" ")}" fill="${f}"/>`;};
+  const tri=(sx,sy,pat)=>{const rx=sx*.75,ry=sy*.5,l=Math.hypot(rx,ry),phi=Math.atan2(-rx/l,ry/l)*180/Math.PI;
+    return `<g transform="translate(${1.5+rx},${1+ry}) rotate(${phi.toFixed(1)})">${[-.125,0,.125].map((y,i)=>pat[i]==="1"?R(-.25,y-.0415,.5,.083,"#000"):R(-.25,y-.0415,.21,.083,"#000")+R(.04,y-.0415,.21,.083,"#000")).join("")}</g>`;};
+  return {
+    SWE:[16,10,R(0,0,16,10,"#006AA7")+R(5,0,2,10,"#FECC00")+R(0,4,16,2,"#FECC00")],
+    FIN:[18,11,R(0,0,18,11,"#fff")+R(5,0,3,11,"#003580")+R(0,4,18,3,"#003580")],
+    GBR:[60,30,`<clipPath id="ukclip"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>`+R(0,0,60,30,"#012169")+`<path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#ukclip)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>`],
+    ESP:[6,4,R(0,0,6,4,"#AA151B")+R(0,1,6,2,"#F1BF00")],
+    FRA:[3,2,R(0,0,1,2,"#0055A4")+R(1,0,1,2,"#fff")+R(2,0,1,2,"#EF4135")],
+    MCO:[5,4,R(0,0,5,2,"#CE1126")+R(0,2,5,2,"#fff")],
+    ITA:[3,2,R(0,0,1,2,"#009246")+R(1,0,1,2,"#fff")+R(2,0,1,2,"#CE2B37")],
+    CHE:[32,32,R(0,0,32,32,"#DA291C")+R(13,6,6,20,"#fff")+R(6,13,20,6,"#fff")],
+    DEU:[5,3,R(0,0,5,1,"#000")+R(0,1,5,1,"#DD0000")+R(0,2,5,1,"#FFCE00")],
+    EGY:[3,2,R(0,0,3,.667,"#CE1126")+R(0,.667,3,.667,"#fff")+R(0,1.333,3,.667,"#000")],
+    KEN:[90,60,R(0,0,90,18,"#000")+R(0,18,90,3,"#fff")+R(0,21,90,18,"#BB0000")+R(0,39,90,3,"#fff")+R(0,42,90,18,"#006600")+`<ellipse cx="45" cy="30" rx="9.5" ry="17" fill="#BB0000" stroke="#fff" stroke-width="1.6"/><ellipse cx="45" cy="30" rx="4.2" ry="12" fill="#000"/><path d="M45,12 V48" stroke="#fff" stroke-width="1.4"/>`],
+    THA:[9,6,R(0,0,9,6,"#A51931")+R(0,1,9,4,"#F4F5F8")+R(0,2,9,2,"#2D2A4A")],
+    KOR:[3,2,R(0,0,3,2,"#fff")+`<g transform="translate(1.5,1) rotate(-33.69)"><circle r=".5" fill="#CD2E3A"/><path d="M-.5,0 A.5,.5 0 0 0 .5,0 Z" fill="#0047A0"/><circle cx="-.25" r=".25" fill="#CD2E3A"/><circle cx=".25" r=".25" fill="#0047A0"/></g>`+tri(-1,-1,"111")+tri(1,-1,"010")+tri(-1,1,"101")+tri(1,1,"000")],
+    CHN:[30,20,R(0,0,30,20,"#DE2910")+star(5,5,3,-Math.PI/2,"#FFDE00")+[[10,2],[12,4],[12,7],[10,9]].map(([x,y])=>star(x,y,1,Math.atan2(5-y,5-x),"#FFDE00")).join("")]
+  };})();
+const flagSVG=iso=>{const f=FLAGS[iso];return f?`<svg class="cflag" viewBox="0 0 ${f[0]} ${f[1]}" preserveAspectRatio="none" aria-hidden="true">${f[2]}</svg>`:"";};
+(()=>{const h=document.createElementNS("http://www.w3.org/2000/svg","svg");h.setAttribute("width","0");h.setAttribute("height","0");h.setAttribute("aria-hidden","true");h.style.cssText="position:absolute;width:0;height:0;overflow:hidden";
+  h.innerHTML="<defs>"+Object.keys(FLAGS).map(k=>`<pattern id="flg-${k}" patternUnits="objectBoundingBox" patternContentUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 ${FLAGS[k][0]} ${FLAGS[k][1]}" preserveAspectRatio="none">${FLAGS[k][2]}</pattern>`).join("")+"</defs>";document.body.appendChild(h);})();
+const FLG=(world||[]).filter(f=>FLAGX[f.id]).map(f=>{let g=f.geometry;const ex=FLEXT[f.id];
+  if(ex&&g&&g.type==="MultiPolygon"){const ps=g.coordinates.filter(pl=>{const c=d3.geoCentroid({type:"Polygon",coordinates:pl});return c[0]>=ex[0]&&c[0]<=ex[2]&&c[1]>=ex[1]&&c[1]<=ex[3];});if(ps.length)g={type:"MultiPolygon",coordinates:ps};}
+  return {type:"Feature",id:f.id,geometry:g};});
+function syncFlags(){document.querySelectorAll(".flg").forEach(e=>{const tr=FLAGX[e.dataset.c]||[];e.style.display=tr.some(tripOn)?"":"none";});}
+function drawFlagsFlat(){if(!FLG.length)return;
+  gMap.append("g").attr("class","flgs").selectAll("path").data(FLG).join("path").attr("class","flg").attr("data-c",d=>d.id).attr("d",path).style("fill",d=>`url(#flg-${d.id})`)
+    .attr("tabindex",0).attr("role","button").attr("aria-label",d=>d.id+"の国旗（押すと国の詳細）").on("click",function(){select(this);}).on("keydown",function(e){if(e.key==="Enter"){e.preventDefault();select(this);}});
+  syncFlags();}
+(window.__onTrips=window.__onTrips||[]).push(syncFlags);
+
 // Arctic Circle (66°33'49" N, 2026) and the Equator
 const PARS=[{c:"arc",lat:66.5636,name:"北極圏（北緯66°34′）"},{c:"eq",lat:0,name:"赤道（緯度0°）"}];
 const parGeo=lat=>({type:"LineString",coordinates:d3.range(-180,180.001,1).map(x=>[x,lat])});
@@ -1585,6 +1628,7 @@ function drawBase(){
   gMap.append("path").attr("class","grat").attr("d",path(d3.geoGraticule().step([10,10])()));
   if(world)gMap.append("g").selectAll("path").data(world).join("path")
     .attr("class",d=>"land"+(EU.visited.has(d.id)?" v":AF.visited.has(d.id)?" v2":"")).attr("d",path);
+  drawFlagsFlat();
   PARS.forEach(p=>gMap.append("path").attr("class","par "+p.c).attr("d",path(parGeo(p.lat))));
   TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{
     gMap.append("path").attr("class",`seg ${m} ${m==="air"?"":kind} ${t.key}`).attr("d",path({type:"LineString",coordinates:ks.map(k=>P[k])}));}));
@@ -1782,6 +1826,8 @@ function select(el){
     const ev=EVENTS[+el.dataset.ev];
     panel.innerHTML=`<div class="k"><span class="tag ${ev.trip||"eu"}">${TRIPNAME[ev.trip||"eu"]}</span><h2>${esc(ev.title)}</h2><time>${esc(ev.d)}</time></div>
       <p class="m"><span class="mode ev">✕</span>${esc(ev.where)}</p><ul class="tl">${ev.tl.map(([t,x])=>`<li><time>${esc(t)}</time><span>${esc(x)}</span></li>`).join("")}</ul>${ev.photos?phHTML({name:ev.title,photos:ev.photos}):""}`;if(ev.photos)initPhs();
+  }else if(el.classList.contains("flg")){
+    panel.innerHTML=window.__countryHTML?window.__countryHTML(el.dataset.c):"";
   }else if(el.classList.contains("stop")){
     const t=TRIPS.find(x=>x.key===el.dataset.trip)||EU;const s=t.stops[+el.dataset.n-1];
     panel.innerHTML=`<div class="k"><span class="tag ${t.key}">${esc(TRIPNAME[t.key])}</span><h2>${esc(s.name)}</h2><time>${esc(s.d)}</time></div>
@@ -2015,6 +2061,7 @@ const gSph=gsv.append("path").attr("class","gsph");
 const gGrat=gsv.append("path").attr("class","ggrat");
 const gPar=gsv.append("g");
 const gLand=gsv.append("g");
+const gFlagG=gsv.append("g");
 const gSeg=gsv.append("g");
 const gPlayG=gsv.append("g").attr("class","gplay");
 const gShine=gsv.append("circle").attr("class","gshine").attr("fill","url(#gShine)");
@@ -2037,6 +2084,9 @@ function viewBox(pj){if(!pj.invert)return null;const pts=[];for(let i=0;i<=4;i++
   return [x0-6,Math.min(...la)-6,x1+6,Math.max(...la)+6];}
 function culled(g,key,vb){return {type:"FeatureCollection",features:g.fs.filter(f=>f[key]&&f.bb&&!(f.bb[1][0]<vb[0]&&f.bb[0][0]<=f.bb[1][0]||f.bb[0][0]>vb[2]&&f.bb[0][0]<=f.bb[1][0]||f.bb[1][1]<vb[1]||f.bb[0][1]>vb[3])).map(f=>({type:"Feature",geometry:f[key]}))};}
 gLand.selectAll("path").data(gGroups).join("path").attr("class",d=>"gland"+d.c);
+const FLGG=FLG.map(f=>({id:f.id,fine:fixWind(thin(f.geometry,3,0)),coarse:fixWind(thin(f.geometry,14,0.02)),mc:fixWind(thin(f.geometry,24,0.035))}));
+gFlagG.selectAll("path").data(FLGG).join("path").attr("class","flg").attr("data-c",d=>d.id).style("fill",d=>`url(#flg-${d.id})`).attr("tabindex",0).attr("role","button").attr("aria-label",d=>d.id+"の国旗（押すと国の詳細）").on("click",function(){select(this);}).on("keydown",function(e){if(e.key==="Enter"){e.preventDefault();select(this);}});
+syncFlags();
 let gCoarse=false,gFineT=0;
 const gSegs=[];TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{if(m==="plan")return;gSegs.push({m,kind,t:t.key,geo:{type:"LineString",coordinates:ks.map(k=>P[k])}});}));
 gSeg.selectAll("path").data(gSegs).join("path").attr("class",d=>`gseg ${d.m} ${d.t}`);
@@ -2054,6 +2104,7 @@ function drawWith(pj,t){
   const mid=t>0&&t<1;pj.precision(mid?5:gCoarse?2:.6);
   gGrat.attr("d",pp(d3.geoGraticule().step(mid?[30,30]:[15,15])()));const vb=t===0&&GL.R>R0()*2.5?viewBox(pj):null;const key=mid?"mc":gCoarse?"coarse":"fine";
   gLand.selectAll("path").attr("d",d=>pp(vb?culled(d,key,vb):d[key]));
+  gFlagG.selectAll("path").attr("d",d=>pp(d[key]||d.fine));
   gPar.selectAll("path").data(PARS).join("path").attr("class",d=>"gpar "+d.c).attr("d",d=>pp(parGeo(d.lat)));
   gSeg.selectAll("path").attr("d",d=>pp(d.geo));
   gPlayG.selectAll("path").attr("d",function(){return pp({type:"LineString",coordinates:JSON.parse(this.dataset.c).map(k=>P[k])});});
@@ -2578,14 +2629,14 @@ function rideGlobe(){return new Promise(res=>{
   const SL={hello:"あいさつ",am:"朝のあいさつ",day:"昼のあいさつ",pm:"夜のあいさつ"};
   const spk=window.speechSynthesis;
   const line=(lb,t,k,v,cls="")=>`<div class="tzl ${cls}"><span class="lb">${esc(lb)}</span><span class="tx" ${/[؀-ۿ]/.test(t)?'dir="rtl"':""}>${esc(t)}</span><span class="ka">${esc(k)}</span>${v&&spk?`<button type="button" class="tzsay" data-t="${esc(t)}" data-v="${v}" aria-label="聞く：${esc(t)}">聞く</button>`:""}</div>`;
-  function card(c,ref,note){
+  function card(c,ref,note,nohd){
     const [hh,mm]=[Math.floor(jm/60),jm%60],t=Date.parse(`${ref}T${pad(hh)}:${pad(mm)}:00+09:00`),p=parts(c.tz,t);
     const off=(Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute)-Math.floor(t/60000)*60000)/60000,diff=off-540,[ry,rm,rd]=ref.split("-").map(Number),dd=Math.round((Date.UTC(p.year,p.month-1,p.day)-Date.UTC(ry,rm-1,rd))/864e5);
     const lm=p.hour*60+p.minute,s=slot(c,p.hour),g=c.g,main=g[s]||g.hello;
     const dtxt=diff===0?"日本と同じ時刻":`日本より${Math.abs(diff/60)}時間${diff<0?"遅い":"早い"}`;
     const dl=dd===0?"":`${p.month}/${p.day}（${dd<0?"前日":"翌日"}）`;
     const sl=g[s]?s:"hello";
-    return `<div class="tzc"><div class="hd"><b>${esc(c.name)}</b><small>${esc(c.lang)}</small></div>
+    return `<div class="tzc">${nohd?"":`<div class="hd"><b>${esc(c.name)}</b><small>${esc(c.lang)}</small></div>`}
       <div class="tm"><b>${hm(lm)}</b><span>${dtxt}${dl?`・${dl}`:""}</span></div>
       <div class="tzbar" aria-hidden="true"><i style="left:${(lm/1440*100).toFixed(1)}%"></i></div>
       <div class="tzg">${line(SL[sl],main[0],main[1],c.v)}${line("ありがとう",g.thanks[0],g.thanks[1],c.v,"sm")}${(g.extra||[]).map(e=>line(e[0],e[1],e[2],c.v,"sm")).join("")}</div>${note?`<small class="tzn">${esc(note)}</small>`:""}</div>`;
@@ -2603,6 +2654,23 @@ function rideGlobe(){return new Promise(res=>{
     const lang=b.dataset.v,vs=spk.getVoices();
     if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
     spk.cancel();const u=new SpeechSynthesisUtterance(b.dataset.t);u.lang=lang;u.rate=.85;spk.speak(u);});
+  // 地図の国旗を押したときの、国の詳細（国旗・使う言語・訪れた場所・いまの現地時刻・あいさつ）
+  const ISO2C={SWE:"se",FIN:"fi",GBR:"uk",ESP:"es",FRA:"fr",MCO:"mc",ITA:"it",CHE:"ch",DEU:"de",EGY:"eg",KEN:"ke",KOR:"kr",THA:"th",CHN:"cn"};
+  const PLC={"マントン":"FRA"}; // 国境ぎわで、粗い国境線だと隣の国に入ってしまう場所
+  window.__countryHTML=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);if(!c)return"";
+    const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
+    const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
+    return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
+      ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
+      ${card(c,ref,"",1)}
+      <p class="m"><button type="button" class="tzbtn gotz">ほかの国の時差・あいさつも見る</button></p>`;};
+  const sayH=e=>{const b=e.target.closest(".tzsay");if(!b||!spk)return;
+    const lang=b.dataset.v,vs=spk.getVoices();
+    if(vs.length&&!vs.some(x=>x.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()))){const o=b.textContent;b.textContent="音声なし";setTimeout(()=>{b.textContent=o;},1400);return;}
+    spk.cancel();const u=new SpeechSynthesisUtterance(b.dataset.t);u.lang=lang;u.rate=.85;spk.speak(u);};
+  document.getElementById("panel").addEventListener("click",e=>{sayH(e);if(e.target.closest(".gotz"))window.__setPage("tz");});
+  // 選んでいる国旗を強調
+  document.addEventListener("click",e=>{const f=e.target.closest&&e.target.closest(".flg");if(!f)return;document.querySelectorAll(".flg.on").forEach(x=>x.classList.remove("on"));document.querySelectorAll(`.flg[data-c="${f.dataset.c}"]`).forEach(x=>x.classList.add("on"));});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 旅の数字（選んでいる旅の合計。距離は地図の線の長さから計算した概算） ----
 (()=>{const EARTH=6371,LAP=40075;
