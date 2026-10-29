@@ -2658,7 +2658,7 @@ function rideGlobe(){return new Promise(res=>{
     spk.cancel();const u=new SpeechSynthesisUtterance(b.dataset.t);u.lang=lang;u.rate=.85;spk.speak(u);});
   // 地図の国旗を押したときの、国の詳細（国旗・使う言語・訪れた場所・いまの現地時刻・あいさつ）
   const ISO2C={SWE:"se",FIN:"fi",GBR:"uk",ESP:"es",FRA:"fr",MCO:"mc",ITA:"it",CHE:"ch",DEU:"de",EGY:"eg",KEN:"ke",KOR:"kr",THA:"th",CHN:"cn"};
-  const PLC={"マントン":"FRA"}; // 国境ぎわで、粗い国境線だと隣の国に入ってしまう場所
+  const PLC={"マントン":"FRA","フルガダ":"EGY","ストックホルム":"SWE","ベネチア":"ITA"}; // 国境ぎわで、粗い国境線だと隣の国に入ってしまう場所
   window.__countryName=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);return c?c.name:"";};
   window.__countryHTML=iso=>{const c=C.find(x=>x.id===ISO2C[iso]);if(!c)return"";
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
