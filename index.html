@@ -402,7 +402,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .lbl.big{font:800 16px var(--display)}.lbl.big.eu{fill:var(--eu)}.lbl.big.af{fill:var(--af)}.lbl.big.hi{fill:var(--hi)}.lbl.big.ko{fill:var(--ko)}.lbl.big.ld{fill:var(--ld)}.lbl.big.th{fill:var(--th)}.lbl.big.cn{fill:var(--cn)}
 .dur{font:600 11px var(--mono);paint-order:stroke;stroke:var(--halo);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
 .dur.air{fill:var(--air)}.dur.train{fill:var(--train)}.dur.bus{fill:var(--bus)}.dur.car{fill:var(--car)}.dur.van{fill:var(--car)}
-/* 旅の表示スイッチ（シゲルの旅／ふたりの旅／ミナの旅）。最初は「ふたりの旅」だけ */
+/* 旅の表示スイッチ（Sの旅／ふたりの旅／Mの旅）。最初は「ふたりの旅」だけ */
 .tgrp{display:flex;flex-wrap:wrap;gap:6px}
 .tgbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 10px 7px 12px;font-weight:700;white-space:nowrap}
 .tgbtn .mdots{display:inline-flex;gap:2px}.tgbtn .mdots i{width:7px;height:7px;border-radius:50%;display:block}
@@ -535,9 +535,9 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <div class="legend" aria-label="凡例">
       <span class="only-eu"><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--eu)" stroke-width="2.6" stroke-linecap="round"/></svg>ヨーロッパ一周</span>
       <span class="only-af"><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--af)" stroke-width="2.6" stroke-linecap="round"/></svg>エジプト・ケニア</span>
-      <span class="only-hi"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--hi)"/></svg>ハワイ（ミナとお母さん）</span>
-      <span class="only-ko"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--ko)"/></svg>韓国（ミナ）</span>
-      <span class="only-ld"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--ld)"/></svg>ロンドン（ミナ）</span>
+      <span class="only-hi"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--hi)"/></svg>ハワイ（Mとお母さん）</span>
+      <span class="only-ko"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--ko)"/></svg>韓国（M）</span>
+      <span class="only-ld"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--ld)"/></svg>ロンドン（M）</span>
       <span class="only-th"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--th)"/></svg>タイ（予定）</span><span class="only-cn"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--cn)"/></svg>中国（小5）</span>
       <span><svg width="28" height="8" aria-hidden="true"><line x1="2" y1="4" x2="26" y2="4" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="6 5"/></svg>飛行機</span>
     </div>
@@ -556,9 +556,9 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <div class="seg triplist" id="triplist" role="group" aria-label="旅を選ぶ" hidden>
       <button class="chip only-eu" type="button" data-jump="eu" data-trip="eu" aria-pressed="false"><span class="sw" style="background:var(--eu)"></span>ヨーロッパ旅</button>
       <button class="chip only-af" type="button" data-jump="af" data-trip="af" aria-pressed="false"><span class="sw" style="background:var(--af)"></span>アフリカ旅</button>
-      <button class="chip only-hi" type="button" data-jump="hi" data-trip="hi" aria-pressed="false"><span class="sw" style="background:var(--hi)"></span>ハワイ（ミナとお母さん）</button>
-      <button class="chip only-ko" type="button" data-jump="ko" data-trip="ko" aria-pressed="false"><span class="sw" style="background:var(--ko)"></span>韓国（ミナ）</button>
-      <button class="chip only-ld" type="button" data-jump="ld" data-trip="ld" aria-pressed="false"><span class="sw" style="background:var(--ld)"></span>ロンドン（ミナ）</button>
+      <button class="chip only-hi" type="button" data-jump="hi" data-trip="hi" aria-pressed="false"><span class="sw" style="background:var(--hi)"></span>ハワイ（Mとお母さん）</button>
+      <button class="chip only-ko" type="button" data-jump="ko" data-trip="ko" aria-pressed="false"><span class="sw" style="background:var(--ko)"></span>韓国（M）</button>
+      <button class="chip only-ld" type="button" data-jump="ld" data-trip="ld" aria-pressed="false"><span class="sw" style="background:var(--ld)"></span>ロンドン（M）</button>
       <button class="chip only-th" type="button" data-jump="th" data-trip="th" aria-pressed="false"><span class="sw" style="background:var(--th)"></span>タイ（予定）</button>
       <button class="chip only-cn" type="button" data-jump="cn" data-trip="cn" aria-pressed="false"><span class="sw" style="background:var(--cn)"></span>中国（小5）</button>
     </div>
@@ -662,7 +662,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <div class="tzrw"><input type="range" id="tzr" min="0" max="1435" step="5" aria-label="日本時間（0時から24時まで）">
         <div class="tzbtn" id="tzb"><button class="chip" type="button" data-m="now">いま</button><button class="chip" type="button" data-m="420">朝7時</button><button class="chip" type="button" data-m="720">昼12時</button><button class="chip" type="button" data-m="1320">夜22時</button></div></div></div>
     <div id="tzbody"></div>
-    <p class="snote" id="tznote">時刻は、旅をした時期（ヨーロッパは2025年1月、エジプト・ケニアは2025年12月、タイは予定の2026年11月）の時差で計算している。ミナのロンドンは時期が分からないので冬の時刻。バーの黄色は、時計の6時から18時ごろの目安で、実際の日の出・日没ではない（1月の北欧は昼がもっと短い）。</p>
+    <p class="snote" id="tznote">時刻は、旅をした時期（ヨーロッパは2025年1月、エジプト・ケニアは2025年12月、タイは予定の2026年11月）の時差で計算している。Mのロンドンは時期が分からないので冬の時刻。バーの黄色は、時計の6時から18時ごろの目安で、実際の日の出・日没ではない（1月の北欧は昼がもっと短い）。</p>
   </section>
   <section class="vp" data-page="photos" id="photos" aria-labelledby="photoh">
     <div class="stathd"><h2 id="photoh">写真ウォール</h2><p id="photosub">いま地図に出している旅の写真</p></div>
@@ -677,7 +677,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
   <section class="gal" data-page="gal" id="gal" aria-labelledby="galh">
     <div class="galhd"><div><h2 id="galh">イラスト一覧</h2><p id="galsub">押すと、思い出の解説と写真が出る</p></div>
     </div>
-    <div class="gtabs" id="gtabs" role="group" aria-label="旅で絞り込む"><button class="chip" type="button" data-gv="all" aria-pressed="true">すべて</button><button class="chip only-eu" type="button" data-gv="eu" aria-pressed="false">ヨーロッパ旅</button><button class="chip only-af" type="button" data-gv="af" aria-pressed="false">エジプト・ケニア旅</button><button class="chip only-hi" type="button" data-gv="hi" aria-pressed="false">ハワイ</button><button class="chip only-ko" type="button" data-gv="ko" aria-pressed="false">韓国</button><button class="chip only-ld" type="button" data-gv="ld" aria-pressed="false">ロンドン（ミナ）</button><button class="chip only-th" type="button" data-gv="th" aria-pressed="false">タイ（予定）</button><button class="chip only-cn" type="button" data-gv="cn" aria-pressed="false">中国（小5）</button><button class="chip" type="button" data-gv="cty" aria-pressed="false" aria-expanded="false" aria-controls="gcty">国ごと <span aria-hidden="true">▾</span></button></div>
+    <div class="gtabs" id="gtabs" role="group" aria-label="旅で絞り込む"><button class="chip" type="button" data-gv="all" aria-pressed="true">すべて</button><button class="chip only-eu" type="button" data-gv="eu" aria-pressed="false">ヨーロッパ旅</button><button class="chip only-af" type="button" data-gv="af" aria-pressed="false">エジプト・ケニア旅</button><button class="chip only-hi" type="button" data-gv="hi" aria-pressed="false">ハワイ</button><button class="chip only-ko" type="button" data-gv="ko" aria-pressed="false">韓国</button><button class="chip only-ld" type="button" data-gv="ld" aria-pressed="false">ロンドン（M）</button><button class="chip only-th" type="button" data-gv="th" aria-pressed="false">タイ（予定）</button><button class="chip only-cn" type="button" data-gv="cn" aria-pressed="false">中国（小5）</button><button class="chip" type="button" data-gv="cty" aria-pressed="false" aria-expanded="false" aria-controls="gcty">国ごと <span aria-hidden="true">▾</span></button></div>
     <div class="gtabs gcty" id="gcty" role="group" aria-label="国を選ぶ" hidden></div>
     <div id="galbody"></div>
   </section>
@@ -1254,7 +1254,7 @@ const ILLS=[
  {k:"SEL",ic:"icecone",name:"Bistoppingのアイス",trip:"ko",cap:"番号つきのコーンが壁にずらり。トッピングを選ぶアイス屋さん",lv:3,photos:[PH.ko_bistop]},
  {k:"SEL",ic:"storebag",name:"LINE FRIENDS ストア",trip:"ko",cap:"店の中に、見上げるほど大きなぬいぐるみ",lv:3,photos:[PH.ko_linebear]},
  {k:"HIA",ic:"wingsky",name:"ハワイへの機内から",trip:"hi",cap:"飛行機の窓から。翼の向こうの空がオレンジに染まっていた",lv:3,photos:[PH.hi_wing]},
- {k:"HNL",ic:"palmbeach",name:"ワイキキビーチ",trip:"hi",cap:"ミナが大学4年の春休みに、お母さんと行ったハワイ。ヤシの木の向こうにワイキキの海",photos:[PH.hi_waikiki]},
+ {k:"HNL",ic:"palmbeach",name:"ワイキキビーチ",trip:"hi",cap:"Mが大学4年の春休みに、お母さんと行ったハワイ。ヤシの木の向こうにワイキキの海",photos:[PH.hi_waikiki]},
  {k:"HNL",ic:"surfstatue",name:"デューク・カハナモク像",trip:"hi",cap:"ホテルの近くのビーチにある、有名な銅像。近代サーフィンの父デューク・カハナモク",photos:[PH.hi_duke]},
  {k:"HNL",ic:"pool",name:"プールサイド",trip:"hi",cap:"奥に見えるピンクの塔は、ピンク・パレスと呼ばれるロイヤル・ハワイアン。プールサイドで、目玉焼きののったワッフルの朝ごはん。テーブルに小鳥が遊びに来た",lv:3,photos:[PH.hi_pool,PH.hi_waffle]},
  {k:"HNL",ic:"bagel",name:"ベーグルとサーモンの朝ごはん",trip:"hi",cap:"ベーグルにスモークサーモンとトマト、山盛りのフルーツボウル。どこのお店かは覚えていない",lv:3,photos:[PH.hi_bagel]},
@@ -1318,7 +1318,7 @@ const ILLS=[
  {k:"HRG",ic:"spicebarrel",name:"香辛料とハーブの店",trip:"af",cap:"店先に木の樽がずらり。乾燥ハーブ、黒っぽい乾燥した葉、色とりどりの軽石、わらの束が入っていた",lv:3,photos:[PH.hg_spice]},
  {k:"HRG",ic:"ankh",name:"お土産屋",trip:"af",cap:"ファラオの像、ピラミッド、ネコの像、銅色のアンクが棚いっぱいに並んでいた",lv:3,photos:[PH.hg_souv]},
  {k:"HRG",ic:"burger",name:"マックをテイクアウト",trip:"af",cap:"フルガダのマックで買って、ホテルの部屋で食べた。ポテトはくし形",lv:3,photos:[PH.hg_mcd]},
- {k:"CAI",ic:"ticket",name:"カイロ発ドーハ行きの搭乗券",trip:"af",cap:"12/29の1時20分発、カタール航空。ミナと隣の席だった",lv:3,photos:[PH.cai_ticket]},
+ {k:"CAI",ic:"ticket",name:"カイロ発ドーハ行きの搭乗券",trip:"af",cap:"12/29の1時20分発、カタール航空。Mと隣の席だった",lv:3,photos:[PH.cai_ticket]},
  {k:"CAI",ic:"koshari",name:"空港で最後のエジプトご飯",trip:"af",cap:"空港で食べた、エジプト最後のご飯。煮込み、ごはん、コシャリ",lv:3,photos:[PH.cai_meal]},
  {k:"DOH",ic:"cabin",name:"カタール航空の機内",trip:"af",cap:"きれいで、広い。客室乗務員の制服がかわいかった",lv:3,photos:[PH.dh_cabin]},
  {k:"DOH",ic:"airporttree",name:"ドーハの空港",trip:"af",cap:"空港の中に木が生えている。広くて、おしゃれ",lv:3,photos:[PH.dh_atrium,PH.dh_walk]},
@@ -1554,21 +1554,21 @@ const ILLS=[
 
 // ---- noteの記事（イラストから飛べる） ----
 // 1件＝1記事。names：その記事に書いてあるイラストの名前。keys：地点キー（その地点のイラスト全部）。names が優先。
-// 例：{trip:"af",by:"ミナのnote",title:"エジプト① カイロ",url:"https://note.com/xxxx/n/xxxx",names:["ハン・ハリーリ市場","コシャリ"],keys:[]}
+// 例：{trip:"af",by:"Mのnote",title:"エジプト① カイロ",url:"https://note.com/xxxx/n/xxxx",names:["ハン・ハリーリ市場","コシャリ"],keys:[]}
 const NOTE_ARTICLES=[
 ];
 const MODEJ={train:"列車",bus:"バス",boat:"船",car:"サファリジープ",van:"ツアーのバン",walk:"徒歩",air:"飛行機",mix:"乗継",trip:"日帰り",taxi:"タクシー",plan:"予定"};
-// ミナがお母さんと行ったハワイ（大学4年の春休み。ninomの旅ではない）
-const HI={key:"hi",title:"ハワイ（ミナとお母さん）",accent:"hi",visited:new Set(),
- stops:[{n:1,k:"HNL",name:"ホノルル（ワイキキ）",d:"大学4年の春休み",note:"ミナが大学4年の春休みに、お母さんと2人で行った。ワイキキビーチ",lm:"air",lt:"日本から飛行機。空港は覚えていないので、当時ホノルル便が多かった成田からとして線を引いている（仮）"}],
+// Mがお母さんと行ったハワイ（大学4年の春休み。ninomの旅ではない）
+const HI={key:"hi",title:"ハワイ（Mとお母さん）",accent:"hi",visited:new Set(),
+ stops:[{n:1,k:"HNL",name:"ホノルル（ワイキキ）",d:"大学4年の春休み",note:"Mが大学4年の春休みに、お母さんと2人で行った。ワイキキビーチ",lm:"air",lt:"日本から飛行機。空港は覚えていないので、当時ホノルル便が多かった成田からとして線を引いている（仮）"}],
  seg:[["air","main",["NRT","HNL"]],["bus","trip",["HNL","DHD","KKC","MKP"]]],dur:[]};
-// ミナの韓国旅行（2019/3/17に成田から出発。ninomの旅ではない）
-const KO={key:"ko",title:"韓国（ミナ）",accent:"ko",visited:new Set(),
- stops:[{n:1,k:"SEL",name:"ソウル",d:"2019/3/17〜",note:"ミナが韓国へ。景福宮、国立民俗博物館、明洞、南大門市場。食べ歩きもたくさん",lm:"air",lt:"2019年3月17日の朝、成田空港 第1ターミナル北ウイングから飛行機。成田からソウルへの便は仁川空港に着くので、仁川空港までの線を引いている（便は不明）"}],
+// Mの韓国旅行（2019/3/17に成田から出発。ninomの旅ではない）
+const KO={key:"ko",title:"韓国（M）",accent:"ko",visited:new Set(),
+ stops:[{n:1,k:"SEL",name:"ソウル",d:"2019/3/17〜",note:"Mが韓国へ。景福宮、国立民俗博物館、明洞、南大門市場。食べ歩きもたくさん",lm:"air",lt:"2019年3月17日の朝、成田空港 第1ターミナル北ウイングから飛行機。成田からソウルへの便は仁川空港に着くので、仁川空港までの線を引いている（便は不明）"}],
  seg:[["air","main",["NRT","ICN"]]],dur:[]};
-// ミナのロンドン旅行（2019/3/8〜3/13。ninomの旅ではない）
-const LD={key:"ld",title:"ロンドン（ミナ）",accent:"ld",visited:new Set(),
- stops:[{n:1,k:"ECT",name:"ロンドン（アールズ・コート）",d:"2019/3/8–3/13",note:"ミナがロンドンへ。イギリスで暮らしていた人に案内してもらい、観光客があまり行かない場所にも連れて行ってもらった。1週間の滞在が1か月くらいの濃さだった",lm:"air",lt:"日本から飛行機。空港と便は分からないので、成田からヒースロー空港までの線を仮に引いている。アールズ・コート駅を拠点に、オイスターカードで移動した"}],
+// Mのロンドン旅行（2019/3/8〜3/13。ninomの旅ではない）
+const LD={key:"ld",title:"ロンドン（M）",accent:"ld",visited:new Set(),
+ stops:[{n:1,k:"ECT",name:"ロンドン（アールズ・コート）",d:"2019/3/8–3/13",note:"Mがロンドンへ。イギリスで暮らしていた人に案内してもらい、観光客があまり行かない場所にも連れて行ってもらった。1週間の滞在が1か月くらいの濃さだった",lm:"air",lt:"日本から飛行機。空港と便は分からないので、成田からヒースロー空港までの線を仮に引いている。アールズ・コート駅を拠点に、オイスターカードで移動した"}],
  seg:[["air","main",["NRT","HEA"]]],dur:[]};
 // タイ旅行（2026年11月の予定。まだ行っていない。旅程表「タイ」から）
 const TH={key:"th",title:"タイ（予定）",accent:"th",visited:new Set(),
@@ -1584,10 +1584,10 @@ const CN={key:"cn",title:"中国（小5）",accent:"cn",visited:new Set(),
   {n:5,k:"TAO",name:"青島",d:"2009〜10年（小5）",note:"旅行を兼ねて、友達に会いに行った。海",lm:"air",lt:"天津から飛行機で。往復"},
   {n:6,k:"WUS",name:"武夷山",d:"2009〜10年（小5）",note:"家族旅行で行った",lm:"air",lt:"天津から飛行機で。往復"}],
  seg:[["air","main",["NRT","BJG"]],["train","main",["BJG","TSN"]],["air","trip",["TSN","XIY"]],["air","trip",["TSN","SHH"]],["air","trip",["TSN","TAO"]],["air","trip",["TSN","WUS"]]],dur:[]};
-const TRIPNAME={eu:"ヨーロッパ一周",af:"エジプト・ケニア",hi:"ハワイ（ミナとお母さん）",ko:"韓国（ミナ）",ld:"ロンドン（ミナ）",th:"タイ（予定）",cn:"中国（小5）"};
+const TRIPNAME={eu:"ヨーロッパ一周",af:"エジプト・ケニア",hi:"ハワイ（Mとお母さん）",ko:"韓国（M）",ld:"ロンドン（M）",th:"タイ（予定）",cn:"中国（小5）"};
 const TRIPS=[EU,AF,HI,KO,LD,TH,CN];
-// ミナの旅（ninomの旅ではない）は、スイッチを入れたときだけ出す
-// 旅の表示スイッチ：シゲルの旅＝ヨーロッパ一周、ふたりの旅＝エジプト・ケニア、ミナの旅＝ハワイ・韓国・ロンドン
+// Mの旅（ninomの旅ではない）は、スイッチを入れたときだけ出す
+// 旅の表示スイッチ：Sの旅＝ヨーロッパ一周、ふたりの旅＝エジプト・ケニア、Mの旅＝ハワイ・韓国・ロンドン
 const SHOW={eu:false,af:true,hi:false,ko:false,ld:false,th:false,cn:false},GRPS={sg:["eu"],fu:["af"],mina:["hi","ko","ld"],th:["th"],cn:["cn"]};
 const tripOn=t=>!(t in SHOW)||SHOW[t],TRNT={ICN:"ko",HEL:"eu",PEK:"af",DOH:"af",BAH:"af",GZ:"af",HND:"af"};
 const syncShow=()=>Object.keys(SHOW).forEach(t=>document.body.classList.toggle("off-"+t,!SHOW[t]));syncShow();
@@ -1671,7 +1671,7 @@ function addItem(el,geo,dx,dy,anchor){items.push({el,geo,dx,dy,anchor});}
 function drawOverlay(){
   gOver.selectAll("*").remove();items=[];
   // region labels (only when zoomed out)
-  [["RVN","ヨーロッパ一周 2025.1–2","eu",12,4],["NBO","エジプト・ケニア 2025.12–2026.1","af",16,26],["HNL","ハワイ（ミナとお母さん）","hi",12,-12],["SEL","韓国（ミナ）","ko",-104,-10],["ECT","ロンドン（ミナ）","ld",-118,18],["BKK","タイ（予定）","th",12,10],["TSN","中国（小5）","cn",12,-12],["NRT","日本","",10,-10]].forEach(([k,t,c,dx,dy])=>{
+  [["RVN","ヨーロッパ一周 2025.1–2","eu",12,4],["NBO","エジプト・ケニア 2025.12–2026.1","af",16,26],["HNL","ハワイ（Mとお母さん）","hi",12,-12],["SEL","韓国（M）","ko",-104,-10],["ECT","ロンドン（M）","ld",-118,18],["BKK","タイ（予定）","th",12,10],["TSN","中国（小5）","cn",12,-12],["NRT","日本","",10,-10]].forEach(([k,t,c,dx,dy])=>{
     const el=gOver.append("text").attr("class",`lbl big ${c} l1`).attr("data-pr",0).attr("data-must",1).attr("data-d",6).text(t).node();addItem(el,P[k],dx,dy,"start");});
   // waypoints
   Object.keys(wpInfo).forEach(k=>{
@@ -2134,7 +2134,7 @@ const gSegs=[];TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{if(m==="plan")retu
 gSeg.selectAll("path").data(gSegs).join("path").attr("class",d=>`gseg ${d.m} ${d.t}`);
 const gStops=TRIPS.flatMap(t=>t.stops.map(s=>({k:s.k,t:t.key,name:s.name})));
 const gDot=gPts.selectAll("circle").data(gStops).join("circle").attr("class",d=>"gpt "+d.t).attr("r",4.2).on("click",(e,d)=>{e.stopPropagation();exitGlobe(P[d.k],Math.max(kRef()*1.25,2));});
-const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["HNL","ハワイ（ミナとお母さん）","hi",10,-10],["SEL","韓国（ミナ）","ko",-96,-8],["ECT","ロンドン（ミナ）","ld",10,-8],["BKK","タイ（予定）","th",10,10],["TSN","中国（小5）","cn",10,-10],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
+const gLbl=gPts.selectAll("text").data([["RVN","ヨーロッパ一周 2025.1–2","eu",12,-2],["NBO","エジプト・ケニア 2025.12–2026.1","af",12,18],["HNL","ハワイ（Mとお母さん）","hi",10,-10],["SEL","韓国（M）","ko",-96,-8],["ECT","ロンドン（M）","ld",10,-8],["BKK","タイ（予定）","th",10,10],["TSN","中国（小5）","cn",10,-10],["NRT","日本","",8,-8]]).join("text").attr("class",d=>"glbl "+d[2]).text(d=>d[1]);
 const gName=gPts.selectAll("text.gname").data(gStops).join("text").attr("class",d=>"gname "+d.t).text(d=>d.name);
 const vis=c=>d3.geoDistance(c,[-GL.rot[0],-GL.rot[1]])<Math.PI/2-0.03;
 function drawWith(pj,t){
@@ -2622,13 +2622,13 @@ function rideGlobe(){return new Promise(res=>{
 // ---- 旅の年表（旅を、時期の順に3つの段で並べる。年は等間隔ではない） ----
 (()=>{const el=id=>document.getElementById(id);
   const GRP={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th",cn:"cn"};
-  // 年ごとの列。年齢は、シゲルの年齢（ソースに生年月日は入れない）
+  // 年ごとの列。年齢は、Sの年齢（ソースに生年月日は入れない）
   const COLS=[["2009〜10年","10〜11歳"],["2019年","20歳"],["2025年","26〜27歳"],["2026年","28歳"]];
   const LANES=[["S旅","一人旅・家族と"],["ふたり","SとM"],["M旅","ハワイ・韓国・ロンドン"]];
   // [旅, 列, 段, 日付, 一言]。ハワイは時期が分かっていないので入れない
   const T=[["cn",0,0,"2009〜10年（小5）","天津に1年間住んで、西安・上海・青島・武夷山へ出かけた"],
-    ["ld",1,2,"2019/3/8–3/13","ミナがロンドンへ。1週間の滞在が1か月くらいの濃さだった"],
-    ["ko",1,2,"2019/3/17〜","ミナが韓国へ。景福宮、明洞、南大門市場、食べ歩き"],
+    ["ld",1,2,"2019/3/8–3/13","Mがロンドンへ。1週間の滞在が1か月くらいの濃さだった"],
+    ["ko",1,2,"2019/3/17〜","Mが韓国へ。景福宮、明洞、南大門市場、食べ歩き"],
     ["eu",2,0,"2025/1/2–2/4","初海外・一人旅・リュック1つ"],
     ["af",2,1,"2025/12/20–2026/1/3","ピラミッドの国から、サバンナで年越しまで"],
     ["th",3,1,"2026年11月（予定）","寝台列車でチェンマイへ"]];
@@ -2637,11 +2637,11 @@ function rideGlobe(){return new Promise(res=>{
   const meta=t=>{const tr=TRIPS.find(x=>x.key===t),st=tr&&tr.stats,ph=nPh(t);return `${st?`${st[0][0]}か国・${st[2][0]}日　`:""}イラスト${nIll(t)}件${ph?`・写真${ph}枚`:""}`;};
   const render=()=>{
     const g=el("lifegrid");g.style.setProperty("--n",COLS.length);
-    let h=`<div></div>`+COLS.map(([y,a])=>`<div class="lh"><b>${y}</b><small>シゲル ${a}</small></div>`).join("");
+    let h=`<div></div>`+COLS.map(([y,a])=>`<div class="lh"><b>${y}</b><small>S ${a}</small></div>`).join("");
     LANES.forEach(([n,sub],L)=>{h+=`<div class="ll">${n}<small>${sub}</small></div>`+COLS.map((_,c)=>`<div class="lc">${T.filter(x=>x[1]===c&&x[2]===L).map(([t,,,d,x])=>
       `<button class="lcard" type="button" data-t="${t}" data-on="${tripOn(t)?1:0}" style="--c:var(--${t})"><b>${esc(TRIPNAME[t])}</b><time>${esc(d)}</time><span>${esc(x)}</span><em>${esc(meta(t))}</em></button>`).join("")}</div>`).join("");});
     g.innerHTML=h;
-    el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（ミナとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
+    el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（Mとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
   el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".lcard");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 時差（日本時間を動かすと、旅先の時刻が出る。あいさつは、地図で国に寄ったときの国旗から開く詳細に入っている） ----
@@ -2664,7 +2664,7 @@ function rideGlobe(){return new Promise(res=>{
     {id:"th",tr:["th"],name:"タイ（予定）",lang:"タイ語",tz:"Asia/Bangkok",v:"th-TH",g:{hello:["สวัสดี","サワッディー"],thanks:["ขอบคุณ","コップクン"]}},
     {id:"cn",tr:["cn"],name:"中国",lang:"中国語",tz:"Asia/Shanghai",v:"zh-CN",g:{hello:["你好","ニーハオ"],am:["早上好","ザオシャンハオ"],day:["下午好","シアウーハオ"],pm:["晚上好","ワンシャンハオ"],thanks:["谢谢","シエシエ"]}}
   ];
-  // 旅した時期の日付（夏時間の有無を、その時期の時刻で計算するため）。ミナのロンドンは時期が分からないので冬の日
+  // 旅した時期の日付（夏時間の有無を、その時期の時刻で計算するため）。Mのロンドンは時期が分からないので冬の日
   const REF={eu:"2025-01-15",af:"2025-12-25",hi:"2025-01-15",ko:"2025-01-15",ld:"2026-01-15",th:"2026-11-24",cn:"2010-01-15"};
   const fmtC={};const parts=(tz,t)=>{const f=fmtC[tz]||(fmtC[tz]=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}));
     const o={};f.formatToParts(new Date(t)).forEach(p=>{if(p.type!=="literal")o[p.type]=+p.value;});return o;};
