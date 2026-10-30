@@ -135,7 +135,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 @keyframes rlpop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.rlcard{animation:none}}
 .rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:54px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
 .rlbox.rlin .rlcard{max-height:58vh;overflow:auto}
-@media (min-width:601px){.rlbox.rlin{top:calc(10px + env(safe-area-inset-top,0px))}.rlbox.rlin .rlcard{flex:1 1 auto;max-height:none;align-content:space-between;gap:10px}.rlbox.rlin .rlcard[hidden]{display:none}}
+.rlbox.rlin{top:calc(10px + env(safe-area-inset-top,0px))}.rlbox.rlin .rlcard{flex:1 1 auto;max-height:none;align-content:space-between;gap:10px}.rlbox.rlin .rlcard[hidden]{display:none}
 .rlbox.rlin{pointer-events:none}.rlbox.rlin>*{pointer-events:auto}.rlrow.rltop{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));top:10px}.stage.full .rlrow.rltop{margin-top:env(safe-area-inset-top,0px)}
 .rlm{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px}.rlm div{display:flex;align-items:center;gap:6px}.rlm b{font-weight:600;color:var(--muted)}.rlm .dt{letter-spacing:1px;color:var(--fg)}.rlm .dt.dg{color:#c0392b}.rlm .dt i{font-style:normal;opacity:.22}.rlm span{color:var(--muted)}.rlnote{margin:0;font-size:11px;color:var(--muted);line-height:1.5}
 .rlr{width:100%;display:grid;gap:3px}.rlr .m{display:flex;align-items:center;gap:8px;font-size:12px}.rlr .m b{width:6.6em;white-space:nowrap;font-weight:600;color:var(--muted);font-size:11.5px}.rlr .m>span:last-child{color:var(--muted);font-size:11.5px}.rlr .ic{font-size:13px;letter-spacing:0;white-space:nowrap}.rlr .ic i{font-style:normal;opacity:.18;filter:grayscale(1)}.rlr .st{color:#e0a100}
@@ -2834,7 +2834,7 @@ function rideGlobe(){return new Promise(res=>{
       const fl=el("rlflag");fl.src="flags/"+c[1]+".svg";fl.alt=d[1]+"の国旗";
       el("rlr").innerHTML=rankHTML(D,c,t);
       el("rlts").innerHTML=d[6].map((x,k)=>{const [n,m]=spotOf(x,k);return `<li>${mot(m)}<span>${esc(n)}</span></li>`;}).join("");el("rlun").textContent=d[7];
-      card.style.maxHeight=innerWidth>600?"":Math.max(200,stage.clientHeight-70)+"px";card.hidden=false;fanfare(wd==="land");celebrate();
+      card.style.maxHeight="";card.hidden=false;fanfare(wd==="land");celebrate();
       await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onFrame:()=>window.__rlPin()});
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
