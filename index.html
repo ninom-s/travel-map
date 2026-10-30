@@ -166,21 +166,29 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .smodes .km{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
 .smodes .n{color:var(--muted);font-size:12px;min-width:3.6em;text-align:right;font-variant-numeric:tabular-nums}
 .smodes .nm small{display:block;font-size:11.5px;color:var(--muted)}
-.lscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
-.lgrid{display:grid;grid-template-columns:64px repeat(var(--n),minmax(240px,1fr));gap:8px 10px;min-width:calc(64px + var(--n) * 250px)}
-.lh{display:grid;align-content:end;gap:0;padding:0 2px 5px;border-bottom:2px solid var(--rule)}
-.lh b{font:800 20px var(--display)}.lh small{font-size:12px;color:var(--muted)}
-.ll{position:sticky;left:0;z-index:2;background:var(--card);align-self:start;padding-top:8px;font-weight:800;font-size:13px;line-height:1.3}
-.ll small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
-.lc{display:grid;gap:8px;align-content:start;min-height:86px;padding:6px;border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule);min-width:0}
-.lcard{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:3px;padding:9px 11px 9px 14px;border-radius:6px;background:var(--card);box-shadow:inset 0 0 0 1px var(--rule),inset 5px 0 0 var(--c);min-width:0}
-.lcard b{font-size:14.5px;line-height:1.35}
-.lcard time{font:500 12px var(--mono);color:var(--muted)}
-.lcard span{font-size:12.5px;line-height:1.55}
-.lcard em{font-style:normal;font-size:11.5px;color:var(--muted)}
-.lcard[data-on="0"]{opacity:.55}
-.lcard:hover,.lcard:focus-visible{opacity:1;box-shadow:inset 0 0 0 1.5px var(--fg),inset 5px 0 0 var(--c)}
-.lcard:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.lscroll{padding-bottom:6px}
+.gv{--ax:46px;max-width:1100px}
+.gh{display:none;grid-template-columns:var(--ax) repeat(3,minmax(0,1fr));gap:0;padding-bottom:6px;border-bottom:2px solid var(--rule)}
+.gh b{padding:0 6px;font-weight:800;font-size:13px;line-height:1.3}.gh small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.gsh{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:14px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--rule)}
+.gsh b{font:800 18px var(--display)}.gsh small{font-size:12px;color:var(--muted)}
+.gb{position:relative;margin-left:var(--ax);border-radius:6px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--rule)}
+.gtk{position:absolute;left:0;right:0;border-top:1px dashed var(--rule);pointer-events:none}
+.gtk span{position:absolute;right:calc(100% + 6px);top:0;transform:translateY(-50%);font:500 10.5px var(--mono);color:var(--muted);white-space:nowrap}
+.gbar{all:unset;box-sizing:border-box;position:absolute;left:5px;right:5px;overflow:hidden;cursor:pointer;display:grid;align-content:start;gap:2px;padding:8px 10px 8px 14px;border-radius:6px;background:color-mix(in srgb,var(--c) 14%,var(--card));box-shadow:inset 0 0 0 1px var(--rule),inset 6px 0 0 var(--c)}
+.gbar .gw{justify-self:start;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--c);color:#fff}
+.gbar b{font-size:14px;line-height:1.35}
+.gbar time{font:500 11.5px var(--mono);color:var(--muted)}
+.gbar span.tx{font-size:12.5px;line-height:1.55}
+.gbar em{font-style:normal;font-size:11.5px;color:var(--muted)}
+.gbar.apx{box-shadow:inset 0 0 0 1.5px var(--c),inset 6px 0 0 var(--c);background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,var(--card)) 0 8px,color-mix(in srgb,var(--c) 6%,var(--card)) 8px 16px)}
+.gbar.open{-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.gbar[data-on="0"]{opacity:.55}
+.gbar:hover,.gbar:focus-visible{opacity:1;box-shadow:inset 0 0 0 1.5px var(--fg),inset 6px 0 0 var(--c)}
+.gbar:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.gbk{margin:12px 0 0 var(--ax);padding:6px 0;text-align:center;font-size:12px;color:var(--muted);letter-spacing:.08em}
+@media (min-width:720px){.gh{display:grid;margin-left:0}.gb{margin-left:var(--ax)}.gbar{left:calc(var(--l) * 33.3333% + 5px);right:auto;width:calc(33.3333% - 10px)}.gbar .gw{display:none}}
+@media (max-width:719px){.gbar{left:5px;right:5px}}
 .sttrips{margin:0;font-size:12.5px;color:var(--muted)}
 .snote{margin:0;font-size:11.5px;color:var(--muted);line-height:1.6}
 .vp h3.sec{margin:6px 0 0;font:800 16px var(--display)}
@@ -647,8 +655,8 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <p class="snote" id="snote"></p>
   </section>
   <section class="vp" data-page="life" id="life" aria-labelledby="lifeh">
-    <div class="stathd"><h2 id="lifeh">旅の年表</h2><p id="lifesub">いま選んでいる旅は濃く出している。押すと、その旅の地図へ</p></div>
-    <div class="lscroll" id="lifescroll"><div class="lgrid" id="lifegrid"></div></div>
+    <div class="stathd"><h2 id="lifeh">旅の年表</h2><p id="lifesub">上から下へ時間が進む。バーの長さは日数。いま選んでいる旅は濃く出している。押すと、その旅の地図へ</p></div>
+    <div class="lscroll" id="lifescroll"><div class="gv" id="lifegrid"></div></div>
     <p class="snote" id="lifenote"></p>
   </section>
   <section class="vp" data-page="rec" id="recs" aria-labelledby="rech">
@@ -2619,30 +2627,41 @@ function rideGlobe(){return new Promise(res=>{
       return `<div class="ggrp"><h3>${head}</h3><div class="pgrid">${g.items.map(it=>`<button class="pph" type="button" ${it.ev?`data-e="${it.e}"`:`data-i="${it.i}"`} aria-label="${esc(it.name)}の写真"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(it.src)}" alt=""><span>${esc(it.name)}</span></button>`).join("")}</div></div>`;}).join(""):`<p class="empty">この旅には、まだ写真がない。</p>`;};
   el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
-// ---- 旅の年表（旅を、時期の順に3つの段で並べる。年は等間隔ではない） ----
+// ---- 旅の年表（縦向きの線表。上から下へ時間が進み、バーの長さが日数。区間ごとに縮尺が違い、区間のあいだは「あき」で飛ばす） ----
 (()=>{const el=id=>document.getElementById(id);
   const GRP={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th",cn:"cn"};
-  // 年ごとの列。年齢は、Sの年齢（ソースに生年月日は入れない）
-  const COLS=[["2009〜10年","10〜11歳"],["2019年","20歳"],["2025年","26〜27歳"],["2026年","28歳"]];
   const LANES=[["S旅","一人旅・家族と"],["ふたり","SとM"],["M旅","ハワイ・韓国・ロンドン"]];
-  // [旅, 列, 段, 日付, 一言]。ハワイは時期が分かっていないので入れない
-  const T=[["cn",0,0,"2009〜10年（小5）","天津に1年間住んで、西安・上海・青島・武夷山へ出かけた"],
-    ["ld",1,2,"2019/3/8–3/13","Mがロンドンへ。1週間の滞在が1か月くらいの濃さだった"],
-    ["ko",1,2,"2019/3/17〜","Mが韓国へ。景福宮、明洞、南大門市場、食べ歩き"],
-    ["eu",2,0,"2025/1/2–2/4","初海外・一人旅・リュック1つ"],
-    ["af",2,1,"2025/12/20–2026/1/3","ピラミッドの国から、サバンナで年越しまで"],
-    ["th",3,1,"2026年11月（予定）","寝台列車でチェンマイへ"]];
+  const day=d=>Date.UTC(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10))/864e5;
+  // 区間：from=縮尺の起点、ppd=1日あたりのpx、days=区間の日数。ticks=[表示, 日付]。バー：t=旅、l=段、s/e=開始/終了、open=終わりが分からない、apx=時期がおおよそ
+  // 時期が月単位のものは、bar に h（高さ）だけ持たせる。タイの日付は公開ページに出さない（月だけ）
+  const SEG=[
+    {y:"2009〜10年（小5）",a:"S 10〜11歳",h:270,bars:[{t:"cn",l:0,top:0,h:270,apx:1,d:"2009〜10年（小5）"}]},
+    {y:"2019年3月",a:"S 20歳",from:"2019-03-05",ppd:28,days:19,ticks:[["3/8","2019-03-08"],["3/13","2019-03-13"],["3/17","2019-03-17"],["3/22","2019-03-22"]],
+      bars:[{t:"ld",l:2,s:"2019-03-08",e:"2019-03-13",d:"2019/3/8–3/13"},{t:"ko",l:2,s:"2019-03-17",open:1,d:"2019/3/17〜"}]},
+    {y:"2025年1〜2月",a:"S 26歳",from:"2024-12-30",ppd:10,days:41,ticks:[["1/1","2025-01-01"],["1/15","2025-01-15"],["2/1","2025-02-01"]],
+      bars:[{t:"eu",l:0,s:"2025-01-02",e:"2025-02-04",d:"2025/1/2–2/4"}]},
+    {y:"2025年12月〜2026年1月",a:"S 27歳",from:"2025-12-17",ppd:18,days:21,ticks:[["12/20","2025-12-20"],["12/25","2025-12-25"],["1/1","2026-01-01"],["1/3","2026-01-03"]],
+      bars:[{t:"af",l:1,s:"2025-12-20",e:"2026-01-03",d:"2025/12/20–2026/1/3"}]},
+    {y:"2026年11月（予定）",a:"S 28歳",h:230,bars:[{t:"th",l:1,top:0,h:230,apx:1,d:"2026年11月（予定）"}]}];
+  const BRK=["約9年あき","約6年あき","約10か月あき","約10か月あき"];
+  const TX={cn:"天津に1年間住んで、西安・上海・青島・武夷山へ出かけた",ld:"Mがロンドンへ。1週間の滞在が1か月くらいの濃さだった",ko:"Mが韓国へ。景福宮、明洞、南大門市場、食べ歩き",eu:"初海外・一人旅・リュック1つ",af:"ピラミッドの国から、サバンナで年越しまで",th:"寝台列車でチェンマイへ"};
   const nIll=t=>ILLS.filter(x=>x.trip===t).length;
   const nPh=t=>{const s=new Set();ILLS.filter(x=>x.trip===t).forEach(x=>(x.photos||(x.photo?[x.photo]:[])).forEach(u=>s.add(u)));EVENTS.filter(e=>(e.trip||"eu")===t).forEach(e=>(e.photos||[]).forEach(u=>s.add(u)));return s.size;};
   const meta=t=>{const tr=TRIPS.find(x=>x.key===t),st=tr&&tr.stats,ph=nPh(t);return `${st?`${st[0][0]}か国・${st[2][0]}日　`:""}イラスト${nIll(t)}件${ph?`・写真${ph}枚`:""}`;};
+  const MINH=125;
   const render=()=>{
-    const g=el("lifegrid");g.style.setProperty("--n",COLS.length);
-    let h=`<div></div>`+COLS.map(([y,a])=>`<div class="lh"><b>${y}</b><small>S ${a}</small></div>`).join("");
-    LANES.forEach(([n,sub],L)=>{h+=`<div class="ll">${n}<small>${sub}</small></div>`+COLS.map((_,c)=>`<div class="lc">${T.filter(x=>x[1]===c&&x[2]===L).map(([t,,,d,x])=>
-      `<button class="lcard" type="button" data-t="${t}" data-on="${tripOn(t)?1:0}" style="--c:var(--${t})"><b>${esc(TRIPNAME[t])}</b><time>${esc(d)}</time><span>${esc(x)}</span><em>${esc(meta(t))}</em></button>`).join("")}</div>`).join("");});
+    const g=el("lifegrid");let h=`<div class="gh"><i></i>${LANES.map(([n,sub])=>`<b>${n}<small>${sub}</small></b>`).join("")}</div>`;
+    SEG.forEach((S,i)=>{
+      const H=S.from?Math.round(S.days*S.ppd):S.h;
+      const ticks=(S.ticks||[]).map(([lb,d])=>`<div class="gtk" style="top:${Math.round((day(d)-day(S.from)+.5)*S.ppd)}px"><span>${lb}</span></div>`).join("");
+      const bars=S.bars.map(b=>{let top,hh;
+        if(S.from){top=Math.round((day(b.s)-day(S.from))*S.ppd);hh=b.open?MINH+10:Math.max(MINH,Math.round((day(b.e)-day(b.s)+1)*S.ppd));}else{top=b.top;hh=b.h;}
+        return `<button class="gbar${b.apx?" apx":""}${b.open?" open":""}" type="button" data-t="${b.t}" data-on="${tripOn(b.t)?1:0}" style="--c:var(--${b.t});--l:${b.l};top:${top}px;height:${hh}px"><span class="gw">${LANES[b.l][0]}</span><b>${esc(TRIPNAME[b.t])}</b><time>${esc(b.d)}</time><span class="tx">${esc(TX[b.t])}</span><em>${esc(meta(b.t))}</em></button>`;}).join("");
+      h+=`<div class="gsh"><b>${esc(S.y)}</b><small>${esc(S.a)}</small></div><div class="gb" style="height:${H}px">${ticks}${bars}</div>`;
+      if(BRK[i])h+=`<div class="gbk">︙　${BRK[i]}　︙</div>`;});
     g.innerHTML=h;
-    el("lifenote").textContent="年は等間隔ではない。スマホは横にスクロールできる。ハワイ（Mとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
-  el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".lcard");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
+    el("lifenote").textContent="バーの長さは日数に比例する（区間ごとに縮尺が違う）。点線のバーは、時期がおおよそ（中国）か予定（タイ）のもの。バーが薄れているのは、終わりの日がまだ分かっていないもの（韓国）。ハワイ（Mとお母さん）は、時期がまだ分かっていないので、年表に入れていない。";};
+  el("lifegrid").addEventListener("click",e=>{const b=e.target.closest(".gbar");if(!b)return;window.__selTab(GRP[b.dataset.t]);window.__setPage("map");});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 時差（日本時間を動かすと、旅先の時刻が出る。あいさつは、地図で国に寄ったときの国旗から開く詳細に入っている） ----
 (()=>{const el=id=>document.getElementById(id);
