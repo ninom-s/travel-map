@@ -2748,6 +2748,17 @@ function rideGlobe(){return new Promise(res=>{
     return row("危険度","💀","dg",r.dg,`上位${K.share("dg",r.dg)}%`)+row("マニアック度","★","st",r.mn,`上位${K.share("mn",r.mn)}%`)+row("移動時間","🕐","ck",r.hl,`片道およそ${r.h}時間`)
       +`<div class="rk"><div class="rn"><span>旅行難易度ランキング</span><strong>${e.rank}<small>位</small></strong><span>/ ${K.n}都市（上位${top}%）</span><b class="pt">${Math.round(r.diff)}<small>/100・${LVL(r.diff)[0]}</small></b></div>`
       +`<div class="gg" role="img" aria-label="旅行難易度 ${Math.round(r.diff)}点、${e.rank}位／${K.n}都市"><i style="left:${pos}%"></i></div><div class="gl"><span>やさしい</span><span>超上級</span></div></div>`;};
+  // ---- 国ぜんたいの評価（国の説明パネル用）。危険度・マニアック度は国の値、移動時間は代表の都市（先頭）で見る
+  let CK=null;
+  const cRate=c=>{const iso=c[0],RS=(window.__RLS||{})[iso]||[3,3,8],r=rateOf(iso,[c[3][0][0],c[3][0][1],c[3][0][2],"定"]),dg=RS[0],mn=Math.max(1,Math.min(5,RS[1])),dn=Math.pow((dg-1)/4,1.5),tn=Math.min(1,Math.max(0,(r.hf-3)/27)),mm=(mn-1)/4;
+    return Object.assign({},r,{dg,mn,diff:100*(1-(1-.6*dn)*(1-.3*tn)*(1-.25*mm))});};
+  const cRanks=D=>{if(CK)return CK;const all=D.map(c=>({iso:c[0],r:cRate(c)}));all.sort((a,b)=>b.r.diff-a.r.diff);all.forEach((e,i)=>{e.rank=i+1;});
+    CK={all,n:all.length,share:(k,v)=>Math.max(1,Math.round(100*all.filter(e=>e.r[k]>=v).length/all.length))};return CK;};
+  window.__rlCountry=iso=>load().then(D=>{const K=cRanks(D),e=K.all.find(z=>z.iso===iso);if(!e)return "";const r=e.r,pos=Math.round(100*(1-(e.rank-1)/(K.n-1))),top=Math.max(1,Math.round(100*e.rank/K.n));
+    const row=(lb,ch,cls,n,tx)=>`<div class="m"><b>${lb}</b>${ic(n,ch,cls)}<span>${tx}</span></div>`;
+    return row("危険度","💀","dg",r.dg,`上位${K.share("dg",r.dg)}%`)+row("マニアック度","★","st",r.mn,`上位${K.share("mn",r.mn)}%`)+row("移動時間","🕐","ck",r.hl,`片道およそ${r.h}時間`)
+      +`<div class="rk"><div class="rn"><span>旅行難易度ランキング</span><strong>${e.rank}<small>位</small></strong><span>/ ${K.n}か国（上位${top}%）</span><b class="pt">${Math.round(r.diff)}<small>/100・${LVL(r.diff)[0]}</small></b></div>`
+      +`<div class="gg" role="img" aria-label="旅行難易度 ${Math.round(r.diff)}点、${e.rank}位／${K.n}か国"><i style="left:${pos}%"></i></div><div class="gl"><span>やさしい</span><span>超上級</span></div></div>`;});
   // 見どころの名前から、イラストを選ぶ（"名前~絵" と書いてあればそれを使う）
   const RULES=[[/ロープウェイ|ケーブルカー|ゴンドラ|リフト/,"cablecar"],[/気球/,"balloon"],[/オーロラ/,"aurora"],[/温泉/,"hotspring"],[/滝/,"waterfall"],[/列車|鉄道|トロッコ|電車/,"train"],[/ピラミッド|遺跡|古墳|石碑|王墓|墓|廃墟|ジッグラト|跡/,"ruins"],[/城壁|要塞|城塞|砦|カスバ|ゾン|砲台/,"walls"],[/城/,"castle"],[/宮殿|王宮|宮/,"palace"],[/モスク|ミナレット|ドーム|廟/,"dome"],[/パゴダ|仏塔|ストゥーパ|寺院|神殿|仏歯寺|寺/,"temple"],[/大聖堂|教会|聖堂|修道院|礼拝堂|バシリカ|聖母/,"church"],[/博物館|美術館|ギャラリー|アート/,"museum"],[/図書館|書店/,"book"],[/橋/,"bridge"],[/市場|バザール|スーク|マーケット|屋台|夜市|ホーカー|ショッピング/,"market"],[/像|キリスト/,"statue"],[/摩天楼|高層|ビル/,"skyscraper"],[/タワー|塔/,"tower"],[/砂丘|砂漠|ラクダ|ワディ/,"dune"],[/洞窟|洞穴|鍾乳|地底/,"cave"],[/渓谷|峡谷|断崖|崖|キャニオン/,"canyon"],[/火山|山|峰|岳|氷河|高原|ハイキング|トレッキング|岩/,"mountain"],[/湖|池|ラグーン|泉|湿/,"lake"],[/ビーチ|海岸|砂浜|島|サンゴ|シュノーケ|ダイビング|環礁|海|浜|クジラ|ウミガメ/,"beach"],[/運河|川|クルーズ|ボート|カヌー|フェリー|ダウ|漁|港|船|ヨット|ラフティング/,"boat"],[/公園|庭園|植物園|森|ジャングル|熱帯雨林|サファリ|ゴリラ|ゾウ|ライオン/,"garden"],[/ワイン|ビール|コーヒー|料理|チョコ|ラム|ピンチョス|火鍋|ビビンバ|ロブスター|紅茶|茶/,"food"],[/ゲル|キャンプ|ロッジ|テント/,"tent"],[/日の出|夕日|日没|星空/,"sunset"],[/街並み|旧市街|広場|通り|路地|地区|ストリート|街/,"street"]];
   const FALL=["street","garden","sea"];
@@ -2895,7 +2906,7 @@ function rideGlobe(){return new Promise(res=>{
     const on=c.tr.filter(tripOn),ref=REF[on[0]||c.tr[0]]||REF.eu,ft=FLG.find(f=>f.id===iso);
     const places=[];TRIPS.filter(t=>tripOn(t.key)&&c.tr.includes(t.key)).forEach(t=>t.stops.forEach(st=>{const q=P[st.k];if(q&&ft&&(PLC[st.name]?PLC[st.name]===iso:d3.geoContains(ft,q))&&!places.includes(st.name))places.push(st.name);}));
     return `<div class="k" style="display:flex;gap:12px;align-items:flex-start"><span class="cfl">${flagSVG(iso)}</span><div><span>${on.map(k=>`<span class="tag ${k}">${esc(TRIPNAME[k])}</span>`).join(" ")}</span><h2>${esc(c.name)}</h2><time>${esc(c.lang)}</time></div></div>
-      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div><div class="cl"><span class="lb">10,000円でビッグマックは</span><span class="v bm">読み込み中…</span></div></div>
+      <div class="clive" data-c="${iso}"><div class="cl"><span class="lb">人口</span><span class="v pop">読み込み中…</span></div><div class="cl"><span class="lb">お金（${esc(CUR[iso][1])}）</span><span class="v fx">読み込み中…</span></div><div class="cl"><span class="lb">10,000円でビッグマックは</span><span class="v bm">読み込み中…</span></div></div><p class="m">旅行の評価（国ぜんたいの目安）</p><div class="rlr cr" data-c="${iso}"><span class="v">読み込み中…</span></div>
       ${places.length?`<p class="m">訪れた場所</p><div class="cpl">${places.map(n=>`<span>${esc(n)}</span>`).join("")}</div>`:""}
       ${card(c,ref,"",2)}`;};
   // 人口（世界銀行）と、いまのニュース1本（GDELT。だめなら Google ニュース）を、開いたときにネットから取る
@@ -2927,6 +2938,7 @@ function rideGlobe(){return new Promise(res=>{
     if(!Object.keys(m).length)throw 0;return m;}).catch(e=>{bmP=null;throw e;}));
   const BMISO={FIN:"EUZ",ESP:"EUZ",FRA:"EUZ",ITA:"EUZ",DEU:"EUZ",MCO:"EUZ"};
   window.__countryLive=iso=>{
+    if(window.__rlCountry)window.__rlCountry(iso).then(h=>{const bx=document.querySelector(`#panel .rlr.cr[data-c="${iso}"]`);if(bx)bx.innerHTML=h||"";},()=>{const bx=document.querySelector(`#panel .rlr.cr[data-c="${iso}"]`);if(bx)bx.innerHTML="";});
     const put=(sel,h)=>{const box=document.querySelector(`#panel .clive[data-c="${iso}"] ${sel}`);if(box)box.innerHTML=h;};
     const cache=live.get(iso)||{};live.set(iso,cache);
     const pr=cache.pop||(cache.pop=getPop(iso));
