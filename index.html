@@ -2788,7 +2788,7 @@ function rideGlobe(){return new Promise(res=>{
     try{let D;try{D=await load();}catch(e){btn.textContent="データを読み込めませんでした";await new Promise(r=>setTimeout(r,1800));return;}
       if(my!==tok)return;
       const {c,t}=pick(D),d=[c[0],c[2],t[0],t[1],t[2],t[3],t[4],t[5]];
-      await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?26:12):0,onStart:()=>roll(DUR/1000,wd==="roll")});
+      await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?42:14):0,onStart:()=>roll(DUR/1000,wd==="roll")});
       if(my!==tok)return;
       const q=window.__globePt([d[3],d[4]]);
       if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
@@ -2804,7 +2804,7 @@ function rideGlobe(){return new Promise(res=>{
       el("rlts").innerHTML=d[6].map((x,k)=>{const [n,m]=spotOf(x,k);return `<li>${mot(m)}<span>${esc(n)}</span></li>`;}).join("");el("rlun").textContent=d[7];
       const om=c[3].filter(x=>x!==t).map(x=>x[0]);el("rlmore").textContent=om.length?"この国のほかの候補："+om.join("・"):"";
       card.hidden=false;fanfare(wd==="land");celebrate();
-      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?26:12):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
+      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?42:14):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
     finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";}};
