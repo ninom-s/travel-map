@@ -135,6 +135,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
 .rlbox.rlin .rlcard{max-height:58vh;overflow:auto}
 .rlbox.rlin{pointer-events:none}.rlbox.rlin>*{pointer-events:auto}.rlrow.rltop{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));top:10px}.stage.full .rlrow.rltop{margin-top:env(safe-area-inset-top,0px)}
+.rlm{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px}.rlm div{display:flex;align-items:center;gap:6px}.rlm b{font-weight:600;color:var(--muted)}.rlm .dt{letter-spacing:1px;color:var(--fg)}.rlm .dt.dg{color:#c0392b}.rlm .dt i{font-style:normal;opacity:.22}.rlm span{color:var(--muted)}.rlnote{margin:0;font-size:11px;color:var(--muted);line-height:1.5}
 .rltag{font-style:normal;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#e8eef7;color:#27466f;margin-left:6px}.rlmore{margin:0;font-size:12px;color:var(--muted)}.rlwarn{margin:0;font-size:12px;padding:6px 8px;border-radius:6px;background:#fdecea;color:#8a2a1c}
 .rlcv{position:absolute;inset:0;pointer-events:none}
 .rlpin{position:absolute;z-index:5;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#e8452c;box-shadow:0 0 0 2.5px #fff,0 1px 6px rgba(0,0,0,.4);pointer-events:none}
@@ -611,9 +612,11 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
       <p class="rlk"><span>次の旅のおすすめ</span><em id="rlkind"></em><em class="rltag" id="rltag" hidden></em></p>
       <div class="rlh"><img class="rlflag" id="rlflag" width="44" height="33" alt=""><h3><small id="rlcty"></small><b id="rlcity"></b></h3></div>
+      <div class="rlm" id="rlm"></div>
       <ul class="rlts" id="rlts"></ul>
       <p class="rlun" id="rlun"></p>
       <p class="rlmore" id="rlmore"></p>
+      <p class="rlnote">評価は目安。日数は、日本から行く場合の移動込みのおおよその最低日数。危険度は国ごとの一般的な印象で、最新の安全情報ではない。</p>
       <p class="rlwarn" id="rlwarn" hidden>渡航の安全情報が出ている国・地域。行くかを決める前に、外務省の海外安全情報で最新の状況を確認してね。</p>
     </div>
   </div>
@@ -2785,7 +2788,7 @@ function rideGlobe(){return new Promise(res=>{
     try{let D;try{D=await load();}catch(e){btn.textContent="データを読み込めませんでした";await new Promise(r=>setTimeout(r,1800));return;}
       if(my!==tok)return;
       const {c,t}=pick(D),d=[c[0],c[2],t[0],t[1],t[2],t[3],t[4],t[5]];
-      await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?18:9):0,onStart:()=>roll(DUR/1000,wd==="roll")});
+      await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?26:12):0,onStart:()=>roll(DUR/1000,wd==="roll")});
       if(my!==tok)return;
       const q=window.__globePt([d[3],d[4]]);
       if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
@@ -2793,10 +2796,15 @@ function rideGlobe(){return new Promise(res=>{
       const tg=el("rltag"),tx=d[0]==="JPN"?"日本":d[0]==="THA"?"予定の国":EX.has(d[0])?"行ったことのある国":"";tg.textContent=tx;tg.hidden=!tx;
       el("rlwarn").hidden=!WARN.has(d[0]);
       const fl=el("rlflag");fl.src="flags/"+c[1]+".svg";fl.alt=d[1]+"の国旗";
+      {const S=(window.__RLS||{})[d[0]]||[3,3,8],o=S[1],remote=/島|砂漠|国立公園|山|湖|高原|滝|渓谷|環礁|保護区|ジャングル|氷河|岬/.test(d[2]),
+        days=Math.min(14,S[2]+(remote?1:0)),dl=days<=3?1:days<=5?2:days<=7?3:days<=9?4:5,
+        mn=d[5]==="定"?Math.max(1,Math.min(o,3)):Math.max(2,Math.min(o+1,5)),
+        row=(nm,n,cls,extra)=>`<div><b>${nm}</b><span class="dt ${cls}" role="img" aria-label="${n}/5">${"●".repeat(n)}<i>${"●".repeat(5-n)}</i></span>${extra?`<span>${extra}</span>`:""}</div>`;
+        el("rlm").innerHTML=row("危険度",S[0],"dg","")+row("最低日数",dl,"",`${days}日`)+row("マニアック度",mn,"","");}
       el("rlts").innerHTML=d[6].map((x,k)=>{const [n,m]=spotOf(x,k);return `<li>${mot(m)}<span>${esc(n)}</span></li>`;}).join("");el("rlun").textContent=d[7];
       const om=c[3].filter(x=>x!==t).map(x=>x[0]);el("rlmore").textContent=om.length?"この国のほかの候補："+om.join("・"):"";
       card.hidden=false;fanfare(wd==="land");celebrate();
-      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?18:9):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
+      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?26:12):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
     finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";}};
