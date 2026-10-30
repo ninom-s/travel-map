@@ -124,6 +124,17 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .tzl.sm .tx{font-size:14.5px}.tzl.sm .lb{margin-top:3px}
 .tzsay{all:unset;box-sizing:border-box;margin-left:auto;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 0 0 1px var(--rule);background:var(--card)}.tzsay:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .tzn{font-size:11.5px;color:var(--muted)}
+.rlbtn{all:unset;box-sizing:border-box;position:absolute;left:10px;bottom:10px;z-index:5;cursor:pointer;font-size:13px;font-weight:700;padding:7px 13px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.14)}
+.rlbtn:hover,.rlbtn:focus-visible{box-shadow:0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14)}.rlbtn[disabled]{opacity:.6;cursor:default}.rlbtn[hidden],.rlpin[hidden],.rlcard[hidden]{display:none}
+.stage.full .rlbtn{left:calc(10px + env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.rlpin{position:absolute;z-index:5;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#e8452c;box-shadow:0 0 0 2.5px #fff,0 1px 6px rgba(0,0,0,.4);pointer-events:none}
+.rlpin::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid #e8452c;animation:rlp 1.5s ease-out infinite}@keyframes rlp{from{transform:scale(.6);opacity:1}to{transform:scale(2.2);opacity:0}}@media (prefers-reduced-motion:reduce){.rlpin::after{animation:none}}
+.rlcard{position:absolute;z-index:6;left:10px;right:10px;bottom:10px;max-width:470px;max-height:58%;overflow:auto;box-sizing:border-box;padding:12px 40px 12px 14px;border-radius:8px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 6px 22px rgba(0,0,0,.2);display:grid;gap:6px;justify-items:start}
+.stage.full .rlcard{left:calc(10px + env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.rlx{all:unset;position:absolute;right:6px;top:6px;width:30px;height:30px;display:grid;place-items:center;cursor:pointer;border-radius:6px;color:var(--muted)}.rlx:hover{background:var(--bg)}
+.rlk{margin:0;display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--muted)}.rlk em{font-style:normal;font-weight:700;color:#fff;background:var(--th);padding:1px 8px;border-radius:99px}
+.rlcard h3{margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.rlcard h3 b{font:800 22px/1.2 var(--display)}.rlcard h3 small{font-size:13px;color:var(--muted);font-weight:600}
+.rlsp,.rlun{margin:0;font-size:13px;line-height:1.6}.rlsp{font-weight:600}
 .cbadge{all:unset;box-sizing:border-box;position:absolute;left:10px;top:52px;z-index:4;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);padding:5px 10px 5px 6px;font-size:12.5px;font-weight:700;color:var(--fg);cursor:pointer}
 .cbadge[hidden]{display:none}.cbadge .cflag{width:34px}.cbadge small{font-weight:400;color:var(--muted);font-size:11px}
 .stage.playing .cbadge{display:none}
@@ -593,10 +604,21 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
         <li><b>旅の再生</b>ルートの上を走る乗り物を押すと、その乗り物の目線で行き先まで進む</li>
         <li><b>写真</b>右上に赤い点があるイラストは写真つき。数字は写真の枚数。横にスワイプか矢印で切り替え</li>
         <li><b>旅のタブ</b>地図の上の「ヨーロッパ一周」「エジプト・ケニア」「ハワイ・韓国・ロンドン」で、見る旅を選ぶ。押すたびに足す・外すができて、2つ以上選ぶと地球儀で全部が入る（最低1つは残る）</li>
+        <li><b>次の旅ルーレット</b>左下のボタンで地球儀が回って、行ったことのない国のおすすめの街が出る。体験ではなく、候補</li>
         <li><b>イラスト一覧</b>地図の下に全部並んでいる。押すと解説と写真が出る。「地図で見る」でその場所に飛ぶ</li>
       </ul>
     </div>
     <div class="lodtag" id="lodtag" aria-live="polite"></div>
+    <button type="button" class="rlbtn" id="rlbtn">🎲 次の旅ルーレット</button>
+    <div class="rlpin" id="rlpin" hidden></div>
+    <div class="rlcard" id="rlcard" role="status" aria-live="polite" hidden>
+      <button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
+      <p class="rlk"><span>次の旅のおすすめ</span><em id="rlkind"></em></p>
+      <h3><small id="rlcty"></small><b id="rlcity"></b></h3>
+      <p class="rlsp" id="rlsp"></p>
+      <p class="rlun" id="rlun"></p>
+      <button type="button" class="chip" id="rlagain">🎲 もう一度回す</button>
+    </div>
     <button type="button" class="cbadge" id="cbadge" hidden></button>
     <div class="play" id="play" hidden>
       <div class="pcap" aria-live="polite"><div class="pdate"></div><div class="pname"></div><div class="pnote"></div></div>
@@ -2199,6 +2221,16 @@ async function enterGlobe(center,opt={}){
     return gsv.transition("grot").duration(opt.dur||800).ease(d3.easeCubicInOut).tween("rot",()=>t=>{GL.rot=ip(t);gCoarse=t<1;renderGlobe();}).end().catch(()=>{});}
   if(to)GL.rot=to;renderGlobe();
 }
+// ---- 次の旅ルーレット用：地球儀を回して、指定の場所を正面（やや上）に止める ----
+window.__spinGlobe=async(ll,opt={})=>{
+  await enterGlobe(null,{k:1});gsv.interrupt("grot");
+  const r0=GL.rot.slice(),lat1=Math.max(-85,Math.min(85,-ll[1]+(opt.shift||0)));let t0=-ll[0];
+  if(RM()){GL.rot=[t0,lat1,0];renderGlobe();return;}
+  t0+=360*Math.floor((r0[0]-360*(opt.turns||3)-t0)/360);
+  await gsv.transition("grot").duration(opt.dur||4200).ease(d3.easeCubicOut).tween("rot",()=>t=>{GL.rot=[r0[0]+(t0-r0[0])*t,r0[1]+(lat1-r0[1])*t,0];gCoarse=t<1;renderGlobe();}).end().catch(()=>{});
+  GL.rot=[((GL.rot[0]+180)%360+360)%360-180,GL.rot[1],0];gCoarse=false;renderGlobe();};
+window.__globePt=ll=>{gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);return gpj(ll);};
+window.__spinStop=()=>gsv.interrupt("grot");
 window.__focusKey=(key,k)=>{const g=P[key];if(!g)return;
   if(GL.on){exitGlobe(g,k);return;}
   const p=proj(g),t=d3.zoomIdentity.translate(W/2,H/2).scale(Math.min(k,KMAX())).translate(-p[0],-p[1]);
@@ -2598,6 +2630,28 @@ function rideGlobe(){return new Promise(res=>{
       return `<div class="ggrp"><h3>${head}</h3><div class="pgrid">${g.items.map(it=>`<button class="pph" type="button" ${it.ev?`data-e="${it.e}"`:`data-i="${it.i}"`} aria-label="${esc(it.name)}の写真"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(it.src)}" alt=""><span>${esc(it.name)}</span></button>`).join("")}</div></div>`;}).join(""):`<p class="empty">この旅には、まだ写真がない。</p>`;};
   el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
+// ---- 次の旅ルーレット（行ったことのない国の街を、地球儀を回して出す。体験ではなく、おすすめの候補） ----
+(()=>{const el=id=>document.getElementById(id);
+  // [ISO3, 国, 街, 経度, 緯度, 定番/マニアック, 見どころ3つ, うんちく]
+  const DATA=[["PRT","ポルトガル","ポルト",-8.611,41.15,"定番",["ドン・ルイス1世橋","ポートワインのセラー巡り（対岸のガイア地区）","リヴラリア・レロ書店"],"ポートワインの「ポート」は、この街の名前が由来。ワインの積み出し港だった。"],["CZE","チェコ","チェスキー・クルムロフ",14.3175,48.8127,"マニアック",["クルムロフ城と塔","ヴルタヴァ川沿いの旧市街","城のバロック劇場"],"川が大きく蛇行する内側に街がある。旧市街全体が世界遺産（1992年登録）。"],["AUT","オーストリア","ハルシュタット",13.6493,47.5622,"定番",["湖畔の町並み","ハルシュタット塩坑","湖のボート遊覧"],"古くから岩塩の産地として栄え、先史時代の「ハルシュタット文化」の名前の由来になった。"],["NOR","ノルウェー","トロムソ",18.9553,69.6492,"定番",["オーロラ観測ツアー","北極教会","フロイア山のロープウェイ"],"北緯約70度。夏は太陽が沈まない時期があり、冬は太陽が昇らない時期がある。"],["ISL","アイスランド","レイキャビク",-21.9426,64.1466,"定番",["ハットルグリムス教会","ハルパ・コンサートホール","ゴールデンサークルの日帰りツアー"],"主権国家の首都としては世界最北。"],["GRC","ギリシャ","メテオラ",21.6306,39.7217,"マニアック",["大メテオロン修道院","聖ステファノス修道院","夕日の展望ポイント"],"名前はギリシャ語で「空中に浮いた」という意味。切り立った岩の上に修道院が建つ。"],["TUR","トルコ","カッパドキア（ギョレメ）",34.8289,38.6431,"定番",["早朝の気球","ギョレメ野外博物館","カイマクルの地下都市"],"柔らかい凝灰岩（火山灰が固まった岩）を掘って、住居や教会、地下都市が造られた。"],["MAR","モロッコ","シェフシャウエン",-5.2636,35.1688,"マニアック",["青い旧市街の路地","ウタ・エル・ハマム広場","スパニッシュ・モスクからの眺め"],"街が青く塗られている。その理由には諸説ある。"],["IND","インド","ジャイプル",75.7873,26.9124,"定番",["風の宮殿（ハワー・マハル）","アンベール城","ジャンタル・マンタル（天文台）"],"旧市街がピンク色に塗られていて「ピンクシティ」と呼ばれる。ジャンタル・マンタルは18世紀の天文観測施設で、世界遺産。"],["NPL","ネパール","ポカラ",83.9856,28.2096,"マニアック",["フェワ湖","ワールド・ピース・パゴダ","サランコットの日の出"],"標高約800mの街から、8000m級のアンナプルナ連峰が見える。"],["VNM","ベトナム","ホイアン",108.338,15.8801,"定番",["来遠橋（日本橋）","夜のランタン","旧市街の古い家並み"],"16〜17世紀には日本人町があった。来遠橋は「日本橋」とも呼ばれる。"],["KHM","カンボジア","シェムリアップ（アンコール遺跡群）",103.867,13.4125,"定番",["アンコール・ワットの日の出","バイヨン寺院","タ・プローム"],"アンコール・ワットは12世紀前半に造られた。もとはヒンドゥー教の寺院で、のちに仏教寺院になった。"],["IDN","インドネシア","ヨグヤカルタ",110.3695,-7.7956,"定番",["ボロブドゥール寺院","プランバナン寺院","王宮（クラトン）"],"近郊のボロブドゥールは、9世紀ごろに造られた世界最大級の仏教寺院遺跡。"],["TWN","台湾","台南",120.227,22.999,"マニアック",["赤崁楼","安平古堡","国華街の屋台"],"台湾で古くから開けた街。安平古堡は、17世紀にオランダが築いた要塞が起源。"],["MNG","モンゴル","カラコルム（ハラホリン）",102.8244,47.1986,"マニアック",["エルデネ・ゾー僧院","カラコルム博物館","草原のゲル泊"],"13世紀にモンゴル帝国の都が置かれた。"],["UZB","ウズベキスタン","サマルカンド",66.9597,39.6542,"定番",["レギスタン広場","グリ・アミール廟","シャーヒ・ズィンダ廟群"],"シルクロードの要衝で、ティムール帝国の都。青いタイルの建物から「青の都」と呼ばれる。"],["JOR","ヨルダン","ペトラ",35.4444,30.3285,"定番",["シク（岩の裂け目の道）","エル・ハズネ（宝物殿）","エド・ディル（修道院）"],"ナバテア人が岩壁を削って造った都。夕日で岩が赤く染まり「バラ色の都」と呼ばれる。"],["PER","ペルー","マチュピチュ",-72.545,-13.1631,"定番",["ワイナピチュ","太陽の門（インティプンク）","見張り小屋からの眺め"],"標高約2,400m。15世紀ごろのインカ帝国の遺跡で、名前は現地語で「老いた峰」という意味。"],["BOL","ボリビア","ウユニ塩湖",-67.4891,-20.1338,"定番",["雨季の「天空の鏡」","列車の墓場","塩のホテル"],"標高約3,650mにある世界最大級の塩の平原。雨季には薄く水が張って、空が鏡のように映る。"],["CHL","チリ","イースター島",-109.3497,-27.1127,"マニアック",["アフ・トンガリキ","ラノ・ララク（モアイの工房）","オロンゴ儀式村"],"モアイ像は島に約900体。島の現地名は「ラパ・ヌイ」。"],["ARG","アルゼンチン","ブエノスアイレス",-58.3816,-34.6037,"定番",["ラ・ボカ地区","レコレータ墓地","書店「エル・アテネオ」"],"タンゴは、この街のある港町で生まれたとされる。"],["BRA","ブラジル","リオデジャネイロ",-43.1729,-22.9068,"定番",["コルコバードのキリスト像","パン・デ・アスーカル","イパネマ海岸"],"名前は「1月の川」という意味。1月に湾を見つけた探検隊が、川の河口だと思ったことに由来する。"],["MEX","メキシコ","オアハカ",-96.7266,17.0732,"マニアック",["モンテ・アルバン遺跡","ベニート・フアレス市場","サント・ドミンゴ教会"],"「七つのモレの地」と呼ばれる。モレは、唐辛子やナッツ、チョコレートなどを使うソース。"],["CAN","カナダ","ケベック・シティ",-71.208,46.8139,"定番",["シャトー・フロントナック","プティ・シャンプラン通り","モンモランシーの滝"],"北米では珍しい、城壁が残る街。公用語はフランス語。"],["AUS","オーストラリア","ウルル（エアーズロック）",131.0369,-25.3444,"定番",["ウルルの周囲を歩く","日の出・日没の観賞","カタ・ジュタ"],"先住民アナング族の聖地。登山は2019年10月に禁止された。"],["NZL","ニュージーランド","クイーンズタウン",168.6626,-45.0312,"定番",["ワカティプ湖","ミルフォード・サウンドのクルーズ","ボブズ・ピーク"],"バンジージャンプを商業化した場所として知られる。"],["TZA","タンザニア","ザンジバル（ストーンタウン）",39.2026,-6.1659,"マニアック",["ストーンタウンの路地","フォロダニ市場","スパイスツアー"],"「香辛料の島」。クイーンのフレディ・マーキュリーの生まれた街としても知られる。"],["ZAF","南アフリカ","ケープタウン",18.4241,-33.9249,"定番",["テーブルマウンテン","喜望峰","ボルダーズ・ビーチのペンギン"],"テーブルマウンテンの上に雲がかかる様子は「テーブルクロス」と呼ばれる。"],["NAM","ナミビア","ソススフレイ",15.2933,-24.7275,"マニアック",["デッドフレイ","ビッグ・ダディ（大砂丘）","デューン45の日の出"],"ナミブ砂漠は、世界でも最古級の砂漠のひとつ。"],["MDG","マダガスカル","バオバブ街道（モロンダバ）",44.4189,-20.2506,"マニアック",["バオバブ街道の夕景","キリンディ森林保護区","モロンダバの海岸"],"バオバブは世界に8種ほどあり、そのうち6種がマダガスカルにしかない。"],["GEO","ジョージア","トビリシ",44.8271,41.7151,"マニアック",["旧市街の木造バルコニー","アバノトゥバニの温泉地区","ナリカラ要塞"],"ワイン造り発祥の地とされ、地中に埋めた甕（クヴェヴリ）で発酵させる伝統製法がある。"],["HRV","クロアチア","ドゥブロヴニク",18.0944,42.6507,"定番",["城壁めぐり","スルジ山のロープウェイ","ストラドゥン通り"],"「アドリア海の真珠」と呼ばれる。旧市街をぐるりと囲む城壁は、歩いて一周できる。"],["SVN","スロベニア","ブレッド湖",14.1146,46.3683,"マニアック",["湖に浮かぶ島の聖母教会","ブレッド城","名物のクリームケーキ"],"島の教会には、鐘を鳴らすと願いが叶うと言われる「願いの鐘」がある。"],["POL","ポーランド","クラクフ",19.945,50.0647,"定番",["中央市場広場","ヴァヴェル城","ヴィエリチカ岩塩坑"],"聖マリア教会の塔のラッパは、毎時、曲の途中でぴたりと止まる。昔、敵の矢に射られた伝説にちなむ。"],["HUN","ハンガリー","ブダペスト",19.0402,47.4979,"定番",["国会議事堂","セーチェーニ温泉","漁夫の砦"],"ドナウ川の西のブダと東のペストが、1873年に合併して今の街になった。"],["EST","エストニア","タリン",24.7536,59.437,"定番",["旧市街","聖オラフ教会の塔","カドリオルク公園"],"中世の街並みが残る。インターネット電話のスカイプは、エストニアで開発された。"],["IRL","アイルランド","ダブリン",-6.2603,53.3498,"定番",["トリニティ・カレッジの図書館","ギネス・ストアハウス","テンプル・バー"],"ギネスの創業者は、1759年に醸造所を9,000年の契約で借りたという話が有名。"],["DNK","デンマーク","コペンハーゲン",12.5683,55.6761,"定番",["ニューハウン","チボリ公園","人魚姫の像"],"チボリ公園は1843年開園で、世界で最も古い遊園地のひとつ。"],["BEL","ベルギー","ブルージュ",3.2247,51.2093,"定番",["鐘楼","愛の湖公園（ミンネワーテル）","運河クルーズ"],"街の中心にある鐘楼は366段。上ると旧市街が見渡せる。"],["NLD","オランダ","ヒートホールン",6.0817,52.7407,"マニアック",["運河のボート","茅葺き屋根の家々","小さな橋めぐり"],"「オランダのベニス」と呼ばれる村。中心部に車道がほとんどなく、運河を船で移動する。"],["MLT","マルタ","ヴァレッタ",14.5146,35.8989,"マニアック",["聖ヨハネ大聖堂","アッパー・バラッカ・ガーデン","グランド・ハーバーの眺め"],"街全体が世界遺産。16世紀にヨハネ騎士団が築いた城塞都市。"],["LKA","スリランカ","シーギリヤ",80.7603,7.957,"マニアック",["シーギリヤ・ロック","ダンブッラ石窟寺院","ピドゥランガラ岩"],"5世紀に王が、岩山の上に宮殿を築いた。「天空の宮殿」と呼ばれる。"],["ARE","アラブ首長国連邦","ドバイ",55.2708,25.2048,"定番",["ブルジュ・ハリファ","ドバイ・モール","旧市街のスーク"],"ブルジュ・ハリファは高さ828mで、世界一高い建物。"],["BTN","ブータン","パロ",89.4136,27.4305,"マニアック",["タクツァン僧院（虎の巣）","パロ・ゾン","国立博物館"],"パロの空港は、世界でも着陸が難しい空港として知られる。「国民総幸福」を掲げる国。"],["ETH","エチオピア","ラリベラ",39.0476,12.0317,"マニアック",["聖ギオルギス教会（十字の形）","ビエテ・メダニ・アレム","岩窟教会群をつなぐ通路"],"岩を掘り下げて造られた教会群。「第二のエルサレム」と呼ばれる。"],["CUB","キューバ","ハバナ",-82.3666,23.1136,"定番",["オールド・ハバナ","マレコン（海沿いの道）","クラシックカー"],"1950年代ごろのアメリカ車が、今もタクシーなどで走っている。"],["ROU","ルーマニア","シギショアラ",24.7925,46.2197,"マニアック",["時計塔","城塞の旧市街","学校の屋根付き階段"],"串刺し公ヴラド3世（ドラキュラのモデルのひとりとされる）が生まれた街とされる。"],["SGP","シンガポール","シンガポール",103.8198,1.3521,"定番",["マリーナベイ・サンズ","ガーデンズ・バイ・ザ・ベイ","ホーカーセンター"],"名前は、サンスクリット語で「獅子の街」を意味する言葉に由来するといわれる。"],["LAO","ラオス","ルアンパバーン",102.1347,19.8856,"マニアック",["早朝の托鉢","クアンシーの滝","プーシーの丘"],"街全体が世界遺産（1995年登録）。朝の托鉢は、街の風物詩。"]];
+  const EX=new Set(["USA","KOR","GBR","THA","CHN","JPN"]);TRIPS.forEach(t=>t.visited&&t.visited.forEach(c=>EX.add(c)));   // 行った国・予定の国・日本は出さない
+  const POOL=DATA.filter(d=>!EX.has(d[0]));let bag=[],busy=false,tok=0;
+  const pick=()=>{if(!bag.length)bag=d3.shuffle(POOL.slice());return bag.pop();};
+  const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin");
+  const hide=()=>{card.hidden=true;pin.hidden=true;btn.hidden=false;};
+  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();btn.disabled=true;btn.textContent="回っています…";
+    const d=pick();
+    try{await window.__spinGlobe([d[3],d[4]],{shift:9});
+      if(my!==tok)return;
+      const q=window.__globePt([d[3],d[4]]);
+      if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
+      el("rlkind").textContent=d[5];el("rlcty").textContent=d[1];el("rlcity").textContent=d[2];
+      el("rlsp").textContent="見どころ："+d[6].join("／");el("rlun").textContent=d[7];
+      card.hidden=false;}
+    finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";btn.hidden=!card.hidden;}};
+  btn.addEventListener("click",spin);el("rlagain").addEventListener("click",spin);el("rlx").addEventListener("click",hide);
+  el("stage").addEventListener("pointerdown",e=>{if(e.target.closest(".rlbtn,.rlcard"))return;if(busy){tok++;window.__spinStop();}pin.hidden=true;});
+  window.addEventListener("resize",()=>{pin.hidden=true;});})();
 // ---- 時差（日本時間を動かすと、旅先の時刻が出る。あいさつは、地図で国に寄ったときの国旗から開く詳細に入っている） ----
 (()=>{const el=id=>document.getElementById(id);
   // [表示, カタカナ]。slot：hello=いつでも／am=朝／day=昼／pm=夕方〜夜。pmFrom＝夜のあいさつに変わる時刻
