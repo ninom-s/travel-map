@@ -126,13 +126,15 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .tzsay{all:unset;box-sizing:border-box;margin-left:auto;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 0 0 1px var(--rule);background:var(--card)}.tzsay:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .tzn{font-size:11.5px;color:var(--muted)}
 .rlbox{display:grid;gap:8px;margin:0 0 8px;justify-items:start}
+.zbtn#rlbtn{font-size:17px}.zbtn[disabled]{cursor:default;opacity:.7}.zbtn.spin{animation:rlsp .7s linear infinite}@keyframes rlsp{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.zbtn.spin{animation:none}}
+.rlcard .rlsnd{position:absolute;top:8px;right:40px;width:28px;height:28px;font-size:14px}
 .rlrow{display:flex;gap:8px;align-items:center}
 .rlbtn{all:unset;box-sizing:border-box;cursor:pointer;font-size:14px;font-weight:700;padding:8px 16px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.12)}
 .rlbtn:hover,.rlbtn:focus-visible{box-shadow:0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14)}.rlbtn[disabled]{opacity:.65;cursor:default}
 .rlsnd{all:unset;box-sizing:border-box;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:0 0 0 1px var(--rule);font-size:15px}.rlsnd:hover,.rlsnd:focus-visible{box-shadow:0 0 0 1.5px var(--fg)}.rlsnd[aria-pressed="false"]{opacity:.55}
 .rlcard{position:relative;width:100%;max-width:520px;box-sizing:border-box;padding:12px 40px 12px 14px;border-radius:8px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 4px 16px rgba(0,0,0,.12);display:grid;gap:6px;justify-items:start;animation:rlpop .35s ease-out}
 @keyframes rlpop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.rlcard{animation:none}}
-.rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
+.rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:54px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
 .rlbox.rlin .rlcard{max-height:58vh;overflow:auto}
 .rlbox.rlin{pointer-events:none}.rlbox.rlin>*{pointer-events:auto}.rlrow.rltop{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));top:10px}.stage.full .rlrow.rltop{margin-top:env(safe-area-inset-top,0px)}
 .rlm{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px}.rlm div{display:flex;align-items:center;gap:6px}.rlm b{font-weight:600;color:var(--muted)}.rlm .dt{letter-spacing:1px;color:var(--fg)}.rlm .dt.dg{color:#c0392b}.rlm .dt i{font-style:normal;opacity:.22}.rlm span{color:var(--muted)}.rlnote{margin:0;font-size:11px;color:var(--muted);line-height:1.5}
@@ -612,9 +614,8 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
   </nav>
   <section class="panel empty" data-page="map" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
   <div class="rlbox" data-page="map" id="rlbox">
-    <div class="rlrow"><button type="button" class="rlbtn" id="rlbtn">🎲 次の旅ルーレット</button><button type="button" class="rlsnd" id="rlsnd" aria-pressed="true" aria-label="効果音（ドラムロール）" title="効果音">🔊</button></div>
   <div class="rlcard" id="rlcard" role="status" aria-live="polite" hidden>
-      <button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
+      <button type="button" class="rlsnd" id="rlsnd" aria-pressed="true" aria-label="効果音（ドラムロール）" title="効果音">🔊</button><button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
       <p class="rlk"><span>次の旅のおすすめ</span><em id="rlkind"></em><em class="rltag" id="rltag" hidden></em></p>
       <div class="rlh"><img class="rlflag" id="rlflag" width="44" height="33" alt=""><h3><small id="rlcty"></small><b id="rlcity"></b></h3></div>
       <ul class="rlts" id="rlts"></ul>
@@ -625,7 +626,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     </div>
   </div>
   <div class="stage" data-page="map" id="stage">
-    <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button><button class="zbtn" type="button" id="zhelp" aria-label="操作説明" title="操作説明" aria-expanded="false" aria-controls="help">?</button></div>
+    <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button><button class="zbtn" type="button" id="zhelp" aria-label="操作説明" title="操作説明" aria-expanded="false" aria-controls="help">?</button><button class="zbtn" type="button" id="rlbtn" aria-label="次の旅ルーレット" title="次の旅ルーレット">🎲</button></div>
     <div class="help" id="help" role="dialog" aria-label="操作説明" hidden>
       <button type="button" class="hx" id="helpx" aria-label="操作説明を閉じる">✕</button>
       <h2>操作のしかた</h2>
@@ -636,7 +637,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
         <li><b>旅の再生</b>ルートの上を走る乗り物を押すと、その乗り物の目線で行き先まで進む</li>
         <li><b>写真</b>右上に赤い点があるイラストは写真つき。数字は写真の枚数。横にスワイプか矢印で切り替え</li>
         <li><b>旅のタブ</b>地図の上の「ヨーロッパ一周」「エジプト・ケニア」「ハワイ・韓国・ロンドン」で、見る旅を選ぶ。押すたびに足す・外すができて、2つ以上選ぶと地球儀で全部が入る（最低1つは残る）</li>
-        <li><b>次の旅ルーレット</b>左上のボタンで地球儀が回って、世界のどこかの国のおすすめの街が出る（行ったことのある国も含む）。体験ではなく、候補</li>
+        <li><b>次の旅ルーレット</b>右のボタン列の🎲で地球儀が回って、世界のどこかの国のおすすめの街が出る（行ったことのある国も含む）。体験ではなく、候補</li>
         <li><b>イラスト一覧</b>地図の下に全部並んでいる。押すと解説と写真が出る。「地図で見る」でその場所に飛ぶ</li>
       </ul>
     </div>
@@ -2746,9 +2747,7 @@ function rideGlobe(){return new Promise(res=>{
   const FALL=["street","garden","sea"];
   const spotOf=(t,i)=>{const [n,m]=t.split("~");if(m)return [n,m];for(const [r,k] of RULES)if(r.test(n))return [n,k];return [n,FALL[i%3]];};
   const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin"),box=el("rlbox"),stage=el("stage"),snd=el("rlsnd"),DUR=4200;
-  stage.appendChild(box);box.classList.add("rlin");const row=box.querySelector(".rlrow");stage.appendChild(row);row.classList.add("rltop");
-  const lay=()=>{const lt=el("lodtag");row.style.top=((lt&&lt.offsetHeight&&getComputedStyle(lt).display!=="none")?lt.offsetTop+lt.offsetHeight+8:10)+"px";};
-  new MutationObserver(lay).observe(el("lodtag"),{childList:true,characterData:true,subtree:true,attributes:true});window.addEventListener("resize",lay);new MutationObserver(lay).observe(stage,{attributes:true,attributeFilter:["class"]});lay();   // 常にマップの上（左下）に重ねる
+  stage.appendChild(box);box.classList.add("rlin");
   // ---- 効果音（ドラムロールと「ジャン！」。ブラウザで合成。ボタンで消せる）
   let ac=null,master=null,mute=false,nb=null;try{mute=localStorage.getItem("rlmute")==="1";}catch(e){}
   const paintSnd=()=>{snd.textContent=mute?"🔇":"🔊";snd.setAttribute("aria-pressed",mute?"false":"true");};paintSnd();
@@ -2801,9 +2800,9 @@ function rideGlobe(){return new Promise(res=>{
   const celebrate=()=>{if(RM())return;sizeCv();clearCv();burst(150);setTimeout(()=>{burst(110);if(!raf){tPrev=performance.now();raf=requestAnimationFrame(tick);}},260);tPrev=performance.now();raf=requestAnimationFrame(tick);};
   // ---- ルーレット本体
   const hide=()=>{card.hidden=true;pin.hidden=true;};
-  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();clearCv();AC();btn.disabled=true;btn.textContent="回っています…";
+  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();clearCv();AC();btn.disabled=true;btn.classList.add("spin");
     const wd=Math.random()<.1?(Math.random()<.5?"roll":"land"):"";
-    try{let D;try{D=await load();}catch(e){btn.textContent="データを読み込めませんでした";await new Promise(r=>setTimeout(r,1800));return;}
+    try{let D;try{D=await load();}catch(e){btn.title="データを読み込めませんでした";await new Promise(r=>setTimeout(r,1800));return;}
       if(my!==tok)return;
       const {c,t}=pick(D),d=[c[0],c[2],t[0],t[1],t[2],t[3],t[4],t[5]];
       await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onStart:()=>roll(DUR/1000,wd==="roll")});
@@ -2820,7 +2819,7 @@ function rideGlobe(){return new Promise(res=>{
       await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
-    finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";}};
+    finally{busy=false;btn.disabled=false;btn.classList.remove("spin");}};
   btn.addEventListener("click",spin);el("rlx").addEventListener("click",()=>{hide();clearCv();});
   stage.addEventListener("pointerdown",e=>{if(e.target.closest(".rlbox"))return;if(busy){tok++;window.__spinStop();silence();}pin.hidden=true;});
   window.addEventListener("resize",()=>{pin.hidden=true;if(parts.length)sizeCv();});})();
