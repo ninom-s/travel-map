@@ -124,13 +124,18 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .tzl.sm .tx{font-size:14.5px}.tzl.sm .lb{margin-top:3px}
 .tzsay{all:unset;box-sizing:border-box;margin-left:auto;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 0 0 1px var(--rule);background:var(--card)}.tzsay:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .tzn{font-size:11.5px;color:var(--muted)}
-.rlbtn{all:unset;box-sizing:border-box;position:absolute;left:10px;bottom:10px;z-index:5;cursor:pointer;font-size:13px;font-weight:700;padding:7px 13px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.14)}
-.rlbtn:hover,.rlbtn:focus-visible{box-shadow:0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14)}.rlbtn[disabled]{opacity:.6;cursor:default}.rlbtn[hidden],.rlpin[hidden],.rlcard[hidden]{display:none}
-.stage.full .rlbtn{left:calc(10px + env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.rlbox{display:grid;gap:8px;margin:0 0 8px;justify-items:start}
+.rlrow{display:flex;gap:8px;align-items:center}
+.rlbtn{all:unset;box-sizing:border-box;cursor:pointer;font-size:14px;font-weight:700;padding:8px 16px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.12)}
+.rlbtn:hover,.rlbtn:focus-visible{box-shadow:0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14)}.rlbtn[disabled]{opacity:.65;cursor:default}
+.rlsnd{all:unset;box-sizing:border-box;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:0 0 0 1px var(--rule);font-size:15px}.rlsnd:hover,.rlsnd:focus-visible{box-shadow:0 0 0 1.5px var(--fg)}.rlsnd[aria-pressed="false"]{opacity:.55}
+.rlcard{position:relative;width:100%;max-width:520px;box-sizing:border-box;padding:12px 40px 12px 14px;border-radius:8px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 4px 16px rgba(0,0,0,.12);display:grid;gap:6px;justify-items:start;animation:rlpop .35s ease-out}
+@keyframes rlpop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.rlcard{animation:none}}
+.rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
+.rlbox.rlin .rlcard{max-height:58vh;overflow:auto}
+.rlcv{position:absolute;inset:0;pointer-events:none}
 .rlpin{position:absolute;z-index:5;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#e8452c;box-shadow:0 0 0 2.5px #fff,0 1px 6px rgba(0,0,0,.4);pointer-events:none}
 .rlpin::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid #e8452c;animation:rlp 1.5s ease-out infinite}@keyframes rlp{from{transform:scale(.6);opacity:1}to{transform:scale(2.2);opacity:0}}@media (prefers-reduced-motion:reduce){.rlpin::after{animation:none}}
-.rlcard{position:absolute;z-index:6;left:10px;right:10px;bottom:10px;max-width:470px;max-height:58%;overflow:auto;box-sizing:border-box;padding:12px 40px 12px 14px;border-radius:8px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 6px 22px rgba(0,0,0,.2);display:grid;gap:6px;justify-items:start}
-.stage.full .rlcard{left:calc(10px + env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px))}
 .rlx{all:unset;position:absolute;right:6px;top:6px;width:30px;height:30px;display:grid;place-items:center;cursor:pointer;border-radius:6px;color:var(--muted)}.rlx:hover{background:var(--bg)}
 .rlk{margin:0;display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--muted)}.rlk em{font-style:normal;font-weight:700;color:#fff;background:var(--th);padding:1px 8px;border-radius:99px}
 .rlcard h3{margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.rlcard h3 b{font:800 22px/1.2 var(--display)}.rlcard h3 small{font-size:13px;color:var(--muted);font-weight:600}
@@ -597,6 +602,16 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     </div>
   </nav>
   <section class="panel empty" data-page="map" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
+  <div class="rlbox" data-page="map" id="rlbox">
+    <div class="rlrow"><button type="button" class="rlbtn" id="rlbtn">🎲 次の旅ルーレット</button><button type="button" class="rlsnd" id="rlsnd" aria-pressed="true" aria-label="効果音（ドラムロール）" title="効果音">🔊</button></div>
+  <div class="rlcard" id="rlcard" role="status" aria-live="polite" hidden>
+      <button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
+      <p class="rlk"><span>次の旅のおすすめ</span><em id="rlkind"></em></p>
+      <div class="rlh"><img class="rlflag" id="rlflag" width="44" height="33" alt=""><h3><small id="rlcty"></small><b id="rlcity"></b></h3></div>
+      <ul class="rlts" id="rlts"></ul>
+      <p class="rlun" id="rlun"></p>
+    </div>
+  </div>
   <div class="stage" data-page="map" id="stage">
     <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button><button class="zbtn" type="button" id="zhelp" aria-label="操作説明" title="操作説明" aria-expanded="false" aria-controls="help">?</button></div>
     <div class="help" id="help" role="dialog" aria-label="操作説明" hidden>
@@ -614,16 +629,8 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       </ul>
     </div>
     <div class="lodtag" id="lodtag" aria-live="polite"></div>
-    <button type="button" class="rlbtn" id="rlbtn">🎲 次の旅ルーレット</button>
     <div class="rlpin" id="rlpin" hidden></div>
-    <div class="rlcard" id="rlcard" role="status" aria-live="polite" hidden>
-      <button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
-      <p class="rlk"><span>次の旅のおすすめ</span><em id="rlkind"></em></p>
-      <div class="rlh"><img class="rlflag" id="rlflag" width="44" height="33" alt=""><h3><small id="rlcty"></small><b id="rlcity"></b></h3></div>
-      <ul class="rlts" id="rlts"></ul>
-      <p class="rlun" id="rlun"></p>
-      <button type="button" class="chip" id="rlagain">🎲 もう一度回す</button>
-    </div>
+
     <button type="button" class="cbadge" id="cbadge" hidden></button>
     <div class="play" id="play" hidden>
       <div class="pcap" aria-live="polite"><div class="pdate"></div><div class="pname"></div><div class="pnote"></div></div>
@@ -2232,10 +2239,12 @@ window.__spinGlobe=async(ll,opt={})=>{
   const r0=GL.rot.slice(),lat1=Math.max(-85,Math.min(85,-ll[1]+(opt.shift||0)));let t0=-ll[0];
   if(RM()){GL.rot=[t0,lat1,0];renderGlobe();return;}
   t0+=360*Math.floor((r0[0]-360*(opt.turns||3)-t0)/360);
+  if(opt.onStart)opt.onStart();
   await gsv.transition("grot").duration(opt.dur||4200).ease(d3.easeCubicOut).tween("rot",()=>t=>{GL.rot=[r0[0]+(t0-r0[0])*t,r0[1]+(lat1-r0[1])*t,0];gCoarse=t<1;renderGlobe();}).end().catch(()=>{});
   GL.rot=[((GL.rot[0]+180)%360+360)%360-180,GL.rot[1],0];gCoarse=false;renderGlobe();};
 window.__globePt=ll=>{gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);return gpj(ll);};
 window.__spinStop=()=>gsv.interrupt("grot");
+window.__globeR=()=>GL.R;
 window.__focusKey=(key,k)=>{const g=P[key];if(!g)return;
   if(GL.on){exitGlobe(g,k);return;}
   const p=proj(g),t=d3.zoomIdentity.translate(W/2,H/2).scale(Math.min(k,KMAX())).translate(-p[0],-p[1]);
@@ -2698,22 +2707,66 @@ function rideGlobe(){return new Promise(res=>{
   const EX=new Set(["USA","KOR","GBR","THA","CHN","JPN"]);TRIPS.forEach(t=>t.visited&&t.visited.forEach(c=>EX.add(c)));   // 行った国・予定の国・日本は出さない
   const POOL=DATA.filter(d=>!EX.has(d[0]));let bag=[],busy=false,tok=0;
   const pick=()=>{if(!bag.length)bag=d3.shuffle(POOL.slice());return bag.pop();};
-  const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin");
-  const hide=()=>{card.hidden=true;pin.hidden=true;btn.hidden=false;};
-  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();btn.disabled=true;btn.textContent="回っています…";
+  const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin"),box=el("rlbox"),stage=el("stage"),snd=el("rlsnd"),DUR=4200;
+  // ---- 表示の場所：ふだんはマップの上。全画面のときだけ、マップの中（左下）に重ねる
+  const place=()=>{const full=stage.classList.contains("full");
+    if(full&&box.parentNode!==stage){stage.appendChild(box);box.classList.add("rlin");}
+    else if(!full&&box.parentNode===stage){stage.parentNode.insertBefore(box,stage);box.classList.remove("rlin");}};
+  new MutationObserver(place).observe(stage,{attributes:true,attributeFilter:["class"]});
+  // ---- 効果音（ドラムロールと「ジャン！」。ブラウザで合成。ボタンで消せる）
+  let ac=null,master=null,mute=false,nb=null;try{mute=localStorage.getItem("rlmute")==="1";}catch(e){}
+  const paintSnd=()=>{snd.textContent=mute?"🔇":"🔊";snd.setAttribute("aria-pressed",mute?"false":"true");};paintSnd();
+  const AC=()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();}catch(e){ac=null;}return ac;};
+  const noise=()=>{if(!nb){nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}return nb;};
+  const hit=(t,vel,out)=>{const n=ac.createBufferSource();n.buffer=noise();const bp=ac.createBiquadFilter();bp.type="bandpass";bp.frequency.value=2200;bp.Q.value=.7;
+    const g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vel,t+.003);g.gain.exponentialRampToValueAtTime(.001,t+.09);
+    n.connect(bp);bp.connect(g);g.connect(out);n.start(t,Math.random()*.6,.12);
+    const o=ac.createOscillator();o.type="triangle";o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(130,t+.06);
+    const og=ac.createGain();og.gain.setValueAtTime(vel*.45,t);og.gain.exponentialRampToValueAtTime(.001,t+.07);o.connect(og);og.connect(out);o.start(t);o.stop(t+.1);};
+  const roll=sec=>{if(mute||!AC())return;master=ac.createGain();master.gain.value=.6;master.connect(ac.destination);
+    const t0=ac.currentTime+.02;let t=0;while(t<sec-.05){const f=t/sec;hit(t0+t,(.1+.6*f*f)*(.85+Math.random()*.3),master);t+=(.09-.05*f)*(.9+Math.random()*.2);}
+    hit(t0+sec-.02,.8,master);};
+  const fanfare=()=>{if(mute||!AC())return;const m=ac.createGain();m.gain.value=.5;m.connect(ac.destination);const t=ac.currentTime+.01;
+    const n=ac.createBufferSource();n.buffer=noise();n.loop=true;const hp=ac.createBiquadFilter();hp.type="highpass";hp.frequency.value=5500;const g=ac.createGain();
+    g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+1.6);n.connect(hp);hp.connect(g);g.connect(m);n.start(t);n.stop(t+1.7);
+    [523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=ac.createOscillator();o.type="sawtooth";o.frequency.value=f;const lp=ac.createBiquadFilter();lp.type="lowpass";lp.frequency.value=2200;
+      const og=ac.createGain();og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(.16,t+.02);og.gain.exponentialRampToValueAtTime(.001,t+1.1);o.connect(lp);lp.connect(og);og.connect(m);o.start(t);o.stop(t+1.2);});};
+  const silence=()=>{try{if(master){master.gain.cancelScheduledValues(ac.currentTime);master.gain.setTargetAtTime(0,ac.currentTime,.03);}}catch(e){}};
+  snd.addEventListener("click",()=>{mute=!mute;try{localStorage.setItem("rlmute",mute?"1":"0");}catch(e){}paintSnd();if(mute)silence();});
+  // ---- 紙ふぶき：地球の裏から打ち上がる。地球の後ろ（奥）のキャンバスで描き、地球の外に出たら手前のキャンバスに移して降らせる
+  const mk=z=>{const c=document.createElement("canvas");c.className="rlcv";c.style.zIndex=z;c.setAttribute("aria-hidden","true");return c;};
+  const back=mk(0),front=mk(4);stage.insertBefore(back,stage.querySelector("svg.globe"));stage.appendChild(front);
+  let parts=[],raf=0,tPrev=0;const COL=["#e8452c","#f5c244","#3f77c4","#4fb36a","#ef6fa0","#ff9a3c","#ffffff","#8e5bd6"];
+  const sizeCv=()=>{const W=stage.clientWidth,H=stage.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);[back,front].forEach(c=>{c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);c.getContext("2d").setTransform(dpr,0,0,dpr,0,0);});return [W,H];};
+  const clearCv=()=>{cancelAnimationFrame(raf);raf=0;parts=[];[back,front].forEach(c=>c.getContext("2d").clearRect(0,0,c.width,c.height));};
+  const burst=n=>{const [W,H]=[stage.clientWidth,stage.clientHeight],R=window.__globeR(),cx=W/2,cy=H/2;
+    for(let i=0;i<n;i++){const a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.25,v=R*(3.2+Math.random()*3);
+      parts.push({x:cx+(Math.random()-.5)*R*.5,y:cy+(Math.random()-.5)*R*.3,vx:Math.cos(a)*v,vy:Math.sin(a)*v,w:6+Math.random()*6,h:3+Math.random()*4,r:Math.random()*6.28,vr:(Math.random()-.5)*12,ph:Math.random()*6.28,vp:6+Math.random()*8,k:2+Math.random()*1.2,c:COL[i%COL.length],age:0,front:false,life:4.6+Math.random()*1.2});}};
+  const tick=ts=>{const dt=Math.min(.033,(ts-tPrev)/1000||.016);tPrev=ts;const [W,H]=[stage.clientWidth,stage.clientHeight],R=window.__globeR(),cx=W/2,cy=H/2,G=R*1.7;
+    const cb=back.getContext("2d"),cf=front.getContext("2d");cb.clearRect(0,0,W,H);cf.clearRect(0,0,W,H);
+    parts=parts.filter(p=>{p.age+=dt;p.vy+=(G-p.k*p.vy)*dt;p.vx+=-p.k*p.vx*dt+Math.sin(p.age*5+p.ph)*R*.25*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.r+=p.vr*dt;p.ph+=p.vp*dt;
+      if(!p.front&&p.age>.3&&Math.hypot(p.x-cx,p.y-cy)>R*1.03)p.front=true;
+      if(p.age>p.life||p.y>H+20||p.x<-30||p.x>W+30)return false;
+      const c=p.front?cf:cb;c.save();c.globalAlpha=Math.min(1,(p.life-p.age)/.8);c.translate(p.x,p.y);c.rotate(p.r);c.scale(1,Math.cos(p.ph));c.fillStyle=p.c;c.fillRect(-p.w/2,-p.h/2,p.w,p.h);c.restore();return true;});
+    raf=parts.length?requestAnimationFrame(tick):0;if(!parts.length){cb.clearRect(0,0,W,H);cf.clearRect(0,0,W,H);}};
+  const celebrate=()=>{if(RM())return;sizeCv();clearCv();burst(150);setTimeout(()=>{burst(110);if(!raf){tPrev=performance.now();raf=requestAnimationFrame(tick);}},260);tPrev=performance.now();raf=requestAnimationFrame(tick);};
+  // ---- ルーレット本体
+  const hide=()=>{card.hidden=true;pin.hidden=true;};
+  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();clearCv();AC();btn.disabled=true;btn.textContent="回っています…";
     const d=pick();
-    try{await window.__spinGlobe([d[3],d[4]],{shift:el("stage").clientHeight<620?18:9});
+    try{await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?18:9):0,onStart:()=>roll(DUR/1000)});
       if(my!==tok)return;
       const q=window.__globePt([d[3],d[4]]);
       if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
       el("rlkind").textContent=d[5];el("rlcty").textContent=d[1];el("rlcity").textContent=d[2];
       const fl=el("rlflag");fl.src="flags/"+ISO2[d[0]]+".svg";fl.alt=d[1]+"の国旗";
       el("rlts").innerHTML=d[6].map((t,k)=>`<li>${mot((MOTS[d[0]]||[])[k])}<span>${esc(t)}</span></li>`).join("");el("rlun").textContent=d[7];
-      card.hidden=false;}
-    finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";btn.hidden=!card.hidden;}};
-  btn.addEventListener("click",spin);el("rlagain").addEventListener("click",spin);el("rlx").addEventListener("click",hide);
-  el("stage").addEventListener("pointerdown",e=>{if(e.target.closest(".rlbtn,.rlcard"))return;if(busy){tok++;window.__spinStop();}pin.hidden=true;});
-  window.addEventListener("resize",()=>{pin.hidden=true;});})();
+      card.hidden=false;fanfare();celebrate();
+      if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
+    finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";}};
+  btn.addEventListener("click",spin);el("rlx").addEventListener("click",()=>{hide();clearCv();});
+  stage.addEventListener("pointerdown",e=>{if(e.target.closest(".rlbox"))return;if(busy){tok++;window.__spinStop();silence();}pin.hidden=true;});
+  window.addEventListener("resize",()=>{pin.hidden=true;if(parts.length)sizeCv();});})();
 // ---- 時差（日本時間を動かすと、旅先の時刻が出る。あいさつは、地図で国に寄ったときの国旗から開く詳細に入っている） ----
 (()=>{const el=id=>document.getElementById(id);
   // [表示, カタカナ]。slot：hello=いつでも／am=朝／day=昼／pm=夕方〜夜。pmFrom＝夜のあいさつに変わる時刻
