@@ -620,7 +620,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <ul class="rlts" id="rlts"></ul>
       <p class="rlun" id="rlun"></p>
       <div class="rlr" id="rlr"></div>
-      <p class="rlnote" id="rlnote">総合は3つの合計（15点満点）。順位は全197か国865都市の中で、1位＝いちばんハードルが高くて珍しい。すべて目安で、最新の安全情報とは別。</p>
+      <p class="rlnote" id="rlnote">旅行難易度は、危険度（いちばん重い）・移動時間・マニアック度を組み合わせた0〜100の目安。危険度が高いと、ほかが易しくても高くなる。順位は全197か国865都市の中で、1位＝いちばん難しい。すべて目安で、最新の安全情報とは別。</p>
       <p class="rlwarn" id="rlwarn" hidden>渡航の安全情報が出ている国・地域。行くかを決める前に、外務省の海外安全情報で最新の状況を確認してね。</p>
     </div>
   </div>
@@ -2729,18 +2729,20 @@ function rideGlobe(){return new Promise(res=>{
   const lvH=h=>h<=4?1:h<=8?2:h<=13?3:h<=19?4:5;
   const rateOf=(iso,x)=>{const RS=(window.__RLS||{})[iso]||[3,3,8],o=RS[1],tier=x[3],dg=tier==="奥"&&RS[0]>=3?Math.min(5,RS[0]+1):RS[0],mn=tier==="定"?Math.max(1,Math.min(o,3)):Math.max(2,Math.min(o+1,5)),
     km=d3.geoDistance([139.69,35.69],[x[1],x[2]])*6371,rem=/島|砂漠|国立公園|山|湖|高原|滝|渓谷|環礁|保護区|ジャングル|氷河|岬/.test(x[0]),
-    hf=km/850+2.5+(o>=4?3:o>=3?1.5:0)+(rem?2:0),h=Math.round(hf),hl=lvH(h);return {dg,mn,hl,h,hf,tot:dg+mn+hl};};
+    hf=km/850+2.5+(o>=4?3:o>=3?1.5:0)+(rem?2:0),h=Math.round(hf),hl=lvH(h);const dn=Math.pow((dg-1)/4,1.5),tn=Math.min(1,Math.max(0,(hf-3)/27)),mm=(mn-1)/4,diff=100*(1-(1-.6*dn)*(1-.3*tn)*(1-.25*mm));
+    return {dg,mn,hl,h,hf,tot:dg+mn+hl,diff};};
+  const LVL=d=>d<15?["やさしい","1"]:d<30?["ふつう","2"]:d<45?["ちょっと難しい","3"]:d<60?["難しい","4"]:d<75?["上級","5"]:["超上級","6"];
   let RK=null;
   const ranks=D=>{if(RK)return RK;const all=[];D.forEach(c=>c[3].forEach(x=>all.push({x,r:rateOf(c[0],x)})));
-    all.sort((a,b)=>b.r.tot-a.r.tot||b.r.hf-a.r.hf||b.r.mn-a.r.mn);all.forEach((e,i)=>{e.rank=i+1;});
+    all.sort((a,b)=>b.r.diff-a.r.diff);all.forEach((e,i)=>{e.rank=i+1;});
     const share=(k,v)=>Math.max(1,Math.round(100*all.filter(e=>e.r[k]>=v).length/all.length));
     RK={all,n:all.length,find:x=>all.find(e=>e.x===x),share};return RK;};
   const ic=(n,ch,cls)=>`<span class="ic ${cls}">${ch.repeat(n)}<i>${ch.repeat(5-n)}</i></span>`;
   const rankHTML=(D,c,t)=>{const K=ranks(D),e=K.find(t),r=e.r,pos=Math.round(100*(1-(e.rank-1)/(K.n-1))),top=Math.max(1,Math.round(100*e.rank/K.n));
     const row=(lb,ch,cls,n,tx)=>`<div class="m"><b>${lb}</b>${ic(n,ch,cls)}<span>${tx}</span></div>`;
     return row("危険度","💀","dg",r.dg,`上位${K.share("dg",r.dg)}%`)+row("マニアック度","★","st",r.mn,`上位${K.share("mn",r.mn)}%`)+row("移動時間","🕐","ck",r.hl,`片道およそ${r.h}時間`)
-      +`<div class="rk"><div class="rn"><span>総合ランキング</span><strong>${e.rank}<small>位</small></strong><span>/ ${K.n}都市（上位${top}%）</span><b class="pt">${r.tot}<small>/15点</small></b></div>`
-      +`<div class="gg" role="img" aria-label="総合ランキング ${e.rank}位、${K.n}都市中"><i style="left:${pos}%"></i></div><div class="gl"><span>行きやすい・定番</span><span>遠い・危険・珍しい</span></div></div>`;};
+      +`<div class="rk"><div class="rn"><span>旅行難易度ランキング</span><strong>${e.rank}<small>位</small></strong><span>/ ${K.n}都市（上位${top}%）</span><b class="pt">${Math.round(r.diff)}<small>/100・${LVL(r.diff)[0]}</small></b></div>`
+      +`<div class="gg" role="img" aria-label="旅行難易度 ${Math.round(r.diff)}点、${e.rank}位／${K.n}都市"><i style="left:${pos}%"></i></div><div class="gl"><span>やさしい</span><span>超上級</span></div></div>`;};
   // 見どころの名前から、イラストを選ぶ（"名前~絵" と書いてあればそれを使う）
   const RULES=[[/ロープウェイ|ケーブルカー|ゴンドラ|リフト/,"cablecar"],[/気球/,"balloon"],[/オーロラ/,"aurora"],[/温泉/,"hotspring"],[/滝/,"waterfall"],[/列車|鉄道|トロッコ|電車/,"train"],[/ピラミッド|遺跡|古墳|石碑|王墓|墓|廃墟|ジッグラト|跡/,"ruins"],[/城壁|要塞|城塞|砦|カスバ|ゾン|砲台/,"walls"],[/城/,"castle"],[/宮殿|王宮|宮/,"palace"],[/モスク|ミナレット|ドーム|廟/,"dome"],[/パゴダ|仏塔|ストゥーパ|寺院|神殿|仏歯寺|寺/,"temple"],[/大聖堂|教会|聖堂|修道院|礼拝堂|バシリカ|聖母/,"church"],[/博物館|美術館|ギャラリー|アート/,"museum"],[/図書館|書店/,"book"],[/橋/,"bridge"],[/市場|バザール|スーク|マーケット|屋台|夜市|ホーカー|ショッピング/,"market"],[/像|キリスト/,"statue"],[/摩天楼|高層|ビル/,"skyscraper"],[/タワー|塔/,"tower"],[/砂丘|砂漠|ラクダ|ワディ/,"dune"],[/洞窟|洞穴|鍾乳|地底/,"cave"],[/渓谷|峡谷|断崖|崖|キャニオン/,"canyon"],[/火山|山|峰|岳|氷河|高原|ハイキング|トレッキング|岩/,"mountain"],[/湖|池|ラグーン|泉|湿/,"lake"],[/ビーチ|海岸|砂浜|島|サンゴ|シュノーケ|ダイビング|環礁|海|浜|クジラ|ウミガメ/,"beach"],[/運河|川|クルーズ|ボート|カヌー|フェリー|ダウ|漁|港|船|ヨット|ラフティング/,"boat"],[/公園|庭園|植物園|森|ジャングル|熱帯雨林|サファリ|ゴリラ|ゾウ|ライオン/,"garden"],[/ワイン|ビール|コーヒー|料理|チョコ|ラム|ピンチョス|火鍋|ビビンバ|ロブスター|紅茶|茶/,"food"],[/ゲル|キャンプ|ロッジ|テント/,"tent"],[/日の出|夕日|日没|星空/,"sunset"],[/街並み|旧市街|広場|通り|路地|地区|ストリート|街/,"street"]];
   const FALL=["street","garden","sea"];
