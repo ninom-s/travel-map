@@ -136,7 +136,11 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .rlbox.rlin .rlcard{max-height:58vh;overflow:auto}
 .rlbox.rlin{pointer-events:none}.rlbox.rlin>*{pointer-events:auto}.rlrow.rltop{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));top:10px}.stage.full .rlrow.rltop{margin-top:env(safe-area-inset-top,0px)}
 .rlm{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px}.rlm div{display:flex;align-items:center;gap:6px}.rlm b{font-weight:600;color:var(--muted)}.rlm .dt{letter-spacing:1px;color:var(--fg)}.rlm .dt.dg{color:#c0392b}.rlm .dt i{font-style:normal;opacity:.22}.rlm span{color:var(--muted)}.rlnote{margin:0;font-size:11px;color:var(--muted);line-height:1.5}
-.rlt{display:grid;gap:1px;width:100%;margin-right:-28px}.rlt .r{display:flex;align-items:center;gap:5px;font-size:11px;padding:1px 4px;border-radius:5px}.rlt .r.on{background:#fdf3d9;font-weight:700}.rlt .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rlt .ic{font-size:10px;letter-spacing:-1px;white-space:nowrap}.rlt .ic i{font-style:normal;opacity:.18;filter:grayscale(1)}.rlt .st{color:#e0a100}.rlt .sc{min-width:18px;text-align:right;font-size:13px}
+.rlr{width:100%;display:grid;gap:3px}.rlr .m{display:flex;align-items:center;gap:8px;font-size:12px}.rlr .m b{width:6.6em;white-space:nowrap;font-weight:600;color:var(--muted);font-size:11.5px}.rlr .m>span:last-child{color:var(--muted);font-size:11.5px}.rlr .ic{font-size:13px;letter-spacing:0;white-space:nowrap}.rlr .ic i{font-style:normal;opacity:.18;filter:grayscale(1)}.rlr .st{color:#e0a100}
+.rlr .rk{margin-top:6px;padding:8px 10px;border-radius:8px;background:linear-gradient(135deg,#fff7e0,#fdecea);color:#3a2a14}.rlr .rn{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;font-size:11.5px}.rlr .rn strong{font-size:26px;line-height:1;font-weight:800;letter-spacing:-.5px}.rlr .rn small{font-size:12px;font-weight:700;margin-left:1px}.rlr .pt{margin-left:auto;font-size:19px;font-weight:800}.rlr .pt small{font-size:10px;font-weight:600}
+.rlr .gg{position:relative;height:8px;margin:8px 0 3px;border-radius:99px;background:linear-gradient(90deg,#7bc47f,#f2d04a,#e8743b,#c0392b)}.rlr .gg i{position:absolute;top:-4px;width:4px;height:16px;margin-left:-2px;border-radius:2px;background:#1b2329;box-shadow:0 0 0 2px #fff}.rlr .gl{display:flex;justify-content:space-between;font-size:10px;opacity:.75}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rlr .rk{background:linear-gradient(135deg,#3b3322,#3b2723);color:#f1e6d2}:root:not([data-theme="light"]) .rlr .gg i{box-shadow:0 0 0 2px #141c22;background:#fff}}
+:root[data-theme="dark"] .rlr .rk{background:linear-gradient(135deg,#3b3322,#3b2723);color:#f1e6d2}:root[data-theme="dark"] .rlr .gg i{box-shadow:0 0 0 2px #141c22;background:#fff}
 .rltag{font-style:normal;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#e8eef7;color:#27466f;margin-left:6px}.rlmore{margin:0;font-size:12px;color:var(--muted)}.rlwarn{margin:0;font-size:12px;padding:6px 8px;border-radius:6px;background:#fdecea;color:#8a2a1c}
 .rlcv{position:absolute;inset:0;pointer-events:none}
 .rlpin{position:absolute;z-index:5;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#e8452c;box-shadow:0 0 0 2.5px #fff,0 1px 6px rgba(0,0,0,.4);pointer-events:none}
@@ -149,7 +153,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .rlts{list-style:none;margin:2px 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
 .rlts li{display:grid;gap:4px;justify-items:center;align-content:start;text-align:center;font-size:11.5px;line-height:1.35;font-weight:600}
 .rlts svg{display:block;width:100%;max-width:62px;aspect-ratio:1;border-radius:10px;overflow:hidden}
-@media (max-width:600px){.rlts svg{max-width:46px}.rlts li{font-size:11px}}
+@media (max-width:600px){.rlts svg{max-width:34px}.rlts li{font-size:10.5px}.rlnote{display:none}.rlr .rk{padding:6px 8px;margin-top:3px}.rlr .rn strong{font-size:22px}.rlcard{gap:4px;padding-top:10px;padding-bottom:10px}}
 .cbadge{all:unset;box-sizing:border-box;position:absolute;left:10px;top:52px;z-index:4;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);padding:5px 10px 5px 6px;font-size:12.5px;font-weight:700;color:var(--fg);cursor:pointer}
 .cbadge[hidden]{display:none}.cbadge .cflag{width:34px}.cbadge small{font-weight:400;color:var(--muted);font-size:11px}
 .stage.playing .cbadge{display:none}
@@ -615,9 +619,8 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <div class="rlh"><img class="rlflag" id="rlflag" width="44" height="33" alt=""><h3><small id="rlcty"></small><b id="rlcity"></b></h3></div>
       <ul class="rlts" id="rlts"></ul>
       <p class="rlun" id="rlun"></p>
-      <div class="rlt" id="rlt"></div>
-      <p class="rlmore" id="rlmore"></p>
-      <p class="rlnote" id="rlnote">💀危険度　★マニアック度　🕐片道の移動時間　右端は総合点（合計15点満点）。すべて目安で、最新の安全情報とは別。</p>
+      <div class="rlr" id="rlr"></div>
+      <p class="rlnote" id="rlnote">総合は3つの合計（15点満点）。順位は全197か国865都市の中で、1位＝いちばんハードルが高くて珍しい。すべて目安で、最新の安全情報とは別。</p>
       <p class="rlwarn" id="rlwarn" hidden>渡航の安全情報が出ている国・地域。行くかを決める前に、外務省の海外安全情報で最新の状況を確認してね。</p>
     </div>
   </div>
@@ -2724,6 +2727,22 @@ function rideGlobe(){return new Promise(res=>{
   if(window.requestIdleCallback)window.addEventListener("load",()=>requestIdleCallback(()=>load().catch(()=>{}),{timeout:8000}));
   let cbag=[],busy=false,tok=0;const city={};
   const pick=D=>{if(!cbag.length)cbag=d3.shuffle(D.slice());const c=cbag.pop();let bg=city[c[0]];if(!bg||!bg.length)bg=city[c[0]]=d3.shuffle(c[3].slice());const t=bg.pop();return {c,t};};
+  // ---- 評価（💀危険度・★マニアック度・🕐片道の移動時間）と、全都市の中のランキング ----
+  const lvH=h=>h<=4?1:h<=8?2:h<=13?3:h<=19?4:5;
+  const rateOf=(iso,x)=>{const RS=(window.__RLS||{})[iso]||[3,3,8],o=RS[1],tier=x[3],dg=tier==="奥"&&RS[0]>=3?Math.min(5,RS[0]+1):RS[0],mn=tier==="定"?Math.max(1,Math.min(o,3)):Math.max(2,Math.min(o+1,5)),
+    km=d3.geoDistance([139.69,35.69],[x[1],x[2]])*6371,rem=/島|砂漠|国立公園|山|湖|高原|滝|渓谷|環礁|保護区|ジャングル|氷河|岬/.test(x[0]),
+    hf=km/850+2.5+(o>=4?3:o>=3?1.5:0)+(rem?2:0),h=Math.round(hf),hl=lvH(h);return {dg,mn,hl,h,hf,tot:dg+mn+hl};};
+  let RK=null;
+  const ranks=D=>{if(RK)return RK;const all=[];D.forEach(c=>c[3].forEach(x=>all.push({x,r:rateOf(c[0],x)})));
+    all.sort((a,b)=>b.r.tot-a.r.tot||b.r.hf-a.r.hf||b.r.mn-a.r.mn);all.forEach((e,i)=>{e.rank=i+1;});
+    const share=(k,v)=>Math.max(1,Math.round(100*all.filter(e=>e.r[k]>=v).length/all.length));
+    RK={all,n:all.length,find:x=>all.find(e=>e.x===x),share};return RK;};
+  const ic=(n,ch,cls)=>`<span class="ic ${cls}">${ch.repeat(n)}<i>${ch.repeat(5-n)}</i></span>`;
+  const rankHTML=(D,c,t)=>{const K=ranks(D),e=K.find(t),r=e.r,pos=Math.round(100*(1-(e.rank-1)/(K.n-1))),top=Math.max(1,Math.round(100*e.rank/K.n));
+    const row=(lb,ch,cls,n,tx)=>`<div class="m"><b>${lb}</b>${ic(n,ch,cls)}<span>${tx}</span></div>`;
+    return row("危険度","💀","dg",r.dg,`上位${K.share("dg",r.dg)}%`)+row("マニアック度","★","st",r.mn,`上位${K.share("mn",r.mn)}%`)+row("移動時間","🕐","ck",r.hl,`片道およそ${r.h}時間`)
+      +`<div class="rk"><div class="rn"><span>総合ランキング</span><strong>${e.rank}<small>位</small></strong><span>/ ${K.n}都市（上位${top}%）</span><b class="pt">${r.tot}<small>/15点</small></b></div>`
+      +`<div class="gg" role="img" aria-label="総合ランキング ${e.rank}位、${K.n}都市中"><i style="left:${pos}%"></i></div><div class="gl"><span>行きやすい・定番</span><span>遠い・危険・珍しい</span></div></div>`;};
   // 見どころの名前から、イラストを選ぶ（"名前~絵" と書いてあればそれを使う）
   const RULES=[[/ロープウェイ|ケーブルカー|ゴンドラ|リフト/,"cablecar"],[/気球/,"balloon"],[/オーロラ/,"aurora"],[/温泉/,"hotspring"],[/滝/,"waterfall"],[/列車|鉄道|トロッコ|電車/,"train"],[/ピラミッド|遺跡|古墳|石碑|王墓|墓|廃墟|ジッグラト|跡/,"ruins"],[/城壁|要塞|城塞|砦|カスバ|ゾン|砲台/,"walls"],[/城/,"castle"],[/宮殿|王宮|宮/,"palace"],[/モスク|ミナレット|ドーム|廟/,"dome"],[/パゴダ|仏塔|ストゥーパ|寺院|神殿|仏歯寺|寺/,"temple"],[/大聖堂|教会|聖堂|修道院|礼拝堂|バシリカ|聖母/,"church"],[/博物館|美術館|ギャラリー|アート/,"museum"],[/図書館|書店/,"book"],[/橋/,"bridge"],[/市場|バザール|スーク|マーケット|屋台|夜市|ホーカー|ショッピング/,"market"],[/像|キリスト/,"statue"],[/摩天楼|高層|ビル/,"skyscraper"],[/タワー|塔/,"tower"],[/砂丘|砂漠|ラクダ|ワディ/,"dune"],[/洞窟|洞穴|鍾乳|地底/,"cave"],[/渓谷|峡谷|断崖|崖|キャニオン/,"canyon"],[/火山|山|峰|岳|氷河|高原|ハイキング|トレッキング|岩/,"mountain"],[/湖|池|ラグーン|泉|湿/,"lake"],[/ビーチ|海岸|砂浜|島|サンゴ|シュノーケ|ダイビング|環礁|海|浜|クジラ|ウミガメ/,"beach"],[/運河|川|クルーズ|ボート|カヌー|フェリー|ダウ|漁|港|船|ヨット|ラフティング/,"boat"],[/公園|庭園|植物園|森|ジャングル|熱帯雨林|サファリ|ゴリラ|ゾウ|ライオン/,"garden"],[/ワイン|ビール|コーヒー|料理|チョコ|ラム|ピンチョス|火鍋|ビビンバ|ロブスター|紅茶|茶/,"food"],[/ゲル|キャンプ|ロッジ|テント/,"tent"],[/日の出|夕日|日没|星空/,"sunset"],[/街並み|旧市街|広場|通り|路地|地区|ストリート|街/,"street"]];
   const FALL=["street","garden","sea"];
@@ -2789,7 +2808,7 @@ function rideGlobe(){return new Promise(res=>{
     try{let D;try{D=await load();}catch(e){btn.textContent="データを読み込めませんでした";await new Promise(r=>setTimeout(r,1800));return;}
       if(my!==tok)return;
       const {c,t}=pick(D),d=[c[0],c[2],t[0],t[1],t[2],t[3],t[4],t[5]];
-      await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?42:14):0,onStart:()=>roll(DUR/1000,wd==="roll")});
+      await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onStart:()=>roll(DUR/1000,wd==="roll")});
       if(my!==tok)return;
       const q=window.__globePt([d[3],d[4]]);
       if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
@@ -2797,17 +2816,10 @@ function rideGlobe(){return new Promise(res=>{
       const tg=el("rltag"),tx=d[0]==="JPN"?"日本":d[0]==="THA"?"予定の国":EX.has(d[0])?"行ったことのある国":"";tg.textContent=tx;tg.hidden=!tx;
       el("rlwarn").hidden=!WARN.has(d[0]);
       const fl=el("rlflag");fl.src="flags/"+c[1]+".svg";fl.alt=d[1]+"の国旗";
-      {const RS=(window.__RLS||{})[d[0]]||[3,3,8],lv=(h)=>h<=4?1:h<=8?2:h<=13?3:h<=19?4:5,
-        rate=x=>{const o=RS[1],tier=x[3],dg=tier==="奥"&&RS[0]>=3?Math.min(5,RS[0]+1):RS[0],mn=tier==="定"?Math.max(1,Math.min(o,3)):Math.max(2,Math.min(o+1,5)),
-          km=d3.geoDistance([139.69,35.69],[x[1],x[2]])*6371,rem=/島|砂漠|国立公園|山|湖|高原|滝|渓谷|環礁|保護区|ジャングル|氷河|岬/.test(x[0]),
-          h=Math.round(km/850+2.5+(o>=4?3:o>=3?1.5:0)+(rem?2:0)),hl=lv(h);return {dg,mn,hl,h,tot:dg+mn+hl};},
-        ic=(n,ch,cls)=>`<span class="ic ${cls}">${ch.repeat(n)}<i>${ch.repeat(5-n)}</i></span>`;
-        el("rlt").innerHTML=c[3].map(x=>{const r=rate(x),on=x===t;
-          return `<div class="r${on?" on":""}"><span class="n">${esc(x[0])}</span>${ic(r.dg,"💀","dg")}${ic(r.mn,"★","st")}${ic(r.hl,"🕐","ck")}<b class="sc" title="総合点（15点満点）">${r.tot}</b></div>`;}).join("");
-        const rr=rate(t);el("rlmore").textContent=`${d[2]}は、日本から片道およそ${rr.h}時間（乗り継ぎ込みの目安）`;}
+      el("rlr").innerHTML=rankHTML(D,c,t);
       el("rlts").innerHTML=d[6].map((x,k)=>{const [n,m]=spotOf(x,k);return `<li>${mot(m)}<span>${esc(n)}</span></li>`;}).join("");el("rlun").textContent=d[7];
-      card.hidden=false;fanfare(wd==="land");celebrate();
-      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?42:14):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
+      card.style.maxHeight=Math.max(200,stage.clientHeight-70)+"px";card.hidden=false;fanfare(wd==="land");celebrate();
+      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
     finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";}};
