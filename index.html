@@ -127,11 +127,10 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .tzn{font-size:11.5px;color:var(--muted)}
 .rlbox{display:grid;gap:8px;margin:0 0 8px;justify-items:start}
 .zbtn#rlbtn{font-size:17px}.zbtn[disabled]{cursor:default;opacity:.7}.zbtn.spin{animation:rlsp .7s linear infinite}@keyframes rlsp{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.zbtn.spin{animation:none}}
-.rlcard .rlsnd{position:absolute;top:8px;right:40px;width:28px;height:28px;font-size:14px}
 .rlrow{display:flex;gap:8px;align-items:center}
 .rlbtn{all:unset;box-sizing:border-box;cursor:pointer;font-size:14px;font-weight:700;padding:8px 16px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.12)}
 .rlbtn:hover,.rlbtn:focus-visible{box-shadow:0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14)}.rlbtn[disabled]{opacity:.65;cursor:default}
-.rlsnd{all:unset;box-sizing:border-box;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:0 0 0 1px var(--rule);font-size:15px}.rlsnd:hover,.rlsnd:focus-visible{box-shadow:0 0 0 1.5px var(--fg)}.rlsnd[aria-pressed="false"]{opacity:.55}
+
 .rlcard{position:relative;width:100%;max-width:520px;box-sizing:border-box;padding:12px 40px 12px 14px;border-radius:8px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 4px 16px rgba(0,0,0,.12);display:grid;gap:6px;justify-items:start;animation:rlpop .35s ease-out}
 @keyframes rlpop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.rlcard{animation:none}}
 .rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:54px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
@@ -615,7 +614,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
   <section class="panel empty" data-page="map" id="panel" aria-live="polite"><p class="m">地図上の点や ✕ をタップすると、ここに詳細が出る。</p></section>
   <div class="rlbox" data-page="map" id="rlbox">
   <div class="rlcard" id="rlcard" role="status" aria-live="polite" hidden>
-      <button type="button" class="rlsnd" id="rlsnd" aria-pressed="true" aria-label="効果音（ドラムロール）" title="効果音">🔊</button><button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
+      <button type="button" class="rlx" id="rlx" aria-label="閉じる">✕</button>
       <p class="rlk"><span>次の旅のおすすめ</span><em id="rlkind"></em><em class="rltag" id="rltag" hidden></em></p>
       <div class="rlh"><img class="rlflag" id="rlflag" width="44" height="33" alt=""><h3><small id="rlcty"></small><b id="rlcity"></b></h3></div>
       <ul class="rlts" id="rlts"></ul>
@@ -2746,11 +2745,10 @@ function rideGlobe(){return new Promise(res=>{
   const RULES=[[/ロープウェイ|ケーブルカー|ゴンドラ|リフト/,"cablecar"],[/気球/,"balloon"],[/オーロラ/,"aurora"],[/温泉/,"hotspring"],[/滝/,"waterfall"],[/列車|鉄道|トロッコ|電車/,"train"],[/ピラミッド|遺跡|古墳|石碑|王墓|墓|廃墟|ジッグラト|跡/,"ruins"],[/城壁|要塞|城塞|砦|カスバ|ゾン|砲台/,"walls"],[/城/,"castle"],[/宮殿|王宮|宮/,"palace"],[/モスク|ミナレット|ドーム|廟/,"dome"],[/パゴダ|仏塔|ストゥーパ|寺院|神殿|仏歯寺|寺/,"temple"],[/大聖堂|教会|聖堂|修道院|礼拝堂|バシリカ|聖母/,"church"],[/博物館|美術館|ギャラリー|アート/,"museum"],[/図書館|書店/,"book"],[/橋/,"bridge"],[/市場|バザール|スーク|マーケット|屋台|夜市|ホーカー|ショッピング/,"market"],[/像|キリスト/,"statue"],[/摩天楼|高層|ビル/,"skyscraper"],[/タワー|塔/,"tower"],[/砂丘|砂漠|ラクダ|ワディ/,"dune"],[/洞窟|洞穴|鍾乳|地底/,"cave"],[/渓谷|峡谷|断崖|崖|キャニオン/,"canyon"],[/火山|山|峰|岳|氷河|高原|ハイキング|トレッキング|岩/,"mountain"],[/湖|池|ラグーン|泉|湿/,"lake"],[/ビーチ|海岸|砂浜|島|サンゴ|シュノーケ|ダイビング|環礁|海|浜|クジラ|ウミガメ/,"beach"],[/運河|川|クルーズ|ボート|カヌー|フェリー|ダウ|漁|港|船|ヨット|ラフティング/,"boat"],[/公園|庭園|植物園|森|ジャングル|熱帯雨林|サファリ|ゴリラ|ゾウ|ライオン/,"garden"],[/ワイン|ビール|コーヒー|料理|チョコ|ラム|ピンチョス|火鍋|ビビンバ|ロブスター|紅茶|茶/,"food"],[/ゲル|キャンプ|ロッジ|テント/,"tent"],[/日の出|夕日|日没|星空/,"sunset"],[/街並み|旧市街|広場|通り|路地|地区|ストリート|街/,"street"]];
   const FALL=["street","garden","sea"];
   const spotOf=(t,i)=>{const [n,m]=t.split("~");if(m)return [n,m];for(const [r,k] of RULES)if(r.test(n))return [n,k];return [n,FALL[i%3]];};
-  const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin"),box=el("rlbox"),stage=el("stage"),snd=el("rlsnd"),DUR=4200;
+  const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin"),box=el("rlbox"),stage=el("stage"),DUR=4200;
   stage.appendChild(box);box.classList.add("rlin");
   // ---- 効果音（ドラムロールと「ジャン！」。ブラウザで合成。ボタンで消せる）
-  let ac=null,master=null,mute=false,nb=null;try{mute=localStorage.getItem("rlmute")==="1";}catch(e){}
-  const paintSnd=()=>{snd.textContent=mute?"🔇":"🔊";snd.setAttribute("aria-pressed",mute?"false":"true");};paintSnd();
+  let ac=null,master=null,mute=false,nb=null;
   const AC=()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();}catch(e){ac=null;}return ac;};
   const noise=()=>{if(!nb){nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}return nb;};
   const hit=(t,vel,out)=>{const n=ac.createBufferSource();n.buffer=noise();const bp=ac.createBiquadFilter();bp.type="lowpass";bp.frequency.value=900;bp.Q.value=.4;
@@ -2780,7 +2778,6 @@ function rideGlobe(){return new Promise(res=>{
       o.connect(bp);bp.connect(g);g.connect(m);o.start(t+d);o.stop(t+d+.25);});return;}
     pop(m,t,.4);pop(m,t+.13,.28);};
   const silence=()=>{try{if(master){master.gain.cancelScheduledValues(ac.currentTime);master.gain.setTargetAtTime(0,ac.currentTime,.03);}}catch(e){}};
-  snd.addEventListener("click",()=>{mute=!mute;try{localStorage.setItem("rlmute",mute?"1":"0");}catch(e){}paintSnd();if(mute)silence();});
   // ---- 紙ふぶき：地球の裏から打ち上がる。地球の後ろ（奥）のキャンバスで描き、地球の外に出たら手前のキャンバスに移して降らせる
   const mk=z=>{const c=document.createElement("canvas");c.className="rlcv";c.style.zIndex=z;c.setAttribute("aria-hidden","true");return c;};
   const back=mk(0),front=mk(4);stage.insertBefore(back,stage.querySelector("svg.globe"));stage.appendChild(front);
