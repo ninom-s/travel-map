@@ -2244,6 +2244,13 @@ window.__spinGlobe=async(ll,opt={})=>{
   if(opt.onStart)opt.onStart();
   await gsv.transition("grot").duration(opt.dur||4200).ease(d3.easeCubicOut).tween("rot",()=>t=>{GL.rot=[r0[0]+(t0-r0[0])*t,r0[1]+(lat1-r0[1])*t,0];gCoarse=t<1;renderGlobe();}).end().catch(()=>{});
   GL.rot=[((GL.rot[0]+180)%360+360)%360-180,GL.rot[1],0];gCoarse=false;renderGlobe();};
+// ルーレットで国が決まったら、その場所へ地球儀をぐっと寄せる（平らな地図に切り替わる手前まで）
+window.__zoomGlobe=async(ll,opt={})=>{
+  if(!GL.on)return;const k0=GL.R/R0(),kT=Math.min(opt.k||3.2,0.9*swR()/R0());if(kT<=k0*1.1)return;
+  const sh=Math.asin(Math.sin((opt.shift||0)*Math.PI/180)/kT)*180/Math.PI,lat1=Math.max(-85,Math.min(85,-ll[1]+sh)),r0=GL.rot.slice(),k=t=>k0+(kT-k0)*t;
+  if(RM()){GL.R=R0()*kT;setGlobeZoom(kT);GL.rot=[-ll[0],lat1,0];renderGlobe();if(opt.onFrame)opt.onFrame();return;}
+  await gsv.transition("grot").duration(opt.dur||1500).ease(d3.easeCubicInOut).tween("rot",()=>t=>{GL.R=R0()*k(t);setGlobeZoom(k(t));GL.rot=[r0[0]+(-ll[0]-r0[0])*t,r0[1]+(lat1-r0[1])*t,0];gCoarse=t<1;renderGlobe();if(opt.onFrame)opt.onFrame();}).end().catch(()=>{});
+  gCoarse=false;renderGlobe();if(opt.onFrame)opt.onFrame();};
 window.__globePt=ll=>{gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);return gpj(ll);};
 window.__spinStop=()=>gsv.interrupt("grot");
 window.__globeR=()=>GL.R;
@@ -2723,14 +2730,27 @@ function rideGlobe(){return new Promise(res=>{
     n.connect(bp);bp.connect(g);g.connect(out);n.start(t,Math.random()*.6,.14);
     const o=ac.createOscillator();o.type="sine";o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(85,t+.09);
     const og=ac.createGain();og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(vel*.5,t+.008);og.gain.exponentialRampToValueAtTime(.001,t+.12);o.connect(og);og.connect(out);o.start(t);o.stop(t+.14);};
-  const roll=sec=>{if(mute||!AC())return;master=ac.createGain();master.gain.value=.35;master.connect(ac.destination);
-    const t0=ac.currentTime+.02;let t=0;while(t<sec-.05){const f=t/sec;hit(t0+t,(.08+.4*f*f)*(.85+Math.random()*.3),master);t+=(.09-.05*f)*(.9+Math.random()*.2);}
+  const roll=(sec,weird)=>{if(mute||!AC())return;master=ac.createGain();master.gain.value=.35;master.connect(ac.destination);
+    const t0=ac.currentTime+.02;
+    if(weird){   // ときどき：ぷるぷる上がっていく変なロール（スライドホイッスル風）
+      const o=ac.createOscillator();o.type="sine";o.frequency.setValueAtTime(260,t0);o.frequency.exponentialRampToValueAtTime(1100,t0+sec);
+      const l=ac.createOscillator(),lg=ac.createGain();l.frequency.setValueAtTime(5,t0);l.frequency.linearRampToValueAtTime(16,t0+sec);lg.gain.value=60;l.connect(lg);lg.connect(o.frequency);
+      const g=ac.createGain();g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.3,t0+.3);g.gain.setValueAtTime(.3,t0+sec-.1);g.gain.linearRampToValueAtTime(0,t0+sec);
+      o.connect(g);g.connect(master);o.start(t0);l.start(t0);o.stop(t0+sec+.05);l.stop(t0+sec+.05);return;}
+    let t=0;while(t<sec-.05){const f=t/sec;hit(t0+t,(.08+.4*f*f)*(.85+Math.random()*.3),master);t+=(.09-.05*f)*(.9+Math.random()*.2);}
     hit(t0+sec-.02,.6,master);};
-  const fanfare=()=>{if(mute||!AC())return;const m=ac.createGain();m.gain.value=.35;m.connect(ac.destination);const t=ac.currentTime+.01;
-    const n=ac.createBufferSource();n.buffer=noise();n.loop=true;const hp=ac.createBiquadFilter();hp.type="highpass";hp.frequency.value=6500;const g=ac.createGain();
-    g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+1.2);n.connect(hp);hp.connect(g);g.connect(m);n.start(t);n.stop(t+1.7);
-    [523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=ac.createOscillator();o.type="triangle";o.frequency.value=f;const lp=ac.createBiquadFilter();lp.type="lowpass";lp.frequency.value=1600;
-      const og=ac.createGain();og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(.12,t+.05);og.gain.exponentialRampToValueAtTime(.001,t+1.3);o.connect(lp);lp.connect(og);og.connect(m);o.start(t);o.stop(t+1.2);});};
+  // 止まった時：やさしめのクラッカー（ぱん・ぱぱん）。ときどき：アヒルのような変な音
+  const pop=(m,t,vel)=>{const n=ac.createBufferSource();n.buffer=noise();const f=ac.createBiquadFilter();f.type="bandpass";f.frequency.value=2600;f.Q.value=.5;
+    const g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vel,t+.004);g.gain.exponentialRampToValueAtTime(.001,t+.07);n.connect(f);f.connect(g);g.connect(m);n.start(t,Math.random()*.6,.1);
+    const o=ac.createOscillator();o.type="sine";o.frequency.setValueAtTime(240,t);o.frequency.exponentialRampToValueAtTime(70,t+.08);
+    const og=ac.createGain();og.gain.setValueAtTime(vel*.7,t);og.gain.exponentialRampToValueAtTime(.001,t+.1);o.connect(og);og.connect(m);o.start(t);o.stop(t+.12);
+    const r=ac.createBufferSource();r.buffer=noise();const hp=ac.createBiquadFilter();hp.type="highpass";hp.frequency.value=5000;const rg=ac.createGain();   // 紙テープのさらさら
+    rg.gain.setValueAtTime(0,t+.03);rg.gain.linearRampToValueAtTime(vel*.12,t+.08);rg.gain.exponentialRampToValueAtTime(.001,t+.6);r.connect(hp);hp.connect(rg);rg.connect(m);r.start(t+.03,0,.65);};
+  const fanfare=weird=>{if(mute||!AC())return;const m=ac.createGain();m.gain.value=.4;m.connect(ac.destination);const t=ac.currentTime+.01;
+    if(weird){[0,.27].forEach((d,i)=>{const o=ac.createOscillator();o.type="sawtooth";o.frequency.setValueAtTime(i?330:420,t+d);o.frequency.exponentialRampToValueAtTime(i?190:260,t+d+.2);
+      const bp=ac.createBiquadFilter();bp.type="bandpass";bp.frequency.value=900;bp.Q.value=2.5;const g=ac.createGain();g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.3,t+d+.02);g.gain.exponentialRampToValueAtTime(.001,t+d+.22);
+      o.connect(bp);bp.connect(g);g.connect(m);o.start(t+d);o.stop(t+d+.25);});return;}
+    pop(m,t,.4);pop(m,t+.13,.28);};
   const silence=()=>{try{if(master){master.gain.cancelScheduledValues(ac.currentTime);master.gain.setTargetAtTime(0,ac.currentTime,.03);}}catch(e){}};
   snd.addEventListener("click",()=>{mute=!mute;try{localStorage.setItem("rlmute",mute?"1":"0");}catch(e){}paintSnd();if(mute)silence();});
   // ---- 紙ふぶき：地球の裏から打ち上がる。地球の後ろ（奥）のキャンバスで描き、地球の外に出たら手前のキャンバスに移して降らせる
@@ -2753,15 +2773,17 @@ function rideGlobe(){return new Promise(res=>{
   // ---- ルーレット本体
   const hide=()=>{card.hidden=true;pin.hidden=true;};
   const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();clearCv();AC();btn.disabled=true;btn.textContent="回っています…";
-    const d=pick();
-    try{await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?18:9):0,onStart:()=>roll(DUR/1000)});
+    const d=pick();const wd=Math.random()<.1?(Math.random()<.5?"roll":"land"):"";
+    try{await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?18:9):0,onStart:()=>roll(DUR/1000,wd==="roll")});
       if(my!==tok)return;
       const q=window.__globePt([d[3],d[4]]);
       if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
       el("rlkind").textContent=d[5];el("rlcty").textContent=d[1];el("rlcity").textContent=d[2];
       const fl=el("rlflag");fl.src="flags/"+ISO2[d[0]]+".svg";fl.alt=d[1]+"の国旗";
       el("rlts").innerHTML=d[6].map((t,k)=>`<li>${mot((MOTS[d[0]]||[])[k])}<span>${esc(t)}</span></li>`).join("");el("rlun").textContent=d[7];
-      card.hidden=false;fanfare();celebrate();
+      card.hidden=false;fanfare(wd==="land");celebrate();
+      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?18:9):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
+      if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
     finally{busy=false;btn.disabled=false;btn.textContent="🎲 次の旅ルーレット";}};
   btn.addEventListener("click",spin);el("rlx").addEventListener("click",()=>{hide();clearCv();});
