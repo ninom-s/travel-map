@@ -1768,6 +1768,7 @@ function place(){
   if(lod!==lastLod&&!window.__globeOn){lodtag.innerHTML=LODTXT[lod];lastLod=lod;}
   if(typeof applyIcons==="function"&&gOver.node().querySelector(".ill"))applyIcons();
   updBadge();
+  if(window.__rlPin)window.__rlPin();
 }
 
 // keep labels from overlapping: names stay beside their point or hide; optional labels hide
@@ -2180,7 +2181,7 @@ function drawWith(pj,t){
   gLbl.style("visibility",showN?"hidden":null);if(window.__vehRedraw)window.__vehRedraw("g");
   gLbl.each(function(d){const c=P[d[0]];const q=pj(c);d3.select(this).attr("x",q?q[0]+d[3]:-99).attr("y",q?q[1]+d[4]:-99).style("display",q&&vv(c)&&(t>0.45||d3.geoDistance(c,ctr)<Math.PI/2-0.25)?null:"none");});
 }
-function renderGlobe(){gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);drawWith(gpj,0);}
+function renderGlobe(){gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);drawWith(gpj,0);if(window.__rlPin)window.__rlPin();}
 // morph between the globe (t=0) and the flat map (t=1)
 // globe side of the morph: orthographic on the front, then keeps going outward past the edge (no fold-over)
 const oRaw=(x,y)=>{const cy=Math.cos(y),cc=Math.max(-1,Math.min(1,cy*Math.cos(x))),c=Math.acos(cc),sc=Math.sin(c);
@@ -2259,6 +2260,10 @@ window.__zoomGlobe=async(ll,opt={})=>{
   if(RM()){GL.R=R0()*kT;setGlobeZoom(kT);GL.rot=[-ll[0],lat1,0];renderGlobe();if(opt.onFrame)opt.onFrame();return;}
   await gsv.transition("grot").duration(opt.dur||1500).ease(d3.easeCubicInOut).tween("rot",()=>t=>{GL.R=R0()*k(t);setGlobeZoom(k(t));GL.rot=[r0[0]+(-ll[0]-r0[0])*t,r0[1]+(lat1-r0[1])*t,0];gCoarse=t<1;renderGlobe();if(opt.onFrame)opt.onFrame();}).end().catch(()=>{});
   gCoarse=false;renderGlobe();if(opt.onFrame)opt.onFrame();};
+// 地図上の場所（経度・緯度）を、いまの表示（地球儀でも平らな地図でも）の画面位置に直す。裏側・移動中は null
+window.__llPt=ll=>{if(GL.morph)return null;
+  if(GL.on){if(d3.geoDistance(ll,[-GL.rot[0],-GL.rot[1]])>Math.PI/2-0.02)return null;const q=window.__globePt(ll);return q&&isFinite(q[0])?q:null;}
+  const p=proj(ll);if(!p||!isFinite(p[0]))return null;const q=cur.apply(p);return isFinite(q[0])?q:null;};
 window.__globePt=ll=>{gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);return gpj(ll);};
 window.__spinStop=()=>gsv.interrupt("grot");
 window.__globeR=()=>GL.R;
@@ -2798,16 +2803,19 @@ function rideGlobe(){return new Promise(res=>{
     raf=parts.length?requestAnimationFrame(tick):0;if(!parts.length){cb.clearRect(0,0,W,H);cf.clearRect(0,0,W,H);}};
   const celebrate=()=>{if(RM())return;sizeCv();clearCv();burst(150);setTimeout(()=>{burst(110);if(!raf){tPrev=performance.now();raf=requestAnimationFrame(tick);}},260);tPrev=performance.now();raf=requestAnimationFrame(tick);};
   // ---- ルーレット本体
-  const hide=()=>{card.hidden=true;pin.hidden=true;};
-  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();clearCv();AC();btn.disabled=true;btn.classList.add("spin");
+  // 当たった場所のピンは、カードを閉じても残る。地図を動かしても、その場所について動く（次に回すまで）
+  let pinLL=null;
+  window.__rlPin=()=>{if(!pinLL){pin.hidden=true;return;}const q=window.__llPt(pinLL);if(!q||q[0]<-20||q[1]<-20||q[0]>stage.clientWidth+20||q[1]>stage.clientHeight+20){pin.hidden=true;return;}pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;};
+  pin.style.pointerEvents="auto";pin.style.cursor="pointer";pin.setAttribute("role","button");pin.setAttribute("aria-label","当たった場所の情報を見る");pin.tabIndex=0;
+  const hide=()=>{card.hidden=true;};
+  const spin=async()=>{if(busy)return;busy=true;const my=++tok;hide();pinLL=null;pin.hidden=true;clearCv();AC();btn.disabled=true;btn.classList.add("spin");
     const wd=Math.random()<.1?(Math.random()<.5?"roll":"land"):"";
     try{let D;try{D=await load();}catch(e){btn.title="データを読み込めませんでした";await new Promise(r=>setTimeout(r,1800));return;}
       if(my!==tok)return;
       const {c,t}=pick(D),d=[c[0],c[2],t[0],t[1],t[2],t[3],t[4],t[5]];
       await window.__spinGlobe([d[3],d[4]],{dur:DUR,shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onStart:()=>roll(DUR/1000,wd==="roll")});
       if(my!==tok)return;
-      const q=window.__globePt([d[3],d[4]]);
-      if(q&&isFinite(q[0])){pin.style.left=q[0]+"px";pin.style.top=q[1]+"px";pin.hidden=false;}
+      pinLL=[d[3],d[4]];window.__rlPin();
       el("rlkind").textContent=d[5]==="定"?"定番":"マニアック";el("rlcty").textContent=d[1];el("rlcity").textContent=d[2];
       const tg=el("rltag"),tx=d[0]==="JPN"?"日本":d[0]==="THA"?"予定の国":EX.has(d[0])?"行ったことのある国":"";tg.textContent=tx;tg.hidden=!tx;
       el("rlwarn").hidden=!WARN.has(d[0]);
@@ -2815,13 +2823,14 @@ function rideGlobe(){return new Promise(res=>{
       el("rlr").innerHTML=rankHTML(D,c,t);
       el("rlts").innerHTML=d[6].map((x,k)=>{const [n,m]=spotOf(x,k);return `<li>${mot(m)}<span>${esc(n)}</span></li>`;}).join("");el("rlun").textContent=d[7];
       card.style.maxHeight=Math.max(200,stage.clientHeight-70)+"px";card.hidden=false;fanfare(wd==="land");celebrate();
-      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onFrame:()=>{const q2=window.__globePt([d[3],d[4]]);if(q2&&isFinite(q2[0])){pin.style.left=q2[0]+"px";pin.style.top=q2[1]+"px";}}});
+      await window.__zoomGlobe([d[3],d[4]],{shift:box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0,onFrame:()=>window.__rlPin()});
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
     finally{busy=false;btn.disabled=false;btn.classList.remove("spin");}};
   btn.addEventListener("click",spin);el("rlx").addEventListener("click",()=>{hide();clearCv();});
-  stage.addEventListener("pointerdown",e=>{if(e.target.closest(".rlbox"))return;if(busy){tok++;window.__spinStop();silence();}pin.hidden=true;});
-  window.addEventListener("resize",()=>{pin.hidden=true;if(parts.length)sizeCv();});})();
+  stage.addEventListener("pointerdown",e=>{if(e.target.closest(".rlbox,.rlpin"))return;if(busy){tok++;window.__spinStop();silence();pinLL=null;pin.hidden=true;}});
+  pin.addEventListener("click",()=>{if(pinLL&&el("rlcity").textContent)card.hidden=false;});pin.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pin.click();}});
+  window.addEventListener("resize",()=>{window.__rlPin();if(parts.length)sizeCv();});})();
 // ---- 時差（日本時間を動かすと、旅先の時刻が出る。あいさつは、地図で国に寄ったときの国旗から開く詳細に入っている） ----
 (()=>{const el=id=>document.getElementById(id);
   // [表示, カタカナ]。slot：hello=いつでも／am=朝／day=昼／pm=夕方〜夜。pmFrom＝夜のあいさつに変わる時刻
