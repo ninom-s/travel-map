@@ -75,6 +75,7 @@ body.isfull .panel.empty{display:none}
 .zbtn{all:unset;box-sizing:border-box;width:34px;height:34px;display:grid;place-items:center;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);cursor:pointer;font:600 18px var(--mono)}
 .zbtn:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .lodtag{position:absolute;left:10px;top:10px;background:var(--card);border-radius:6px;box-shadow:0 0 0 1px var(--rule);padding:6px 10px;font-size:12px;color:var(--muted);max-width:calc(100% - 66px);box-sizing:border-box}
+.lodtag:empty{display:none}
 .lodtag b{color:var(--fg)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);align-items:center}
 .legend span{display:inline-flex;align-items:center;gap:7px}
@@ -133,6 +134,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 @keyframes rlpop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.rlcard{animation:none}}
 .rlbox.rlin{position:absolute;z-index:6;left:calc(10px + env(safe-area-inset-left,0px));right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-width:470px;display:flex;flex-direction:column-reverse;align-items:flex-start}
 .rlbox.rlin .rlcard{max-height:58vh;overflow:auto}
+.rlbox.rlin{pointer-events:none}.rlbox.rlin>*{pointer-events:auto}.rlbox.rlin .rlrow{pointer-events:none}.rlbox.rlin .rlrow>*{pointer-events:auto}
 .rlcv{position:absolute;inset:0;pointer-events:none}
 .rlpin{position:absolute;z-index:5;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#e8452c;box-shadow:0 0 0 2.5px #fff,0 1px 6px rgba(0,0,0,.4);pointer-events:none}
 .rlpin::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid #e8452c;animation:rlp 1.5s ease-out infinite}@keyframes rlp{from{transform:scale(.6);opacity:1}to{transform:scale(2.2);opacity:0}}@media (prefers-reduced-motion:reduce){.rlpin::after{animation:none}}
@@ -2217,7 +2219,7 @@ function setGlobeZoom(k){GL.quiet=true;gsv.call(gzoom.transform,d3.zoomIdentity.
 function showGlobe(){const zc=document.getElementById("zcomp");if(zc)zc.hidden=true;if(!PS.on&&window.__tripLbl)window.__tripLbl(null);
   // back on the globe (the whole view): no trip is selected
   if(!PS.on){document.querySelectorAll(".seg .chip").forEach(c=>c.setAttribute("aria-pressed","false"));document.querySelectorAll(".areas[data-for]").forEach(g=>{g.hidden=true;});if(typeof playLabel==="function")playLabel();}GL.on=true;window.__globeOn=true;gsv.style("display",null);svg.style("visibility","hidden");stage.classList.add("isglobe");
-  lodtag.innerHTML="<b>地球儀</b>：ドラッグで回せる。ズームするか点をタップすると、平らな地図になる";}
+  lodtag.innerHTML="";}
 async function enterGlobe(center,opt={}){
   if(typeof closePanel==="function"&&!opt.keepPanel)closePanel();
   const k=opt.k||1;
@@ -2708,11 +2710,7 @@ function rideGlobe(){return new Promise(res=>{
   const POOL=DATA.filter(d=>!EX.has(d[0]));let bag=[],busy=false,tok=0;
   const pick=()=>{if(!bag.length)bag=d3.shuffle(POOL.slice());return bag.pop();};
   const btn=el("rlbtn"),card=el("rlcard"),pin=el("rlpin"),box=el("rlbox"),stage=el("stage"),snd=el("rlsnd"),DUR=4200;
-  // ---- 表示の場所：ふだんはマップの上。全画面のときだけ、マップの中（左下）に重ねる
-  const place=()=>{const full=stage.classList.contains("full");
-    if(full&&box.parentNode!==stage){stage.appendChild(box);box.classList.add("rlin");}
-    else if(!full&&box.parentNode===stage){stage.parentNode.insertBefore(box,stage);box.classList.remove("rlin");}};
-  new MutationObserver(place).observe(stage,{attributes:true,attributeFilter:["class"]});
+  stage.appendChild(box);box.classList.add("rlin");   // 常にマップの上（左下）に重ねる
   // ---- 効果音（ドラムロールと「ジャン！」。ブラウザで合成。ボタンで消せる）
   let ac=null,master=null,mute=false,nb=null;try{mute=localStorage.getItem("rlmute")==="1";}catch(e){}
   const paintSnd=()=>{snd.textContent=mute?"🔇":"🔊";snd.setAttribute("aria-pressed",mute?"false":"true");};paintSnd();
