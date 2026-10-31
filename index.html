@@ -1894,8 +1894,8 @@ const phList=il=>il.photos||(il.photo?[il.photo]:[]);
 function notesOf(il){const by=NOTE_ARTICLES.filter(a=>(a.names||[]).includes(il.name));if(by.length)return by;
   return NOTE_ARTICLES.filter(a=>(!a.trip||a.trip===il.trip)&&(a.keys||[]).includes(il.k));}
 const illURL=il=>location.href.split("#")[0]+"#ill="+encodeURIComponent(il.name);
-function noteHTML(il){const ns=notesOf(il);
-  return `<div class="notelinks">${ns.map(a=>`<a class="notelink" href="${esc(a.url)}" target="_blank" rel="noopener">📖 ${esc(a.by||"note")}で読む<small>${esc(a.title)}</small></a>`).join("")}<button type="button" class="copylink" data-ill-name="${esc(il.name)}">🔗 この場所のリンクをコピー</button></div>`;}
+function noteHTML(il){const ns=notesOf(il);if(!ns.length)return "";
+  return `<div class="notelinks">${ns.map(a=>`<a class="notelink" href="${esc(a.url)}" target="_blank" rel="noopener">📖 ブログを読む<small>${esc(a.title)}</small></a>`).join("")}</div>`;}
 document.addEventListener("click",e=>{const b=e.target.closest(".copylink");if(!b)return;const il=ILLS.find(x=>x.name===b.dataset.illName);if(!il)return;const u=illURL(il);
   const done=()=>{const t=b.textContent;b.textContent="✓ コピーした";setTimeout(()=>{b.textContent=t;},1600);};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>prompt("このリンクをコピーしてね",u));else prompt("このリンクをコピーしてね",u);});
