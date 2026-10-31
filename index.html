@@ -94,6 +94,7 @@ body.isfull .panel.empty{display:none}
 /* map */
 .land{fill:var(--land);stroke:var(--land-edge);stroke-width:.6;vector-effect:non-scaling-stroke}
 .land.v{fill:var(--visited)}.land.v2{fill:var(--visited2)}
+.park{fill:#7fb069;fill-opacity:.32;stroke:#4f8a3f;stroke-width:1.2;stroke-dasharray:5 3;vector-effect:non-scaling-stroke;pointer-events:none}.parklake{fill:#6ec3d9;fill-opacity:.5;stroke:#3f9fb8;stroke-width:.6;vector-effect:non-scaling-stroke;pointer-events:none}
 .par{fill:none;stroke-width:1.4;stroke-dasharray:10 4 2 4;stroke-linecap:butt;vector-effect:non-scaling-stroke;opacity:.9;pointer-events:none}
 .par.arc,.gpar.arc{stroke:var(--arc)}.par.eq,.gpar.eq{stroke:var(--equ)}
 .gpar{fill:none;stroke-width:1.3;stroke-dasharray:9 4 2 4;opacity:.9;pointer-events:none}
@@ -937,7 +938,7 @@ const WPN={HYG:"黄崖関長城（薊県）",AYT:"アユタヤ",PSL:"ピサヌ�
  ROV:"ロヴェレート",TRE:"トレント",BRX:"ブリクセン",STZ:"シュテルツィング",BRN:"ブレンナー峠",INN:"インスブルック",KUF:"クーフシュタイン",
  ROS:"ローゼンハイム",SCH:"ショーンガウ",STG:"シュタインガーデン",HSW:"ホーエンシュヴァンガウ",AUG:"アウクスブルク",DON:"ドナウヴェルト",
  TRL:"トロイヒトリンゲン",ANS:"アンスバッハ",STE:"シュタイナッハ",HEI:"ハイルスブロン",FUE:"フュルト",NEA:"ノイシュタット・アン・デア・アイシュ",
- KIT:"キッツィンゲン",GEM:"ゲミュンデン",ASC:"アシャッフェンブルク",HAN:"ハーナウ",QEN:"ケナ",EDR:"ナイル東側の砂漠の道",SAF:"サファガ",EDS:"ケナ〜サファガの砂漠の道",AUR:"オーロラを見た林道",BKP:"バッキンガム宮殿",HPC:"ハイド・パーク・コーナー駅",PRW:"ザ・プリンス（ウェスト・ブロンプトン）",MMW:"M&M'Sワールド（レスター・スクエア）",PCC:"ピカデリー・サーカス",TOL:"ロンドン塔",LDM:"レドンホール・マーケット",SPX:"セント・パンクラス駅",ZTA:"ゼットランド・アームズ（サウス・ケンジントン）",GBG:"景福宮",FLK:"国立民俗博物館",MDG:"明洞",NDM:"南大門市場",DHD:"ダイヤモンド・ヘッド",KKC:"ココ・クレーター",MKP:"マカプウ岬",RNZ:"ラヌア動物園",PDI:"パラダイス島",DEN:"デンデラ神殿",EML:"エマリ",KIM:"キマナ",KAJ:"カジアド",NAM:"ナマンガ"};
+ KIT:"キッツィンゲン",GEM:"ゲミュンデン",ASC:"アシャッフェンブルク",HAN:"ハーナウ",QEN:"ケナ",EDR:"ナイル東側の砂漠の道",SAF:"サファガ",EDS:"ケナ〜サファガの砂漠の道",AUR:"オーロラを見た林道",BKP:"バッキンガム宮殿",HPC:"ハイド・パーク・コーナー駅",PRW:"ザ・プリンス（ウェスト・ブロンプトン）",MMW:"M&M'Sワールド（レスター・スクエア）",PCC:"ピカデリー・サーカス",TOL:"ロンドン塔",LDM:"レドンホール・マーケット",SPX:"セント・パンクラス駅",ZTA:"ゼットランド・アームズ（サウス・ケンジントン）",GBG:"景福宮",FLK:"国立民俗博物館",MDG:"明洞",NDM:"南大門市場",DHD:"ダイヤモンド・ヘッド",KKC:"ココ・クレーター",MKP:"マカプウ岬",RNZ:"ラヌア動物園",PDI:"パラダイス島",AMB:"アンボセリ国立公園",DEN:"デンデラ神殿",EML:"エマリ",KIM:"キマナ",KAJ:"カジアド",NAM:"ナマンガ"};
 const TRN={DMK:"ドンムアン空港",ICN:"仁川空港",HEL:"ヘルシンキ（乗り継ぎ）",PEK:"北京（乗り継ぎ）",DOH:"ドーハ（乗り継ぎ）",BAH:"バーレーン（乗り継ぎ）",GZ:"広州（乗り継ぎ）",NRT:"成田",HND:"羽田"};
 const KNOWN=new Set(["EDR","DEN","DHD","KKC","MKP","OXF","BIB","STO","CHC","GLF","TIR","HSW","MES","SRM","TUR","LAM","VRN","NAP","AUR","RNZ","PDI","AMB","DIN","HYG"]);
 // day-trip destinations: date and how we got there (shown in the panel)
@@ -1703,6 +1704,9 @@ function drawBase(){
   if(world)gMap.append("g").selectAll("path").data(world).join("path")
     .attr("class",d=>"land"+(EU.visited.has(d.id)?" v":AF.visited.has(d.id)?" v2":"")).attr("d",path);
   PARS.forEach(p=>gMap.append("path").attr("class","par "+p.c).attr("d",path(parGeo(p.lat))));
+  // アンボセリ国立公園：サバンナの広がり（範囲と湖の位置は目安）。キリマンジャロの三角印は別レイヤー
+  gMap.append("path").attr("class","park t-af").attr("d",path(d3.geoCircle().center([37.27,-2.60]).radius(.16).precision(2)()));
+  gMap.append("path").attr("class","parklake t-af").attr("d",path(d3.geoCircle().center([37.22,-2.56]).radius(.06).precision(2)()));
   TRIPS.forEach(t=>t.seg.forEach(([m,kind,ks])=>{
     gMap.append("path").attr("class",`seg ${m} ${m==="air"?"":kind} ${t.key}`).attr("d",path({type:"LineString",coordinates:ks.map(k=>P[k])}));}));
 }
