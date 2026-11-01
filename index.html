@@ -232,14 +232,18 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 @media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);gap:4px}.pph span{font-size:9.5px;padding:12px 5px 3px}}
 .pinbook{display:grid;gap:10px}
 .pingrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.pin{position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:4px;padding:8px;text-align:center;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--rule)}
+.pin{position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:4px;padding:8px;text-align:center;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--rule)}
 .pin.empty{box-shadow:none;border:1.5px dashed var(--rule)}
 .pin .pn{font-size:11px;font-weight:700;line-height:1.3;color:var(--fg)}
 .pin .pw{font-size:10.5px;color:var(--muted)}
 .pin .pc{width:34px;height:34px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--rule);display:grid;place-items:center;color:var(--muted);font-size:16px}
 .pin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.pin.has .pn{position:absolute;left:0;right:0;bottom:0;padding:14px 6px 4px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.62))}
-@media (max-width:600px){.pingrid{grid-template-columns:repeat(3,1fr);gap:6px}.pin .pn{font-size:10px}}
+.pin.empty{aspect-ratio:auto;min-height:120px}
+.pin.has{aspect-ratio:auto;display:grid;grid-template-columns:1fr;justify-items:stretch;align-content:start;gap:0;text-align:left;padding:0;background:var(--card);box-shadow:inset 0 0 0 1px var(--rule)}
+.pin.has img{position:static;display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:#000}
+.pin.has .pn{position:static;display:block;padding:7px 9px 9px;color:var(--fg);background:none;text-align:left;font-size:12.5px}
+.pin .pn small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);margin-top:1px}
+@media (max-width:600px){.pingrid{grid-template-columns:repeat(2,1fr);gap:8px}.pin .pn{font-size:12px}}
 .gal{display:grid;gap:8px;margin-top:8px}
 .galhd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
 .galhd h2{margin:0;font:800 22px var(--display)}
@@ -2712,17 +2716,22 @@ function rideGlobe(){return new Promise(res=>{
       else{const [pl,dd]=window.__illPlace(f.i);head=`${esc(pl)}${dd?`<time>${esc(dd)}</time>`:""}`;}
       return `<div class="ggrp"><h3>${head}</h3><div class="pgrid">${g.items.map(it=>`<button class="pph" type="button" ${it.ev?`data-e="${it.e}"`:`data-i="${it.i}"`} aria-label="${esc(it.name)}の写真"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(it.src)}" alt=""><span>${esc(it.name)}</span></button>`).join("")}</div></div>`;}).join(""):`<p class="empty">この旅には、まだ写真がない。</p>`;};
   // ピンバッチ図鑑：写真はまだ。photo に "photos/pin_xxx.webp" を入れると、その枠に写真が出る
-  // ★で買ったと確認できている場所だけ枠を作ってある（残りは写真が届いてから足す）
+  // 写真つきは what に「何のデザインか」を書く。写真待ちの枠は、★で買ったと確認できている場所だけ
   const PINS=[
     {trip:"eu",place:"ロンドン",photo:null},
-    {trip:"eu",place:"サンモリッツ",photo:null},
+    {trip:"eu",place:"バルセロナ",what:"サグラダ・ファミリア",photo:"photos/pin_sagrada.webp"},
+    {trip:"eu",place:"カンヌ",what:"ハートとヤシの木",photo:"photos/pin_cannes_heart.webp"},
+    {trip:"eu",place:"カンヌ",what:"カチンコと星",photo:"photos/pin_cannes_clapper.webp"},
+    {trip:"eu",place:"ミラノ",what:"ドゥオーモ",photo:"photos/pin_milano_duomo.webp"},
+    {trip:"eu",place:"ミラノ",what:"筆記体とイタリア国旗",photo:"photos/pin_milano_script.webp"},
     {trip:"eu",place:"ベネチア",photo:null},
+    {trip:"eu",place:"サンモリッツ",photo:null},
     {trip:"eu",place:"フュッセン",photo:null}];
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
     const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
     el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
     box.innerHTML=ps.length?`<div class="pingrid">`+
-      ps.map(p=>p.photo?`<div class="pin has"><img loading="lazy" decoding="async" src="${esc(p.photo)}" alt="${esc(p.place)}のピンバッチ"><span class="pn">${esc(p.place)}</span></div>`
+      ps.map(p=>p.photo?`<div class="pin has"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(p.photo)}" alt="${esc(p.place)}のピンバッチ（${esc(p.what||"")}）"><span class="pn">${esc(p.place)}${p.what?`<small>${esc(p.what)}</small>`:""}</span></div>`
         :`<div class="pin empty" aria-label="${esc(p.place)}のピンバッチ（写真待ち）"><span class="pc" aria-hidden="true">＋</span><span class="pn">${esc(p.place)}</span><span class="pw">写真待ち</span></div>`).join("")+`</div>`
       :`<p class="empty">この旅のピンバッチは、まだ登録していない。</p>`;};
   (window.__onTrips=window.__onTrips||[]).push(renderPins);renderPins();
