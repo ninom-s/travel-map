@@ -2761,7 +2761,11 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"ローテンブルク",what:"市門と木組みの家",photo:"photos/pin_rothenburg.webp"},
     {trip:"eu",place:"ドイツ",what:"バイエルンの紋章",photo:"photos/pin_bayern.webp"},
     {trip:"eu",place:"ドイツ",what:"鷲の紋章と国旗の盾",photo:"photos/pin_germany.webp"},
-    {trip:"eu",place:"フランクフルト",what:"レーマー広場の街並み",photo:"photos/pin_frankfurt.webp"}];
+    {trip:"eu",place:"フランクフルト",what:"レーマー広場の街並み",photo:"photos/pin_frankfurt.webp"},
+    {trip:"af",place:"エジプト",what:"有翼の女神の壁画",photo:"photos/pin_eg_mural.webp"},
+    {trip:"af",place:"エジプト",what:"スカラベ",photo:"photos/pin_eg_scarab.webp"},
+    {trip:"af",place:"エジプト",what:"ウジャトの目",photo:"photos/pin_eg_horus.webp"},
+    {trip:"af",place:"エジプト",what:"ファラオのマスク",photo:"photos/pin_eg_tut.webp"}];
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
     const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
     el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
