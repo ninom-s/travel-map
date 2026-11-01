@@ -1,0 +1,11 @@
+/*
+ * noscript.css
+ * JavaScript が無効のとき（<noscript> の中）だけ読み込まれる CSS。
+ * 地図・操作ボタン・パネルなど JavaScript 前提の部分を隠し、代わりに静止画（.nojs）を見せる。
+ */
+.nav, .stage, #modelegend, .hint, .panel, .gal { display: none !important; }
+
+/* 静止画の並び */
+.nojs { display: grid; gap: 14px; margin: 12px 0; }
+.nojs img { width: 100%; height: auto; border-radius: 6px; border: 1px solid #ccc; }
+.nojs p { margin: 0; font-size: 14px; line-height: 1.7; }

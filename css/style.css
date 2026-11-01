@@ -1,0 +1,3357 @@
+/* ===== ページの基本 ===== */
+/* iPhoneのノッチ（セーフエリア）の余白、余白ゼロ、画像の最大幅、hidden属性は必ず非表示 */
+:root {
+  padding-top: env(safe-area-inset-top,0px);
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none!important; }
+/* Layout: 地図を主役に。上に見出しとジャンプボタン、中央に全幅のズーム地図、下に選んだ地点の詳細パネル */
+
+/* ===== 色とフォント（ライトモード） ===== */
+/* --bg=背景、--fg=文字、--sea/--land=海と陸、--train/--bus…=乗り物の色、--i-*=イラストの色、--eu/--af/--hi/--ko/--ld/--th/--cn=旅ごとの色（ヨーロッパ/エジプト・ケニア/ハワイ/韓国/ロンドン/タイ/中国） */
+:root {
+  --bg: #f6f7f7;
+  --fg: #1b2329;
+  --muted: #5b6871;
+  --rule: #c9d2d7;
+  --card: #ffffff;
+  --sea: #d7e2e8;
+  --land: #f2f3f0;
+  --land-edge: #b8c3c9;
+  --visited: #f0ddd5;
+  --visited2: #dbe3f2;
+  --train: #c23b26;
+  --bus: #16806a;
+  --boat: #2f74b5;
+  --car: #a0652a;
+  --walk: #5b6871;
+  --air: #4f6375;
+  --taxi: #b07d00;
+  --plan: #8a96a0;
+  --i-sand: #e3c88d;
+  --i-sand2: #f1e2bd;
+  --i-stone: #b9c2c9;
+  --i-sea: #7fb2dc;
+  --i-gold: #e5b22e;
+  --i-ink: #1b2329;
+  --i-snow: #ffffff;
+  --i-night: #1d2b4a;
+  --i-tree: #0f1a2e;
+  --i-brown: #9a6a43;
+  --i-sail: #f4ecd8;
+  --i-red: #d4553f;
+  --i-green: #4da36f;
+  --i-lemon: #f2d43a;
+  --i-slate: #5f7896;
+  --i-aur1: #4fd39a;
+  --i-aur2: #e889c0;
+  --i-carpet: #c2338a;
+  --i-peach: #f2a58a;
+  --i-purple: #7d4fa8;
+  --i-lake: #3fb39f;
+  --eu: #c23b26;
+  --af: #2a5ea8;
+  --hi: #c9437a;
+  --ko: #14876a;
+  --ld: #7a4fb0;
+  --th: #c77d0a;
+  --cn: #8a5a2b;
+  --halo: #f2f3f0;
+  --arc: #2b86b8;
+  --equ: #d97a1e;
+  --display: "Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body: "Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --mono: "IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+
+/* ダークモード（OSがダークのとき）。ただし<html>に data-theme="light" を付けているので、いまは常にライト表示 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1317;
+    --fg: #e4eaed;
+    --muted: #93a1aa;
+    --rule: #2c3840;
+    --card: #141c22;
+    --sea: #111b22;
+    --land: #1d262d;
+    --land-edge: #36444d;
+    --visited: #3b2723;
+    --visited2: #22304a;
+    --train: #ff7656;
+    --bus: #45cfa8;
+    --boat: #6fb1ea;
+    --car: #e0a96a;
+    --walk: #93a1aa;
+    --air: #8fa6ba;
+    --taxi: #e8c15a;
+    --plan: #6f7c85;
+    --eu: #ff7656;
+    --af: #7ea8ef;
+    --hi: #f08ab3;
+    --ko: #55c9a6;
+    --ld: #b896ea;
+    --th: #f2b84b;
+    --cn: #d2a06a;
+    --halo: #1d262d;
+    --arc: #6cc0ea;
+    --equ: #f0a85a;
+    color-scheme: dark;
+  }
+}
+
+/* ダークモード（data-theme="dark" を明示したとき）。いまは使われない */
+:root[data-theme="dark"] {
+  --bg: #0d1317;
+  --fg: #e4eaed;
+  --muted: #93a1aa;
+  --rule: #2c3840;
+  --card: #141c22;
+  --sea: #111b22;
+  --land: #1d262d;
+  --land-edge: #36444d;
+  --visited: #3b2723;
+  --visited2: #22304a;
+  --train: #ff7656;
+  --bus: #45cfa8;
+  --boat: #6fb1ea;
+  --car: #e0a96a;
+  --walk: #93a1aa;
+  --air: #8fa6ba;
+  --taxi: #e8c15a;
+  --plan: #6f7c85;
+  --eu: #ff7656;
+  --af: #7ea8ef;
+  --hi: #f08ab3;
+  --ko: #55c9a6;
+  --ld: #b896ea;
+  --th: #f2b84b;
+  --cn: #d2a06a;
+  --halo: #1d262d;
+  --arc: #6cc0ea;
+  --equ: #f0a85a;
+  color-scheme: dark;
+}
+
+/* ===== ページの土台とヘッダー ===== */
+/* 背景・文字・余白。.wrap は全体の幅（最大1280px）。headerはタイトル（h1）と凡例 */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  line-height: 1.6;
+  padding-left: max(16px,env(safe-area-inset-left,0px));
+  padding-right: max(16px,env(safe-area-inset-right,0px));
+  padding-block: 20px 40px;
+}
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px 24px;
+  flex-wrap: wrap;
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(24px,4vw,36px);
+  line-height: 1.2;
+  margin: 0;
+}
+.sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+/* ===== ボタン（チップ）の共通スタイル ===== */
+/* 丸いボタン。選択中は aria-pressed="true" で色が変わる */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.bar .lab {
+  font-size: 12px;
+  color: var(--muted);
+  margin-right: 4px;
+}
+.chip {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 11px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  background: var(--card);
+}
+.chip:hover { box-shadow: inset 0 0 0 1.5px var(--fg); }
+.chip:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.chip .sw {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+/* ===== 地図の枠（.stage） ===== */
+/* 地図・地球儀を描く四角。.full は全画面表示のとき。下の .panel は全画面中は地図の上に重なる */
+.stage {
+  position: relative;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--sea);
+  height: clamp(420px,72vh,820px);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+@media (max-width:600px) {
+  .stage { height: min(64vh,560px); }
+}
+body.isfull { overflow: hidden; }
+.stage.full {
+  position: fixed;
+  inset: 0;
+  height: auto;
+  border-radius: 0;
+  border: 0;
+  z-index: 50;
+}
+.stage.full .zbtns {
+  right: calc(10px + env(safe-area-inset-right,0px));
+  top: calc(10px + env(safe-area-inset-top,0px));
+}
+.stage.full .lodtag {
+  left: calc(10px + env(safe-area-inset-left,0px));
+  top: calc(10px + env(safe-area-inset-top,0px));
+}
+body.isfull .panel {
+  position: fixed;
+  z-index: 60;
+  left: max(10px,env(safe-area-inset-left,0px));
+  right: calc(54px + env(safe-area-inset-right,0px));
+  bottom: calc(10px + env(safe-area-inset-bottom,0px));
+  max-height: calc(100vh - 74px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  max-height: calc(100dvh - 74px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  box-sizing: border-box;
+  overflow: auto;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18);
+}
+body.isfull .panel.empty { display: none; }
+.panel.empty { display: none; }
+
+/* 地図の下の小さい説明文 */
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.stage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.stage svg:active { cursor: grabbing; }
+
+/* ===== 右上のズームボタン列 ===== */
+/* 全画面⤢・拡大＋・縮小−・操作説明？・ルーレット🎲・検索🔍。コンパスは地図を回したときだけ出る */
+.zbtns {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: grid;
+  gap: 4px;
+}
+.zbtn.compass svg {
+  transition: none;
+  display: block;
+}
+.zbtn[hidden] { display: none; }
+.zbtn {
+  all: unset;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--card);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--rule);
+  cursor: pointer;
+  font: 600 18px var(--mono);
+}
+.zbtn:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* ===== 地図左上の説明札（lodtag） ===== */
+/* ズームの段階に応じた説明が出る */
+.lodtag {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: var(--card);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--rule);
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  max-width: calc(100% - 66px);
+  box-sizing: border-box;
+}
+.lodtag:empty { display: none; }
+.snote:empty { display: none; }
+.lodtag b { color: var(--fg); }
+
+/* ===== 凡例 ===== */
+/* ヘッダーの右側にある、色つき線と点の説明 */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 12.5px;
+  color: var(--muted);
+  align-items: center;
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ===== 詳細パネル（.panel） ===== */
+/* 地図の点やイラストを押すと、地図の下に出る説明。k=小さい見出し、h2=名前、time=日付 */
+.panel {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--card);
+  padding: 14px 16px;
+  display: grid;
+  gap: 6px;
+  min-height: 84px;
+}
+.panel .k {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.panel h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+}
+.panel time {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.panel p {
+  margin: 0;
+  font-size: 14px;
+}
+.panel .m {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ===== 札（タグ） ===== */
+/* .tag=旅ごとの色の札、.mode=移動手段（飛行機・電車・バス…）の札 */
+.tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: #fff;
+}
+.tag.eu { background: var(--eu); }
+.tag.af { background: var(--af); }
+.tag.hi { background: var(--hi); }
+.tag.ko { background: var(--ko); }
+.tag.ld { background: var(--ld); }
+.tag.th { background: var(--th); }
+.tag.cn { background: var(--cn); }
+.tag.g { background: var(--muted); }
+.mode {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 0 5px;
+  border-radius: 3px;
+  color: #fff;
+  margin-right: 6px;
+}
+.mode.air { background: var(--air); }
+.mode.train { background: var(--train); }
+.mode.bus { background: var(--bus); }
+.mode.car { background: var(--car); }
+.mode.van { background: var(--car); }
+.mode.mix { background: var(--muted); }
+.mode.boat { background: var(--boat); }
+.mode.walk { background: var(--walk); }
+
+/* パネル下の注記 */
+.foot {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ===== 地図の描画（SVG） ===== */
+/* 陸地（.land。訪れた国は .v/.v2 で色が変わる）、国立公園（.park/.parklake）、北極圏・赤道の線（.par） */
+/* map */
+.land {
+  fill: var(--land);
+  stroke: var(--land-edge);
+  stroke-width: .6;
+  vector-effect: non-scaling-stroke;
+}
+.land.v { fill: var(--visited); }
+.land.v2 { fill: var(--visited2); }
+.park {
+  fill: #7fb069;
+  fill-opacity: .32;
+  stroke: #4f8a3f;
+  stroke-width: 1.2;
+  stroke-dasharray: 5 3;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+.parklake {
+  fill: #6ec3d9;
+  fill-opacity: .5;
+  stroke: #3f9fb8;
+  stroke-width: .6;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+.par {
+  fill: none;
+  stroke-width: 1.4;
+  stroke-dasharray: 10 4 2 4;
+  stroke-linecap: butt;
+  vector-effect: non-scaling-stroke;
+  opacity: .9;
+  pointer-events: none;
+}
+.par.arc,
+.gpar.arc {
+  stroke: var(--arc);
+}
+.par.eq,
+.gpar.eq {
+  stroke: var(--equ);
+}
+.gpar {
+  fill: none;
+  stroke-width: 1.3;
+  stroke-dasharray: 9 4 2 4;
+  opacity: .9;
+  pointer-events: none;
+}
+
+/* ===== 操作説明カード（？ボタンで開く） ===== */
+.help {
+  position: absolute;
+  left: 10px;
+  right: 52px;
+  top: 10px;
+  max-width: 360px;
+  margin-left: auto;
+  box-sizing: border-box;
+  max-height: calc(100% - 20px);
+  overflow: auto;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.16);
+  padding: 12px 40px 12px 14px;
+  z-index: 5;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.help[hidden] { display: none; }
+.help h2 {
+  margin: 0 0 6px;
+  font: 800 15px var(--display);
+}
+.help ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.help li b {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.help .hx {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font: 500 17px/1 system-ui,sans-serif;
+  cursor: pointer;
+}
+.help .hx:hover { background: var(--bg); }
+.zbtn[aria-expanded="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* ===== 表示の切り替えタブの最初の定義 ===== */
+/* （あとで 3172行あたりで上書きされるので、その続きを参照） */
+.vsw {
+  flex-basis: 100%;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.vsw .chip {
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.vsw .chip[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: none;
+}
+
+/* ===== 表示の切り替え ===== */
+/* body の data-view（map/stats/gal/photos/fail/tz/rec/pins）と合わない data-page の要素を隠す */
+body:not([data-view="map"]) [data-page="map"],
+body:not([data-view="stats"]) [data-page="stats"],
+body:not([data-view="gal"]) [data-page="gal"],
+body:not([data-view="photos"]) [data-page="photos"],
+body:not([data-view="fail"]) [data-page="fail"],
+body:not([data-view="tz"]) [data-page="tz"],
+body:not([data-view="rec"]) [data-page="rec"],
+body:not([data-view="pins"]) [data-page="pins"] {
+  display: none!important;
+}
+
+/* ===== 時差ビュー（時差タブ） ===== */
+/* 日本時間のスライダー（.tzctl）と、国ごとの時刻カード（.tzc）、あいさつ（.tzl/.tzsay） */
+.tzctl {
+  display: grid;
+  grid-template-columns: minmax(120px,170px) 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.tzjst b {
+  font: 800 34px/1.1 var(--display);
+  font-variant-numeric: tabular-nums;
+}
+.tzrw {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.tzrw input {
+  width: 100%;
+  accent-color: var(--fg);
+}
+.tzbtn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tzgh {
+  margin: 8px 0 2px;
+  font: 800 15px var(--display);
+}
+.tzgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(262px,1fr));
+  gap: 10px;
+}
+.tzc {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 11px 12px;
+  border-radius: 6px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  min-width: 0;
+}
+.tzc .hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.tzc .hd b { font: 800 16px var(--display); }
+.tzc .hd small {
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: right;
+}
+.tzc .tm {
+  display: flex;
+  align-items: baseline;
+  gap: 4px 10px;
+  flex-wrap: wrap;
+}
+.tzc .tm b {
+  font: 800 30px/1 var(--display);
+  font-variant-numeric: tabular-nums;
+}
+.tzc .tm span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.tzbar {
+  position: relative;
+  height: 8px;
+  margin: 2px 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg,#27355a 0,#27355a 20%,#f6d77e 30%,#f6d77e 70%,#27355a 80%,#27355a 100%);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.tzbar i {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--fg);
+  box-shadow: 0 0 0 2px var(--card);
+  transform: translateX(-1.5px);
+}
+.tzg {
+  display: grid;
+  gap: 3px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--rule);
+}
+.tzl {
+  display: flex;
+  align-items: baseline;
+  gap: 2px 8px;
+  flex-wrap: wrap;
+}
+.tzl .lb {
+  flex: 0 0 100%;
+  font-size: 11px;
+  color: var(--muted);
+}
+.tzl .tx { font: 700 19px/1.3 var(--display); }
+.tzl .ka {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.tzl.sm .tx { font-size: 14.5px; }
+.tzl.sm .lb { margin-top: 3px; }
+.tzsay {
+  all: unset;
+  box-sizing: border-box;
+  margin-left: auto;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  background: var(--card);
+}
+.tzsay:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.tzn {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* ===== 次の旅ルーレットと検索（地図の上のボタン・カード） ===== */
+/* ルーレットのボタン（.rlbtn）、検索ボックス（.srbox/.srin/.srl）、結果カード（.rlcard） */
+.rlbox {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 8px;
+  justify-items: start;
+}
+.zbtn#rlbtn { font-size: 17px; }
+.zbtn[disabled] {
+  cursor: default;
+  opacity: .7;
+}
+.zbtn.spin { animation: rlsp .7s linear infinite; }
+@keyframes rlsp {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .zbtn.spin { animation: none; }
+}
+
+/* 検索ボタン🔍と検索ボックス（地図の右上に開く） */
+.zbtn#srbtn { font-size: 16px; }
+.srbox {
+  position: absolute;
+  z-index: 8;
+  left: 10px;
+  top: 10px;
+  right: 54px;
+  max-width: 360px;
+  box-sizing: border-box;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--rule),0 4px 16px rgba(0,0,0,.14);
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 6px;
+}
+.srbox[hidden] { display: none; }
+.stage.full .srbox {
+  left: calc(10px + env(safe-area-inset-left,0px));
+  top: calc(10px + env(safe-area-inset-top,0px));
+  right: calc(54px + env(safe-area-inset-right,0px));
+}
+.srin {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.srin input {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--rule);
+  background: var(--bg);
+  font: 500 16px var(--body,inherit);
+  color: var(--fg);
+}
+.srin input:focus-visible { box-shadow: 0 0 0 2px var(--fg); }
+.srx {
+  all: unset;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.srx:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.srin input::-webkit-search-cancel-button { display: none; }
+.srl {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(46vh,320px);
+  overflow: auto;
+  display: grid;
+  gap: 2px;
+}
+.srl:empty { display: none; }
+.srl li { margin: 0; }
+.srl .srh,
+.srl .srn {
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.srl button {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-height: 38px;
+}
+.srl button:hover,
+.srl button:focus-visible {
+  background: var(--rule);
+}
+.srl button:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: -2px;
+}
+.srl img {
+  width: 24px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--rule);
+  flex: none;
+}
+.srl .pin {
+  width: 24px;
+  text-align: center;
+  flex: none;
+}
+.srl b {
+  font-weight: 700;
+  font-size: 14px;
+}
+.srl small {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: auto;
+  text-align: right;
+}
+
+/* ルーレットのボタン行（.rlrow）と、結果カードの枠（.rlcard）。カードは .rlin のとき地図の中に重なる */
+.rlrow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.rlbtn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.12);
+}
+.rlbtn:hover,
+.rlbtn:focus-visible {
+  box-shadow: 0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14);
+}
+.rlbtn[disabled] {
+  opacity: .65;
+  cursor: default;
+}
+.rlcard {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+  padding: 12px 40px 12px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--rule),0 4px 16px rgba(0,0,0,.12);
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  animation: rlpop .35s ease-out;
+}
+@keyframes rlpop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .rlcard { animation: none; }
+}
+.rlbox.rlin {
+  position: absolute;
+  z-index: 6;
+  left: calc(10px + env(safe-area-inset-left,0px));
+  right: 54px;
+  bottom: calc(10px + env(safe-area-inset-bottom,0px));
+  margin: 0;
+  max-width: 470px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+}
+.rlbox.rlin .rlcard {
+  max-height: 58vh;
+  overflow: auto;
+}
+.rlbox.rlin { top: calc(10px + env(safe-area-inset-top,0px)); }
+.rlbox.rlin .rlcard {
+  flex: 1 1 auto;
+  max-height: none;
+  align-content: space-between;
+  gap: 10px;
+}
+.rlbox.rlin .rlcard[hidden] { display: none; }
+.rlbox.rlin { pointer-events: none; }
+.rlbox.rlin>* { pointer-events: auto; }
+.rlrow.rltop {
+  position: absolute;
+  z-index: 6;
+  left: calc(10px + env(safe-area-inset-left,0px));
+  top: 10px;
+}
+.stage.full .rlrow.rltop { margin-top: env(safe-area-inset-top,0px); }
+
+/* カードの中の評価の行（💀危険度・★マニアック度・🕐移動時間）と、全都市の中のランキング（.rlr） */
+.rlm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+}
+.rlm div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rlm b {
+  font-weight: 600;
+  color: var(--muted);
+}
+.rlm .dt {
+  letter-spacing: 1px;
+  color: var(--fg);
+}
+.rlm .dt.dg { color: #c0392b; }
+.rlm .dt i {
+  font-style: normal;
+  opacity: .22;
+}
+.rlm span { color: var(--muted); }
+.rlnote {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.rlr {
+  width: 100%;
+  display: grid;
+  gap: 3px;
+}
+.rlr .m {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.rlr .m b {
+  width: 6.6em;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+.rlr .m>span:last-child {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+.rlr .ic {
+  font-size: 13px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.rlr .ic i {
+  font-style: normal;
+  opacity: .18;
+  filter: grayscale(1);
+}
+.rlr .st { color: #e0a100; }
+.rlr .rk {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg,#fff7e0,#fdecea);
+  color: #3a2a14;
+}
+.rlr .rn {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 11.5px;
+}
+.rlr .rn strong {
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -.5px;
+}
+.rlr .rn small {
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 1px;
+}
+.rlr .pt {
+  margin-left: auto;
+  font-size: 19px;
+  font-weight: 800;
+}
+.rlr .pt small {
+  font-size: 10px;
+  font-weight: 600;
+}
+.rlr .gg {
+  position: relative;
+  height: 8px;
+  margin: 8px 0 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg,#7bc47f,#f2d04a,#e8743b,#c0392b);
+}
+.rlr .gg i {
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 16px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #1b2329;
+  box-shadow: 0 0 0 2px #fff;
+}
+.rlr .gl {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  opacity: .75;
+}
+@media (prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) .rlr .rk {
+    background: linear-gradient(135deg,#3b3322,#3b2723);
+    color: #f1e6d2;
+  }
+  :root:not([data-theme="light"]) .rlr .gg i {
+    box-shadow: 0 0 0 2px #141c22;
+    background: #fff;
+  }
+}
+:root[data-theme="dark"] .rlr .rk {
+  background: linear-gradient(135deg,#3b3322,#3b2723);
+  color: #f1e6d2;
+}
+:root[data-theme="dark"] .rlr .gg i {
+  box-shadow: 0 0 0 2px #141c22;
+  background: #fff;
+}
+
+/* カードの小さな札（日本／予定の国／行ったことのある国）、注意書き、紙ふぶきのキャンバス（.rlcv） */
+.rltag {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e8eef7;
+  color: #27466f;
+  margin-left: 6px;
+}
+.rlmore {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.rlwarn {
+  margin: 0;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fdecea;
+  color: #8a2a1c;
+}
+.rlcv {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* 当たった場所に残る赤いピン（.rlpin）。押すとカードが再表示される */
+.rlpin {
+  position: absolute;
+  z-index: 5;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: #e8452c;
+  box-shadow: 0 0 0 2.5px #fff,0 1px 6px rgba(0,0,0,.4);
+  pointer-events: none;
+}
+.rlpin::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid #e8452c;
+  animation: rlp 1.5s ease-out infinite;
+}
+@keyframes rlp {
+  from {
+    transform: scale(.6);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .rlpin::after { animation: none; }
+}
+
+/* カードの閉じるボタン（.rlx）、見出し、国旗、見どころリスト（.rlts）、うんちく（.rlun） */
+.rlx {
+  all: unset;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.rlx:hover { background: var(--bg); }
+.rlk {
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.rlk em {
+  font-style: normal;
+  font-weight: 700;
+  color: #fff;
+  background: var(--th);
+  padding: 1px 8px;
+  border-radius: 99px;
+}
+.rlcard h3 {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rlcard h3 b { font: 800 22px/1.2 var(--display); }
+.rlcard h3 small {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.rlun {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.rlh {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rlflag {
+  display: block;
+  width: 44px;
+  height: 33px;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--rule);
+  flex: 0 0 auto;
+}
+.rlts {
+  list-style: none;
+  margin: 2px 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 8px;
+  width: 100%;
+}
+.rlts li {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  align-content: start;
+  text-align: center;
+  font-size: 11.5px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.rlts svg {
+  display: block;
+  width: 100%;
+  max-width: 62px;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* スマホ幅でのルーレットカード */
+@media (max-width:600px) {
+  .rlts svg { max-width: 34px; }
+  .rlts li { font-size: 10.5px; }
+  .rlnote { display: none; }
+  .rlr .rk {
+    padding: 6px 8px;
+    margin-top: 3px;
+  }
+  .rlr .rn strong { font-size: 22px; }
+  .rlcard {
+    gap: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+/* ===== 国バッジと国の詳細 ===== */
+/* 国に寄ると左上に出る国旗バッジ（.cbadge）、人口・為替（.clive）、ビッグマックのイラスト（.bmr/.bmi/.bmp）、訪れた場所（.cpl） */
+.cbadge {
+  all: unset;
+  box-sizing: border-box;
+  position: absolute;
+  left: 10px;
+  top: 52px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--rule);
+  padding: 5px 10px 5px 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--fg);
+  cursor: pointer;
+}
+.cbadge[hidden] { display: none; }
+.cbadge .cflag { width: 34px; }
+.cbadge small {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 11px;
+}
+.stage.playing .cbadge { display: none; }
+.clive {
+  margin: 8px 0;
+  display: grid;
+  gap: 6px;
+}
+.cl {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13.5px;
+}
+.cl .lb {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.cl .v small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.cl .v a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.bmr {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 2px 8px;
+  align-items: center;
+  margin: 2px 0 6px;
+}
+.bmr .bml {
+  font-size: 12px;
+  color: var(--muted);
+  grid-row: span 2;
+  align-self: start;
+  padding-top: 3px;
+}
+.bmi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  line-height: 0;
+}
+.bmi em {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: normal;
+  line-height: 1.2;
+  align-self: center;
+  margin-left: 4px;
+}
+.bmp {
+  display: inline-block;
+  overflow: hidden;
+  line-height: 0;
+  height: 19px;
+}
+.bmr b { font-size: 13px; }
+
+/* ===== 日付スライダー（.dsl） ===== */
+/* 日付を動かすと、その日どこにいたかが出る */
+.dsl {
+  margin: 10px 0;
+  padding: 12px 14px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.dsl[hidden] { display: none; }
+.dslh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  font-size: 13.5px;
+}
+.dslc {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.dslc button {
+  all: unset;
+  box-sizing: border-box;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.dslc button[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+.dsl input[type=range] {
+  width: 100%;
+  margin: 8px 0 4px;
+  accent-color: var(--fg);
+}
+.dslcard .dd {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dslcard .dd b { font-size: 18px; }
+.dslcard .dd span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.dslcard .pl {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 2px 0;
+}
+.dslcard p {
+  margin: 2px 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* ===== 旅の最高記録（ベスト3）（.recgrid/.reccard） ===== */
+.recgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+  gap: 12px;
+}
+.reccard {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--rule);
+  padding: 14px;
+}
+.reccard h3 {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+}
+.reccard ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.reccard li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 2px 8px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+.reccard li[data-k] { cursor: pointer; }
+.reccard li .rk {
+  grid-row: span 2;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  background: var(--rule);
+  color: var(--fg);
+}
+.reccard li.r1 .rk { background: #e8c53a; }
+.reccard li.r2 .rk { background: #c3c8cc; }
+.reccard li.r3 .rk { background: #d09a68; }
+.reccard li .nm {
+  font-weight: 700;
+  font-size: 13.5px;
+}
+.reccard li .vl {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* 国旗の表示（.cflag/.cfl）と、訪れた場所のリスト（.cpl） */
+.cflag {
+  display: block;
+  width: 64px;
+  height: auto;
+  aspect-ratio: 3/2;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--rule);
+  flex: 0 0 auto;
+}
+.cfl {
+  flex: 0 0 auto;
+  padding-top: 4px;
+}
+.cpl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 2px 0;
+}
+.cpl span {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+@media(max-width:560px) {
+  .tzctl { grid-template-columns: 1fr; }
+}
+/* 旅の数字（選んでいる旅の合計。タブに連動） */
+.stats,
+.vp {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--card);
+  min-width: 0;
+}
+.stathd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+.stathd h2 {
+  margin: 0;
+  font: 800 22px var(--display);
+}
+.stathd p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.stiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(104px,1fr));
+  gap: 8px;
+}
+.stile {
+  display: grid;
+  gap: 1px;
+  align-content: start;
+  padding: 9px 11px;
+  border-radius: 6px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.stile small {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.stile b {
+  font: 800 24px/1.15 var(--display);
+  letter-spacing: .01em;
+}
+.stile b i {
+  font: 600 12.5px var(--display);
+  font-style: normal;
+  margin-left: 3px;
+  color: var(--muted);
+}
+.stile em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.stile.wide { grid-column: span 2; }
+@media(max-width:600px) {
+  .stiles { grid-template-columns: repeat(2,1fr); }
+  .stile:nth-last-child(2):nth-child(odd) { grid-column: span 2; }
+}
+.sbar {
+  display: flex;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  background: var(--bg);
+}
+.sbar i {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+}
+.smodes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(270px,1fr));
+  gap: 4px 18px;
+  font-size: 13px;
+}
+.smodes li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.smodes .sw {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+.smodes .nm { flex: 1 1 auto; }
+.smodes .km {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.smodes .n {
+  color: var(--muted);
+  font-size: 12px;
+  min-width: 3.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.smodes .nm small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.sttrips {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.snote {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ===== 事件簿 ===== */
+/* 大きなやらかしのカード（.fcard）と、ちいさなハプニング（.fsm） */
+.vp h3.sec {
+  margin: 6px 0 0;
+  font: 800 16px var(--display);
+}
+.vp .secsub {
+  margin: -4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.vp .empty {
+  margin: 0;
+  padding: 14px 4px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.fcards {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr));
+}
+.fcard {
+  display: grid;
+  gap: 7px;
+  align-content: start;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  min-width: 0;
+}
+.fcard .k {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.fcard .k time {
+  font: 500 12px var(--mono);
+  color: var(--muted);
+}
+.fcard h4 {
+  margin: 0;
+  font: 800 17px/1.35 var(--display);
+}
+.fcard .fw {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.fcard .tl { margin-top: 2px; }
+.fcard .fph {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
+  gap: 6px;
+}
+.fcard .fph img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--rule);
+}
+.fcard .chip { justify-self: start; }
+.fsmall {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,300px),1fr));
+}
+.fsm {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 4px 12px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  min-width: 0;
+}
+.fsm:hover { box-shadow: inset 0 0 0 1.5px var(--fg); }
+.fsm:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.fsm svg {
+  grid-row: 1 / span 3;
+  width: 44px;
+  height: 44px;
+}
+.fsm b {
+  font-size: 14px;
+  line-height: 1.35;
+}
+.fsm span {
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.fsm em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* ===== 写真ウォール ===== */
+/* 置き場所ごとに写真を並べる（.pgrid/.pph） */
+.pwall {
+  display: grid;
+  gap: 14px;
+}
+.pgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+  gap: 6px;
+}
+.pph {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  display: block;
+  aspect-ratio: 4/3;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--rule);
+}
+.pph img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pph span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px 7px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(transparent,rgba(0,0,0,.62));
+  line-height: 1.3;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pph:hover { box-shadow: 0 0 0 2px var(--fg); }
+.pph:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+@media (max-width:600px) {
+  .pgrid {
+    grid-template-columns: repeat(3,1fr);
+    gap: 4px;
+  }
+  .pph span {
+    font-size: 9.5px;
+    padding: 12px 5px 3px;
+  }
+}
+
+/* ===== ピンバッチ図鑑（.pinbook/.pingrid/.pin） ===== */
+/* 写真が入っていない枠は .pin.empty、入ったものは .pin.has */
+.pinbook {
+  display: grid;
+  gap: 18px;
+}
+.pinc h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.pinc h3 small {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.pingrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+  gap: 8px;
+}
+.pin {
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  padding: 8px;
+  text-align: center;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+}
+.pin.empty {
+  box-shadow: none;
+  border: 1.5px dashed var(--rule);
+}
+.pin .pn {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--fg);
+}
+.pin .pw {
+  font-size: 10.5px;
+  color: var(--muted);
+}
+.pin .pc {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 16px;
+}
+.pin img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pin.empty {
+  aspect-ratio: auto;
+  min-height: 120px;
+}
+.pin.has {
+  aspect-ratio: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: stretch;
+  align-content: start;
+  gap: 0;
+  text-align: left;
+  padding: 0;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.pin.has img {
+  position: static;
+  display: block;
+  width: 86%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 10px auto 0;
+  background: none;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.pin.has .pn {
+  position: static;
+  display: block;
+  padding: 7px 9px 10px;
+  color: var(--fg);
+  background: none;
+  text-align: center;
+  font-size: 12.5px;
+}
+.pin .pn small {
+  display: block;
+  font-weight: 500;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+@media (max-width:600px) {
+  .pingrid {
+    grid-template-columns: repeat(2,1fr);
+    gap: 8px;
+  }
+  .pin .pn { font-size: 12px; }
+}
+
+/* ===== イラスト一覧（地図の下のギャラリー） ===== */
+/* 旅で絞り込むタブ（.gtabs）、国のタブ（.gcty）、場所ごとのまとまり（.ggrp）、イラストのカード（.gcard） */
+.gal {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+.galhd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+}
+.galhd h2 {
+  margin: 0;
+  font: 800 22px var(--display);
+}
+.galhd p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.gtabs {
+  display: flex;
+  gap: 6px;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 1px;
+}
+.gtabs::-webkit-scrollbar { display: none; }
+.gtabs .chip {
+  flex: 0 0 auto;
+  padding: 5px 12px;
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+.gtabs .chip small {
+  margin-left: 5px;
+  font: 500 11px var(--mono);
+  opacity: .7;
+}
+@media (max-width:600px) {
+  #gtabs { gap: 4px; }
+  #gtabs .chip {
+    padding: 5px 9px;
+    font-size: 12px;
+  }
+}
+.gcty {
+  padding-left: 10px;
+  border-left: 2px solid var(--rule);
+  margin-left: 2px;
+}
+.gcty[hidden] { display: none; }
+.gcty .chip {
+  font-size: 12px;
+  padding: 4px 11px;
+}
+.gtabs .chip[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+.ggrp {
+  display: grid;
+  gap: 4px;
+  max-width: 100%;
+  min-width: 0;
+}
+.ggrp[hidden] { display: none; }
+.ggrp h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.ggrp h3 time {
+  font: 500 12px var(--mono);
+  color: var(--muted);
+}
+.ggrp h3 .tag { font-size: 10.5px; }
+#galbody {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: flex-start;
+}
+.ggrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.ggrid .gcard { width: 78px; }
+@media (max-width:600px) {
+  #galbody { gap: 8px 12px; }
+  .ggrid { gap: 3px; }
+  .ggrid .gcard {
+    width: calc((100vw - 32px - 12px) / 5);
+    padding: 5px 2px 4px;
+  }
+  .gcard svg {
+    width: 30px;
+    height: 30px;
+  }
+  .gcard .gn { font-size: 9.5px; }
+}
+.gcard {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 2px;
+  padding: 6px 3px 5px;
+  border-radius: 6px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  text-align: center;
+}
+.gcard:hover { box-shadow: inset 0 0 0 1.5px var(--fg); }
+.gcard:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.gcard.on { box-shadow: inset 0 0 0 2px var(--fg); }
+.gcard .gn {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gcard .gb {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--eu);
+  color: #fff;
+  font: 700 9px/14px var(--mono);
+}
+
+/* ===== イラストを開いたときのダイアログ（.illdlg） ===== */
+/* 前へ・地図へ・次への行は .dlgnav */
+.illdlg {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 16px 16px 12px;
+  width: min(560px,calc(100vw - 24px));
+  max-height: calc(100vh - 32px);
+  box-sizing: border-box;
+  background: var(--card);
+  color: var(--fg);
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  font-family: var(--body);
+  overflow: auto;
+}
+.illdlg::backdrop { background: rgba(20,24,28,.45); }
+.illdlg .illtx>.k { padding-right: 36px; }
+.illdlg h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+}
+.illdlg p {
+  margin: 0;
+  font-size: 14px;
+}
+.illdlg .m {
+  color: var(--muted);
+  font-size: 13px;
+}
+.illdlg .k {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.illdlg .pclose {
+  top: 10px;
+  right: 10px;
+}
+.illdlg .phwrap,
+.illdlg .dots {
+  max-width: none;
+}
+@media (max-width:600px) {
+  .illdlg { padding: 14px 12px 10px; }
+  .illdlg .illbig {
+    width: 56px;
+    height: 56px;
+  }
+  .illdlg h2 { font-size: 19px; }
+  .illdlg .illrow { gap: 10px; }
+}
+.dlgnav {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.dlgnav .chip { padding: 7px 14px; }
+.dlgnav .chip[disabled] {
+  opacity: .35;
+  cursor: default;
+}
+
+/* ===== 地図の線（SVG） ===== */
+/* .grat=緯度経度の線、.seg=移動の線（手段ごとに色。.air=飛行機の点線、.plan=乗れなかった予定、.trip=日帰り）、.ev=✕印（トラブル）、.dur=所要時間の文字 */
+.grat {
+  fill: none;
+  stroke: var(--land-edge);
+  stroke-opacity: .35;
+  stroke-width: .5;
+  vector-effect: non-scaling-stroke;
+}
+.seg {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.seg.train { stroke: var(--train); }
+.seg.bus { stroke: var(--bus); }
+.seg.boat { stroke: var(--boat); }
+.seg.car { stroke: var(--car); }
+.seg.van { stroke: var(--car); }
+.seg.walk { stroke: var(--walk); }
+.seg.main { stroke-width: 3; }
+.seg.trip {
+  stroke-width: 2;
+  stroke-dasharray: 1.5 4.5;
+}
+.seg.walk {
+  stroke-width: 1.6;
+  stroke-dasharray: 1 3.5;
+}
+.seg.air {
+  stroke: var(--air);
+  stroke-width: 1.6;
+  stroke-dasharray: 6 5;
+}
+.seg.taxi { stroke: var(--taxi); }
+.seg.plan.main {
+  stroke: var(--plan);
+  stroke-width: 1.8;
+  stroke-dasharray: 2 5;
+  opacity: .9;
+}
+.lo .seg.plan { display: none; }
+.ev { cursor: pointer; }
+.ev .hit { fill: transparent; }
+.ev path {
+  stroke: var(--fg);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  fill: none;
+}
+.ev circle.bg {
+  fill: var(--card);
+  stroke: var(--fg);
+  stroke-width: 1.2;
+}
+.ev.on circle.bg,
+.ev:focus-visible circle.bg {
+  stroke-width: 2.6;
+}
+.lbl.evn {
+  font-size: 11.5px;
+  font-weight: 700;
+  fill: var(--fg);
+}
+.dur.taxi { fill: var(--taxi); }
+.stage.lite .ill:not(.pick) { display: none!important; }
+.chip[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: none;
+}
+
+/* ===== 旅のスイッチ・旅を選ぶボタン（.nav / .seg / .tripsel） ===== */
+/* .areas=エリアのジャンプボタン（北欧・イギリス…） */
+.nav {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  min-width: 0;
+}
+.seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  max-width: 100%;
+}
+.seg .chip {
+  box-shadow: none;
+  background: transparent;
+  padding: 6px 14px;
+}
+.tripsel { position: relative; }
+.tripbtn {
+  padding: 8px 14px;
+  font-weight: 700;
+}
+.tripbtn .sw { margin-right: 6px; }
+.seg.triplist {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 12px;
+  min-width: 220px;
+  box-shadow: inset 0 0 0 1px var(--rule),0 6px 20px rgba(0,0,0,.14);
+}
+.seg.triplist[hidden] { display: none; }
+.seg.triplist .chip {
+  border-radius: 8px;
+  padding: 9px 12px;
+  text-align: left;
+}
+.seg .chip:hover { box-shadow: inset 0 0 0 1px var(--rule); }
+.seg .chip[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: none;
+}
+.areas .chip[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: none;
+}
+.areas {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 1px;
+}
+.areas::-webkit-scrollbar { display: none; }
+.areas[hidden] { display: none; }
+.areas .lab {
+  font-size: 12px;
+  color: var(--muted);
+  flex: 0 0 auto;
+  margin-right: 2px;
+}
+.areas .chip {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  padding: 4px 10px;
+}
+
+/* ===== イラスト（地図の上に出る小さい絵） ===== */
+/* .ill=1つのイラスト、.phb=写真つきの赤い点。.i-*=絵の塗り色（:root の --i-* を参照） */
+.ill { cursor: pointer; }
+.ill:focus { outline: none; }
+.ill .bg {
+  fill: var(--card);
+  stroke: var(--rule);
+  stroke-width: 1.2;
+}
+.ill.on .bg,
+.ill:focus-visible .bg {
+  stroke: var(--fg);
+  stroke-width: 2.4;
+}
+.ill .ld {
+  stroke: var(--muted);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.i-l {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.i-sand { fill: var(--i-sand); }
+.i-sand2 { fill: var(--i-sand2); }
+.i-stone { fill: var(--i-stone); }
+.i-sea { fill: var(--i-sea); }
+.i-gold { fill: var(--i-gold); }
+.i-ink { fill: var(--i-ink); }
+.i-snow { fill: var(--i-snow); }
+.i-night { fill: var(--i-night); }
+.i-tree { fill: var(--i-tree); }
+.i-brown { fill: var(--i-brown); }
+.i-sail { fill: var(--i-sail); }
+.i-red { fill: var(--i-red); }
+.i-green { fill: var(--i-green); }
+.i-lemon { fill: var(--i-lemon); }
+.i-slate { fill: var(--i-slate); }
+.i-sky { fill: var(--card); }
+.i-aur1 {
+  fill: none;
+  stroke: var(--i-aur1);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.i-aur2 {
+  fill: none;
+  stroke: var(--i-aur2);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.i-steam {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.i-icing {
+  fill: none;
+  stroke: var(--i-snow);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.i-carpet { fill: var(--i-carpet); }
+.i-peach { fill: var(--i-peach); }
+.i-purple { fill: var(--i-purple); }
+.i-lake { fill: var(--i-lake); }
+.i-txt {
+  font: 700 4.4px var(--mono);
+  fill: var(--i-red);
+}
+
+/* ===== 写真（パネルのスワイプ写真） ===== */
+/* .phs=横スクロールの写真列、.dots=ページの点 */
+.phs {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  max-width: 520px;
+  margin-top: 6px;
+  border-radius: 4px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.phs::-webkit-scrollbar { display: none; }
+.ph {
+  display: block;
+  flex: 0 0 100%;
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  scroll-snap-align: center;
+  border-radius: 4px;
+}
+.dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  max-width: 520px;
+  margin-top: 2px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background: var(--rule);
+  cursor: pointer;
+}
+.dot.on { background: var(--fg); }
+.ill .phb {
+  fill: var(--eu);
+  stroke: var(--card);
+  stroke-width: 1.6;
+}
+
+/* ===== 乗り物（旅の再生中に路線を走るイラスト） ===== */
+/* .veh=乗り物、.vring=押せることを示す輪 */
+.vehl .veh { cursor: pointer; }
+.vehl .vbg {
+  fill: var(--card);
+  stroke: var(--fg);
+  stroke-width: 1.6;
+}
+.vehl .veh.air .vbg { stroke: var(--air); }
+.vehl .veh.train .vbg { stroke: var(--train); }
+.vehl .veh.bus .vbg { stroke: var(--bus); }
+.vehl .veh.taxi .vbg { stroke: var(--taxi); }
+.vehl .veh.boat .vbg { stroke: var(--boat); }
+.vehl .veh.car .vbg { stroke: var(--car); }
+.vehl .veh.van .vbg { stroke: var(--car); }
+.vehl .vring {
+  fill: none;
+  stroke: var(--eu);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: vr 1.8s ease-out infinite;
+}
+.vehl .veh.riding .vring {
+  animation: none;
+  opacity: 0;
+}
+@keyframes vr {
+  0% {
+    transform: scale(.75);
+    opacity: .7;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+.vehl .veh:focus { outline: none; }
+.vehl .veh:focus-visible .vbg { stroke-width: 3; }
+.play.riding .pdate { color: var(--fg); }
+.stage.riding text.lbl:not(.stopn):not(.big),
+.stage.riding text.dur {
+  visibility: hidden;
+}
+
+/* ===== 地球儀（最初の画面） ===== */
+/* .gs0/.gs1=海のグラデーション、.gland=陸地、.gseg=線、.gpt=点、.glbl/.gname=名前 */
+.stage svg.globe {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+}
+.stage svg.globe:active { cursor: grabbing; }
+.stage svg.globe.gfade { animation: gfade .32s ease-out; }
+.stage svg.ffade { animation: ffade .28s ease-out; }
+@keyframes ffade {
+  from { opacity: .55; }
+  to { opacity: 1; }
+}
+@keyframes gfade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .stage svg.globe.gfade { animation: none; }
+}
+.gs0 { stop-color: color-mix(in srgb,var(--sea) 70%,#fff); }
+.gs1 { stop-color: color-mix(in srgb,var(--sea) 82%,#5d7b8e); }
+.gsph { fill: url(#gSea); }
+.gatm {
+  fill: none;
+  stroke: color-mix(in srgb,var(--sea) 60%,#fff);
+  stroke-width: 10;
+  opacity: .55;
+}
+.gedge {
+  fill: none;
+  stroke: var(--land-edge);
+  stroke-width: 1;
+}
+.ggrat {
+  fill: none;
+  stroke: var(--land-edge);
+  stroke-opacity: .35;
+  stroke-width: .5;
+}
+.gland {
+  fill: var(--land);
+  stroke: var(--land-edge);
+  stroke-width: .45;
+}
+.gland.v { fill: var(--visited); }
+.gland.v2 { fill: var(--visited2); }
+.gseg {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  pointer-events: none;
+}
+.gseg.air {
+  stroke-width: 1.4;
+  stroke-dasharray: 4 3.5;
+}
+.gseg.air.eu { stroke: var(--eu); }
+.gseg.air.af { stroke: var(--af); }
+.gseg.air.hi { stroke: var(--hi); }
+.gseg.air.ko { stroke: var(--ko); }
+.gseg.air.ld { stroke: var(--ld); }
+.gseg.air.th { stroke: var(--th); }
+.gseg.air.cn { stroke: var(--cn); }
+.gseg.eu:not(.air) { stroke: var(--eu); }
+.gseg.af:not(.air) { stroke: var(--af); }
+.gseg.hi:not(.air) { stroke: var(--hi); }
+.gseg.ko:not(.air) { stroke: var(--ko); }
+.gseg.ld:not(.air) { stroke: var(--ld); }
+.gseg.th:not(.air) { stroke: var(--th); }
+.gseg.cn:not(.air) { stroke: var(--cn); }
+.gseg.walk { display: none; }
+.gshine { pointer-events: none; }
+.gpt {
+  stroke: var(--card);
+  stroke-width: 1.6;
+  cursor: pointer;
+}
+.gpt.eu { fill: var(--eu); }
+.gpt.af { fill: var(--af); }
+.gpt.hi { fill: var(--hi); }
+.gpt.ko { fill: var(--ko); }
+.gpt.ld { fill: var(--ld); }
+.gpt.th { fill: var(--th); }
+.gpt.cn { fill: var(--cn); }
+.glbl {
+  font: 800 15px var(--display);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  pointer-events: none;
+  fill: var(--fg);
+}
+.glbl.eu { fill: var(--eu); }
+.glbl.af { fill: var(--af); }
+.glbl.hi { fill: var(--hi); }
+.glbl.ko { fill: var(--ko); }
+.glbl.ld { fill: var(--ld); }
+.glbl.th { fill: var(--th); }
+.glbl.cn { fill: var(--cn); }
+.gname {
+  font: 700 11.5px var(--body);
+  fill: var(--fg);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.gpl {
+  fill: none;
+  stroke: var(--eu);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+@media (max-width:600px) {
+  .glbl { font-size: 12.5px; }
+}
+
+/* ===== 旅の再生（▶ この旅を再生） ===== */
+/* .playbtn=再生ボタン、.play=下の字幕（日付 .pdate・名前 .pname・説明 .pnote）、.pctl=一時停止・2倍速・終了、.pbar=進み具合 */
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.nav>.areas { flex-basis: 100%; }
+.playbtn {
+  background: var(--fg)!important;
+  color: var(--bg)!important;
+  box-shadow: none!important;
+  padding: 8px 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.playbtn:hover { opacity: .88; }
+.stage.playing path.seg { opacity: .16; }
+.stage.playing .lodtag { display: none; }
+.playh path {
+  fill: none;
+  stroke: var(--card);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .9;
+}
+.playl path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.playp .pp1 {
+  fill: none;
+  stroke: var(--eu);
+  stroke-width: 2.5;
+  animation: pp 1.4s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.playp .pp2 {
+  fill: var(--eu);
+  stroke: var(--card);
+  stroke-width: 2;
+}
+@keyframes pp {
+  0% {
+    transform: scale(.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.play {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pcap {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  max-width: min(360px,calc(100% - 84px));
+  background: color-mix(in srgb,var(--card) 92%,transparent);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+  display: grid;
+  gap: 2px;
+}
+.pdate {
+  font: 600 13px/1.4 var(--mono,monospace);
+  color: var(--eu);
+}
+.pname {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1.3;
+}
+.pnote {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.pnote[hidden] { display: none; }
+.pctl {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  width: min(420px,calc(100% - 24px));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: color-mix(in srgb,var(--card) 94%,transparent);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 6px 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.14);
+  pointer-events: auto;
+}
+.pbtn {
+  all: unset;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--fg);
+  flex: none;
+}
+.pbtn:hover { background: var(--bg); }
+.pbtn:focus-visible {
+  outline: 2px solid var(--eu);
+  outline-offset: 1px;
+}
+.pbtn.sm {
+  font: 600 12px var(--mono,monospace);
+  width: 38px;
+}
+.pbar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.pbar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--eu);
+  transition: width .4s;
+}
+.play.af .pdate { color: var(--af); }
+.play.af .pbar i { background: var(--af); }
+.playp.af .pp1 { stroke: var(--af); }
+.playp.af .pp2 { fill: var(--af); }
+@media (max-width:600px) {
+  .pcap {
+    left: 8px;
+    top: 8px;
+    padding: 8px 11px;
+    max-width: calc(100% - 74px);
+  }
+  .pname { font-size: 17px; }
+  .pnote { font-size: 12px; }
+}
+
+/* ===== 解説パネルの細部 ===== */
+/* .pclose=閉じるボタン、.phwrap=写真の枠（複数枚のときは .multi で矢印 .pha と枚数 .phn）、.tl=時系列リスト */
+.panel { position: relative; }
+.pclose {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--card);
+  color: var(--fg);
+  font: 500 18px/1 system-ui,sans-serif;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+}
+.pclose:hover { background: var(--bg); }
+.panel:not(.empty) { padding-right: 16px; }
+/* 閉じるボタンと重なるのは見出しの行だけ。文章・ボタン・写真は右端まで使う */
+.panel:not(.empty)>.k,
+.panel:not(.empty) .illtx>.k {
+  padding-right: 40px;
+}
+@media (max-width:600px) {
+  .panel .illbig {
+    width: 56px;
+    height: 56px;
+  }
+  .panel .illrow { gap: 10px; }
+}
+.phwrap {
+  position: relative;
+  max-width: 520px;
+  margin-top: 6px;
+}
+.phwrap .phs { margin-top: 0; }
+.phwrap.multi .phs {
+  gap: 6px;
+  scroll-padding-left: 0;
+}
+.phwrap.multi .ph {
+  flex: 0 0 91%;
+  width: 91%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+.phwrap.multi .ph:last-child {
+  flex-basis: 100%;
+  width: 100%;
+}
+.phn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.phwrap.multi .phn { right: calc(9% + 8px); }
+.phn {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(20,24,28,.62);
+  color: #fff;
+  font: 600 12px/1.6 var(--mono,monospace);
+  letter-spacing: .02em;
+  pointer-events: none;
+}
+.pha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255,255,255,.88);
+  color: #1d2328;
+  font: 600 22px/1 system-ui,sans-serif;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0 0 3px;
+}
+.pha.prev { left: 8px; }
+.pha.next { right: 12%; }
+.pha[hidden] { display: none; }
+@media (hover:none) {
+  .pha {
+    width: 30px;
+    height: 30px;
+    font-size: 19px;
+  }
+}
+.ill .phn2 {
+  font: 700 6px/1 var(--mono,monospace);
+  fill: #fff;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+.illrow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.illbig { flex: none; }
+.illtx {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.mode.taxi { background: var(--taxi); }
+.mode.trip { background: var(--muted); }
+.mode.ev {
+  background: var(--fg);
+  color: var(--bg);
+}
+.tl {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-size: 13.5px;
+}
+.tl li {
+  display: grid;
+  grid-template-columns: 4.2em 1fr;
+  gap: 10px;
+}
+.tl time {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+/* low zoom: color by trip */
+.lo .seg.eu:not(.air) {
+  stroke: var(--eu);
+  stroke-width: 2.6;
+  stroke-dasharray: none;
+}
+.lo .seg.af:not(.air) {
+  stroke: var(--af);
+  stroke-width: 2.6;
+  stroke-dasharray: none;
+}
+.lo .seg.air.eu { stroke: var(--eu); }
+.lo .seg.air.hi { stroke: var(--hi); }
+.lo .seg.air.ko { stroke: var(--ko); }
+.lo .seg.air.ld { stroke: var(--ld); }
+.lo .seg.air.th { stroke: var(--th); }
+.lo .seg.air.cn { stroke: var(--cn); }
+.lo .seg.air.af { stroke: var(--af); }
+.lo .seg.walk { display: none; }
+.stop .hit { fill: transparent; }
+.stop .pt {
+  stroke: var(--halo);
+  stroke-width: 2;
+}
+.stop.eu .pt { fill: var(--eu); }
+.stop.af .pt { fill: var(--af); }
+.stop.hi .pt { fill: var(--hi); }
+.stop.ko .pt { fill: var(--ko); }
+.stop.ld .pt { fill: var(--ld); }
+.stop.th .pt { fill: var(--th); }
+.stop.cn .pt { fill: var(--cn); }
+.stop { cursor: pointer; }
+.stop:focus { outline: none; }
+.stop:focus-visible .pt,
+.stop.on .pt {
+  stroke: var(--fg);
+  stroke-width: 3;
+}
+.wp { cursor: pointer; }
+.wp .pt {
+  fill: var(--card);
+  stroke: var(--muted);
+  stroke-width: 1.3;
+}
+.wp .hit { fill: transparent; }
+.wp.on .pt {
+  stroke: var(--fg);
+  stroke-width: 2.4;
+}
+.tr .pt {
+  fill: var(--card);
+  stroke: var(--air);
+  stroke-width: 1.6;
+}
+.mk { fill: var(--muted); }
+.lbl {
+  font: 500 13px var(--body);
+  fill: var(--fg);
+  paint-order: stroke;
+  stroke: var(--halo);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.lbl.stopn { font-weight: 700; }
+.lbl.sm {
+  font-size: 11.5px;
+  fill: var(--muted);
+  font-weight: 400;
+}
+.lbl.wpn {
+  font-size: 11px;
+  fill: var(--muted);
+  font-weight: 400;
+}
+.lbl.big { font: 800 16px var(--display); }
+.lbl.big.eu { fill: var(--eu); }
+.lbl.big.af { fill: var(--af); }
+.lbl.big.hi { fill: var(--hi); }
+.lbl.big.ko { fill: var(--ko); }
+.lbl.big.ld { fill: var(--ld); }
+.lbl.big.th { fill: var(--th); }
+.lbl.big.cn { fill: var(--cn); }
+.dur {
+  font: 600 11px var(--mono);
+  paint-order: stroke;
+  stroke: var(--halo);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.dur.air { fill: var(--air); }
+.dur.train { fill: var(--train); }
+.dur.bus { fill: var(--bus); }
+.dur.car { fill: var(--car); }
+.dur.van { fill: var(--car); }
+/* 旅の表示スイッチ（Sの旅／ふたりの旅／Mの旅）。最初は「ふたりの旅」だけ */
+.tgrp {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tgbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px 7px 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.tgbtn .mdots {
+  display: inline-flex;
+  gap: 2px;
+}
+.tgbtn .mdots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: block;
+}
+.tgbtn .tg {
+  position: relative;
+  width: 26px;
+  height: 15px;
+  border-radius: 999px;
+  background: var(--rule);
+  flex: 0 0 auto;
+  transition: background .15s;
+}
+.tgbtn .tg::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.25);
+  transition: transform .15s;
+}
+.tgbtn[aria-pressed="true"] {
+  background: var(--card);
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1.5px var(--c);
+}
+.tgbtn[aria-pressed="true"] .tg { background: var(--c); }
+.tgbtn[aria-pressed="true"] .tg::after { transform: translateX(11px); }
+.tgbtn[aria-pressed="false"] { color: var(--muted); }
+@media (max-width:420px) {
+  .tgbtn {
+    padding: 6px 8px 6px 10px;
+    font-size: 12px;
+    gap: 5px;
+  }
+  .tgbtn .mdots { display: none; }
+}
+
+/* ===== 旅を非表示にする（body の .off-eu などが付くと、その旅の線・点・名前・凡例を消す） ===== */
+.off-eu .seg.eu,
+.off-eu .stop.eu,
+.off-eu .lbl.big.eu,
+.off-eu .gseg.eu,
+.off-eu .gpt.eu,
+.off-eu .glbl.eu,
+.off-eu .gname.eu,
+.off-eu .t-eu,
+.off-eu .only-eu,
+.off-af .seg.af,
+.off-af .stop.af,
+.off-af .lbl.big.af,
+.off-af .gseg.af,
+.off-af .gpt.af,
+.off-af .glbl.af,
+.off-af .gname.af,
+.off-af .t-af,
+.off-af .only-af,
+.off-hi .seg.hi,
+.off-hi .stop.hi,
+.off-hi .lbl.big.hi,
+.off-hi .gseg.hi,
+.off-hi .gpt.hi,
+.off-hi .glbl.hi,
+.off-hi .gname.hi,
+.off-hi .t-hi,
+.off-hi .only-hi,
+.off-ko .seg.ko,
+.off-ko .stop.ko,
+.off-ko .lbl.big.ko,
+.off-ko .gseg.ko,
+.off-ko .gpt.ko,
+.off-ko .glbl.ko,
+.off-ko .gname.ko,
+.off-ko .t-ko,
+.off-ko .only-ko,
+.off-ld .seg.ld,
+.off-ld .stop.ld,
+.off-ld .lbl.big.ld,
+.off-ld .gseg.ld,
+.off-ld .gpt.ld,
+.off-ld .glbl.ld,
+.off-ld .gname.ld,
+.off-ld .t-ld,
+.off-ld .only-ld,
+.off-th .seg.th,
+.off-th .stop.th,
+.off-th .lbl.big.th,
+.off-th .gseg.th,
+.off-th .gpt.th,
+.off-th .glbl.th,
+.off-th .gname.th,
+.off-th .t-th,
+.off-th .only-th {
+  display: none!important;
+}
+.off-cn .seg.cn,
+.off-cn .stop.cn,
+.off-cn .lbl.big.cn,
+.off-cn .gseg.cn,
+.off-cn .gpt.cn,
+.off-cn .glbl.cn,
+.off-cn .gname.cn,
+.off-cn .t-cn,
+.off-cn .only-cn {
+  display: none!important;
+}
+.off-eu .land.v,
+.off-af .land.v2,
+.off-eu .gland.v,
+.off-af .gland.v2 {
+  fill: var(--land);
+}
+/* 全画面の解説：横長の画面では文と写真を左右に */
+@media (min-width:640px) {
+  body.isfull .panel { max-width: 900px; }
+  body.isfull .panel:has(.phwrap) {
+    grid-template-columns: minmax(0,1fr) auto;
+    column-gap: 18px;
+    align-items: start;
+    padding-right: 56px;
+  }
+  body.isfull .panel:has(.phwrap) .illrow {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  body.isfull .panel:has(.phwrap) .phwrap {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: min(440px,46vw);
+    margin: 0;
+  }
+  body.isfull .panel:has(.phwrap) .dots {
+    grid-column: 2;
+    margin-right: 0;
+  }
+}
+/* 「旅を選ぶ」と共通の再生ボタンは使わない（旅のスイッチと、その横の再生ボタンで操作する） */
+.tripsel,
+#playbtn,
+#playmenu {
+  display: none!important;
+}
+
+/* 旅のタブの横の再生ボタン（.tpair/.tplay） */
+.tpair {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.tplay {
+  background: var(--fg)!important;
+  color: var(--bg)!important;
+  box-shadow: none!important;
+  padding: 7px 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+.tplay:hover { opacity: .88; }
+@media (max-width:420px) {
+  .tplay {
+    padding: 6px 9px;
+    font-size: 12px;
+  }
+}
+/* 全画面・縦長の画面：解説は右端まで広げ、上はボタンの列の下まで */
+@media (orientation:portrait) {
+  body.isfull .panel {
+    right: max(10px,env(safe-area-inset-right,0px));
+    max-height: calc(100vh - 178px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+    max-height: calc(100dvh - 178px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  }
+}
+/* 旅のタブ：行き先を大きく、誰の旅かを小さく。選んだタブは旅の色 */
+.ttab {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 7px;
+  align-items: center;
+  padding: 6px 14px 6px 11px;
+  text-align: left;
+  line-height: 1.3;
+}
+.ttab .mdots {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  gap: 2px;
+}
+.ttab .mdots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: block;
+}
+.ttab b {
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ttab small {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.ttab[aria-pressed="true"] {
+  background: var(--c);
+  color: #fff;
+  box-shadow: none;
+}
+.ttab[aria-pressed="true"] small { color: rgba(255,255,255,.85); }
+.ttab[aria-pressed="true"] .mdots i { box-shadow: 0 0 0 1.5px #fff; }
+@media (max-width:560px) {
+  .tgrp {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .ttab {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+  .ttab .mdots { display: none; }
+  .ttab b {
+    font-size: 12px;
+    white-space: normal;
+    line-height: 1.25;
+    word-break: keep-all;
+  }
+  .ttab small {
+    font-size: 10.5px;
+    white-space: normal;
+  }
+}
+/* noteの記事へのリンクと、この場所のリンクをコピー */
+.notelinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.notelink {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 7px 14px;
+  border-radius: 12px;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #41c9b4;
+  color: #fff!important;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  line-height: 1.35;
+}
+.notelink:hover { opacity: .88; }
+.notelink small {
+  font-weight: 500;
+  opacity: .92;
+  font-size: 12px;
+}
+.notelinks { align-items: center; }
+.copylink {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.copylink:hover {
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--fg);
+}
+.copylink:focus-visible,
+.notelink:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+/* level of detail */
+.l1,
+.l2,
+.l3,
+.l4 {
+  display: none;
+}
+.z1 .l1,
+.z2 .l2,
+.z3 .l3,
+.z4 .l4 {
+  display: inline;
+}
+.z2 .l1x,
+.z3 .l1x,
+.z4 .l1x {
+  display: none;
+}
+@media (prefers-reduced-motion:reduce) {
+  * { transition: none!important; }
+}
+/* 表示の切り替えは1本のタブバーにして、横にスクロールできるようにする（2026-10-30） */
+.vsw {
+  flex-basis: 100%;
+  flex-wrap: nowrap;
+  gap: 2px;
+  padding: 3px;
+  background: var(--card);
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.vsw::-webkit-scrollbar { display: none; }
+.vsw .chip {
+  flex: 0 0 auto;
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: none;
+  background: transparent;
+}
+.vsw .chip:hover {
+  background: var(--bg);
+  box-shadow: none;
+}
+.vsw .chip[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+@media (max-width:560px) {
+  header .sub,
+  header .legend {
+    display: none;
+  }
+  .tgrp {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1px;
+  }
+  .tgrp::-webkit-scrollbar { display: none; }
+  .ttab {
+    flex: 0 0 auto;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+  .ttab b {
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+  .ttab small {
+    font-size: 10.5px;
+    white-space: nowrap;
+  }
+  .vsw .chip { padding: 6px 11px; }
+}
