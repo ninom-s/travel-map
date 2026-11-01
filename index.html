@@ -128,6 +128,17 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .tzn{font-size:11.5px;color:var(--muted)}
 .rlbox{display:grid;gap:8px;margin:0 0 8px;justify-items:start}
 .zbtn#rlbtn{font-size:17px}.zbtn[disabled]{cursor:default;opacity:.7}.zbtn.spin{animation:rlsp .7s linear infinite}@keyframes rlsp{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.zbtn.spin{animation:none}}
+.zbtn#srbtn{font-size:16px}
+.srbox{position:absolute;z-index:8;left:10px;top:10px;right:54px;max-width:360px;box-sizing:border-box;padding:8px;border-radius:8px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 4px 16px rgba(0,0,0,.14);display:grid;grid-template-columns:minmax(0,1fr);gap:6px}.srbox[hidden]{display:none}
+.stage.full .srbox{left:calc(10px + env(safe-area-inset-left,0px));top:calc(10px + env(safe-area-inset-top,0px));right:calc(54px + env(safe-area-inset-right,0px))}
+.srin{display:flex;gap:6px;align-items:center}.srin input{all:unset;box-sizing:border-box;flex:1 1 0;width:100%;min-width:0;height:34px;padding:0 10px;border-radius:6px;box-shadow:0 0 0 1px var(--rule);background:var(--bg);font:500 16px var(--body,inherit);color:var(--fg)}.srin input:focus-visible{box-shadow:0 0 0 2px var(--fg)}
+.srx{all:unset;box-sizing:border-box;width:34px;height:34px;display:grid;place-items:center;border-radius:6px;cursor:pointer;font-size:14px;box-shadow:0 0 0 1px var(--rule)}.srx:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.srin input::-webkit-search-cancel-button{display:none}
+.srl{list-style:none;margin:0;padding:0;max-height:min(46vh,320px);overflow:auto;display:grid;gap:2px}.srl:empty{display:none}
+.srl li{margin:0}.srl .srh,.srl .srn{padding:6px 8px;font-size:12px;color:var(--muted)}
+.srl button{all:unset;box-sizing:border-box;width:100%;display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:6px;cursor:pointer;min-height:38px}.srl button:hover,.srl button:focus-visible{background:var(--rule)}.srl button:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
+.srl img{width:24px;height:18px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px var(--rule);flex:none}.srl .pin{width:24px;text-align:center;flex:none}
+.srl b{font-weight:700;font-size:14px}.srl small{color:var(--muted);font-size:12px;margin-left:auto;text-align:right}
 .rlrow{display:flex;gap:8px;align-items:center}
 .rlbtn{all:unset;box-sizing:border-box;cursor:pointer;font-size:14px;font-weight:700;padding:8px 16px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--rule),0 2px 8px rgba(0,0,0,.12)}
 .rlbtn:hover,.rlbtn:focus-visible{box-shadow:0 0 0 1.5px var(--fg),0 2px 8px rgba(0,0,0,.14)}.rlbtn[disabled]{opacity:.65;cursor:default}
@@ -644,7 +655,8 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     </div>
   </div>
   <div class="stage" data-page="map" id="stage">
-    <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button><button class="zbtn" type="button" id="zhelp" aria-label="操作説明" title="操作説明" aria-expanded="false" aria-controls="help">?</button><button class="zbtn" type="button" id="rlbtn" aria-label="次の旅ルーレット" title="次の旅ルーレット">🎲</button></div>
+    <div class="zbtns"><button class="zbtn compass" type="button" id="zcomp" aria-label="北を上に戻す" title="北を上に" hidden><svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0,-8 L4,1 L0,-1 L-4,1Z" fill="var(--eu)"/><path d="M0,8 L4,-1 L0,1 L-4,-1Z" fill="var(--muted)"/></svg></button><button class="zbtn" type="button" id="zfull" aria-label="全画面で見る" title="全画面">⤢</button><button class="zbtn" type="button" id="zin" aria-label="拡大">+</button><button class="zbtn" type="button" id="zout" aria-label="縮小">−</button><button class="zbtn" type="button" id="zhelp" aria-label="操作説明" title="操作説明" aria-expanded="false" aria-controls="help">?</button><button class="zbtn" type="button" id="rlbtn" aria-label="次の旅ルーレット" title="次の旅ルーレット">🎲</button><button class="zbtn" type="button" id="srbtn" aria-label="国・都市を検索" title="国・都市を検索" aria-expanded="false" aria-controls="srbox">🔍</button></div>
+    <div class="srbox" id="srbox" role="search" hidden><div class="srin"><input id="srq" type="search" placeholder="国名・都市名（例：リスボン、ペルー）" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="国名・都市名を検索"><button type="button" class="srx" id="srx" aria-label="検索を閉じる">✕</button></div><ul class="srl" id="srl" aria-label="検索結果"></ul></div>
     <div class="help" id="help" role="dialog" aria-label="操作説明" hidden>
       <button type="button" class="hx" id="helpx" aria-label="操作説明を閉じる">✕</button>
       <h2>操作のしかた</h2>
@@ -656,6 +668,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
         <li><b>写真</b>右上に赤い点があるイラストは写真つき。数字は写真の枚数。横にスワイプか矢印で切り替え</li>
         <li><b>旅のタブ</b>地図の上の「ヨーロッパ一周」「エジプト・ケニア」「ハワイ・韓国・ロンドン」で、見る旅を選ぶ。押すたびに足す・外すができて、2つ以上選ぶと地球儀で全部が入る（最低1つは残る）</li>
         <li><b>次の旅ルーレット</b>右のボタン列の🎲で地球儀が回って、世界のどこかの国のおすすめの街が出る（行ったことのある国も含む）。体験ではなく、候補</li>
+        <li><b>検索</b>右のボタン列の🔍で、国名・都市名から探せる（ひらがなでもOK）。旅した場所はその場所へ、行ったことのない国・都市は地球儀が回って寄る（都市はルーレットと同じ難易度カードつき）</li>
         <li><b>イラスト一覧</b>地図の下に全部並んでいる。押すと解説と写真が出る。「地図で見る」でその場所に飛ぶ</li>
       </ul>
     </div>
@@ -2316,7 +2329,7 @@ window.__llPt=ll=>{if(GL.morph)return null;
   if(GL.on){if(d3.geoDistance(ll,[-GL.rot[0],-GL.rot[1]])>Math.PI/2-0.02)return null;const q=window.__globePt(ll);return q&&isFinite(q[0])?q:null;}
   const p=proj(ll);if(!p||!isFinite(p[0]))return null;const q=cur.apply(p);return isFinite(q[0])?q:null;};
 window.__globePt=ll=>{gpj.translate([W/2,H/2]).scale(GL.R).rotate(GL.rot);return gpj(ll);};
-window.__spinStop=()=>gsv.interrupt("grot");
+window.__spinStop=()=>gsv.interrupt("grot");window.__exitGlobe=(c,k)=>exitGlobe(c,k);
 window.__globeR=()=>GL.R;
 window.__focusKey=(key,k)=>{const g=P[key];if(!g)return;
   if(GL.on){exitGlobe(g,k);return;}
@@ -2956,10 +2969,58 @@ function rideGlobe(){return new Promise(res=>{
       if(my!==tok)return;
       if(!box.classList.contains("rlin")){const r=box.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-8,behavior:"smooth"});}}
     finally{busy=false;btn.disabled=false;btn.classList.remove("spin");}};
+  // 検索から呼ぶ：国・都市の場所へ地球儀を回して寄せる。都市なら、ルーレットと同じカード（評価つき）も出す
+  window.__rlLoad=load;
+  window.__rlGo=async(iso,tname)=>{if(busy)window.__spinStop();busy=true;const my=++tok;hide();clearCv();pinLL=null;pin.hidden=true;
+    try{const D=await load(),c=D.find(z=>z[0]===iso);if(!c)return;const t=tname?c[3].find(x=>x[0]===tname):null;
+      const ll=t?[t[1],t[2]]:d3.geoCentroid({type:"MultiPoint",coordinates:c[3].map(x=>[x[1],x[2]])}),sh=box.classList.contains("rlin")?(stage.clientHeight<620?60:14):0;
+      await window.__spinGlobe(ll,{dur:1500,turns:.01,shift:sh});if(my!==tok)return;
+      if(t){const d=[c[0],c[2],t[0],t[1],t[2],t[3],t[4],t[5]];pinLL=ll;window.__rlPin();
+        el("rlkind").textContent=d[5]==="定"?"定番":"マニアック";el("rlcty").textContent=d[1];el("rlcity").textContent=d[2];
+        const tg=el("rltag"),tx=d[0]==="JPN"?"日本":d[0]==="THA"?"予定の国":EX.has(d[0])?"行ったことのある国":"";tg.textContent=tx;tg.hidden=!tx;
+        el("rlwarn").hidden=!WARN.has(d[0]);const fl=el("rlflag");fl.src="flags/"+c[1]+".svg";fl.alt=d[1]+"の国旗";
+        el("rlr").innerHTML=rankHTML(D,c,t);el("rlts").innerHTML=d[6].map((x,k)=>{const [n,m]=spotOf(x,k);return `<li>${mot(m)}<span>${esc(n)}</span></li>`;}).join("");el("rlun").textContent=d[7];
+        card.style.maxHeight="";card.hidden=false;}
+      await window.__zoomGlobe(ll,{k:t?3.2:1.8,shift:sh,onFrame:()=>window.__rlPin()});}
+    finally{busy=false;}};
   btn.addEventListener("click",spin);el("rlx").addEventListener("click",()=>{hide();clearCv();});
-  stage.addEventListener("pointerdown",e=>{if(e.target.closest(".rlbox,.rlpin"))return;if(busy){tok++;window.__spinStop();silence();pinLL=null;pin.hidden=true;}});
+  stage.addEventListener("pointerdown",e=>{if(e.target.closest(".rlbox,.rlpin,.srbox"))return;if(busy){tok++;window.__spinStop();silence();pinLL=null;pin.hidden=true;}});
   pin.addEventListener("click",()=>{if(pinLL&&el("rlcity").textContent)card.hidden=false;});pin.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pin.click();}});
   window.addEventListener("resize",()=>{window.__rlPin();if(parts.length)sizeCv();});})();
+// ---- 検索（国名・都市名。旅した場所と、世界197か国865都市から探す） ----
+(function(){const btn=document.getElementById("srbtn"),box=document.getElementById("srbox"),q=document.getElementById("srq"),ul=document.getElementById("srl"),xb=document.getElementById("srx");if(!btn||!box)return;
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const norm=t=>String(t).normalize("NFKC").toLowerCase().replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).replace(/[・･\s\-_.,、。()（）]/g,"");
+  const TG={eu:"sg",af:"fu",hi:"mina",ko:"mina",ld:"mina",th:"th",cn:"cn"};
+  const VIS=[],seen=new Set();TRIPS.forEach(t=>(t.stops||[]).forEach(s=>{if(!s.name||!P[s.k]||seen.has(s.k))return;seen.add(s.k);VIS.push({type:"visit",k:s.k,trip:t.key,name:s.name,n:norm(s.name),sub:s.d||""});}));
+  let RL=null,ldErr=false;const ENT=()=>{const a=VIS.slice();if(RL){const vn=new Set(VIS.map(v=>v.n));RL.forEach(c=>{a.push({type:"country",iso:c[0],flag:c[1],name:c[2],n:norm(c[2]),sub:c[3].length+"都市"});c[3].forEach(x=>{if(vn.has(norm(x[0])))return;a.push({type:"city",iso:c[0],flag:c[1],name:x[0],n:norm(x[0]),sub:c[2]});});});}return a;};
+  let ALL=null;const ord={visit:0,country:1,city:2};
+  const load=()=>{if(RL||!window.__rlLoad)return;window.__rlLoad().then(D=>{RL=D;ALL=null;if(!box.hidden)render();},()=>{ldErr=true;if(!box.hidden)render();});};
+  const li=e=>{const ic=e.type==="visit"?'<span class="pin" aria-hidden="true">📍</span>':`<img src="flags/${e.flag}.svg" alt="" width="24" height="18" loading="lazy">`;
+    return `<li><button type="button" data-t="${e.type}" data-i="${esc(e.type==="visit"?e.k:e.type==="country"?e.iso:e.iso+"|"+e.name)}">${ic}<b>${esc(e.name)}</b><small>${e.type==="visit"?"旅した場所"+(e.sub?"・"+esc(e.sub):""):e.type==="country"?"国・"+esc(e.sub):esc(e.sub)}</small></button></li>`;};
+  let cur=null;   // 国を選んだあと、その国の都市を出しているときの国
+  const render=()=>{const v=norm(q.value);ALL=ALL||ENT();
+    if(cur){const c=RL&&RL.find(z=>z[0]===cur);if(c&&v===norm(c[2])){ul.innerHTML=`<li class="srh">${esc(c[2])}の都市・見どころ（${c[3].length}か所）</li>`+c[3].map(x=>li({type:"city",iso:c[0],flag:c[1],name:x[0],sub:x[3]==="定"?"定番":"マニアック"})).join("");return;}cur=null;}
+    if(!v){ul.innerHTML=`<li class="srn">国名か都市名を入れてね（ひらがなでもOK）。${RL?"世界197か国・865都市と、旅した場所から探せる。":ldErr?"世界の国・都市のデータを読み込めなかったので、いまは旅した場所だけ。":"世界の国・都市のデータを読み込み中…"}</li>`;return;}
+    const hit=[];ALL.forEach(e=>{const i=e.n.indexOf(v);if(i<0)return;hit.push([i===0?0:1,ord[e.type],e.n.length,e]);});
+    hit.sort((a,b)=>a[0]-b[0]||a[1]-b[1]||a[2]-b[2]);
+    ul.innerHTML=hit.length?hit.slice(0,40).map(h=>li(h[3])).join("")+(hit.length>40?`<li class="srn">ほか${hit.length-40}件。もう少し絞ってね</li>`:""):`<li class="srn">「${esc(q.value)}」は見つからなかった。${RL?"都市は主要なところだけ入っているので、その国の名前で探してみて。":""}</li>`;};
+  const open=()=>{box.hidden=false;btn.setAttribute("aria-expanded","true");const c=document.getElementById("rlcard");if(c)c.hidden=true;load();render();setTimeout(()=>q.focus(),0);};
+  const close=()=>{box.hidden=true;btn.setAttribute("aria-expanded","false");cur=null;q.blur();};
+  btn.addEventListener("click",()=>box.hidden?open():close());xb.addEventListener("click",()=>{close();btn.focus();});
+  q.addEventListener("input",()=>{cur=null;render();});
+  box.addEventListener("keydown",e=>{if(e.key==="Escape"){close();btn.focus();return;}
+    const bs=[...ul.querySelectorAll("button")];if(e.key==="Enter"&&e.target===q&&bs[0]){e.preventDefault();bs[0].click();return;}
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){const i=bs.indexOf(document.activeElement);const n=e.key==="ArrowDown"?i+1:i-1;if(e.target===q&&e.key==="ArrowDown"&&bs[0]){e.preventDefault();bs[0].focus();return;}if(i>=0){e.preventDefault();if(n<0)q.focus();else if(bs[n])bs[n].focus();}}});
+  ul.addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;const t=b.dataset.t,id=b.dataset.i;
+    if(t==="country"){cur=id;const c=RL.find(z=>z[0]===id);q.value=c[2];render();window.__rlGo(id);return;}
+    if(t==="city"){const [iso,nm]=id.split("|");close();await window.__rlGo(iso,nm);return;}
+    const v=VIS.find(z=>z.k===id);close();
+    if(document.body.classList.contains("off-"+v.trip)&&window.__selTab&&TG[v.trip]){window.__selTab(TG[v.trip]);await new Promise(r=>setTimeout(r,1200));}
+    const K=Math.min(KMAX(),26);
+    if(window.__globeOn)await window.__exitGlobe(P[v.k],K);else window.__zoomTo(v.k,K);});
+  if(window.requestIdleCallback)window.addEventListener("load",()=>requestIdleCallback(load,{timeout:9000}));
+})();
 // ---- 時差（日本時間を動かすと、旅先の時刻が出る。あいさつは、地図で国に寄ったときの国旗から開く詳細に入っている） ----
 (()=>{const el=id=>document.getElementById(id);
   // [表示, カタカナ]。slot：hello=いつでも／am=朝／day=昼／pm=夕方〜夜。pmFrom＝夜のあいさつに変わる時刻
