@@ -230,7 +230,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .pph:hover{box-shadow:0 0 0 2px var(--fg)}
 .pph:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 @media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);gap:4px}.pph span{font-size:9.5px;padding:12px 5px 3px}}
-.pinbook{display:grid;gap:10px}
+.pinbook{display:grid;gap:18px}.pinc h3{margin:0 0 8px;font-size:15px;font-weight:800;display:flex;gap:8px;align-items:baseline}.pinc h3 small{font-size:12px;font-weight:600;color:var(--muted)}
 .pingrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 .pin{position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:4px;padding:8px;text-align:center;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--rule)}
 .pin.empty{box-shadow:none;border:1.5px dashed var(--rule)}
@@ -240,8 +240,8 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .pin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .pin.empty{aspect-ratio:auto;min-height:120px}
 .pin.has{aspect-ratio:auto;display:grid;grid-template-columns:1fr;justify-items:stretch;align-content:start;gap:0;text-align:left;padding:0;background:var(--card);box-shadow:inset 0 0 0 1px var(--rule)}
-.pin.has img{position:static;display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:#000}
-.pin.has .pn{position:static;display:block;padding:7px 9px 9px;color:var(--fg);background:none;text-align:left;font-size:12.5px}
+.pin.has img{position:static;display:block;width:86%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:50%;margin:10px auto 0;background:none;box-shadow:0 0 0 1px var(--rule)}
+.pin.has .pn{position:static;display:block;padding:7px 9px 10px;color:var(--fg);background:none;text-align:center;font-size:12.5px}
 .pin .pn small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);margin-top:1px}
 @media (max-width:600px){.pingrid{grid-template-columns:repeat(2,1fr);gap:8px}.pin .pn{font-size:12px}}
 .gal{display:grid;gap:8px;margin-top:8px}
@@ -2771,13 +2771,16 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"af",place:"ケニア",what:"国旗",photo:"photos/pin_ke_flag.webp"},
     {trip:"af",place:"ケニア",what:"ライオン",photo:"photos/pin_ke_lion.webp"},
     {trip:"af",place:"ケニア",what:"座るチーター",photo:"photos/pin_ke_cheetah.webp"}];
+  const PCTRY={"ロヴァニエミ":"フィンランド","ロンドン":"イギリス","オックスフォード":"イギリス","イギリス":"イギリス","バルセロナ":"スペイン","マルセイユ":"フランス","マントン":"フランス","エズ":"フランス","ニース":"フランス","カンヌ":"フランス","モナコ":"モナコ","ミラノ":"イタリア","ベネチア":"イタリア","ボルツァーノ":"イタリア","オルティゼーイ":"イタリア","南チロル":"イタリア","サンモリッツ":"スイス","スイス":"スイス","フュッセン":"ドイツ","ローテンブルク":"ドイツ","ドイツ":"ドイツ","フランクフルト":"ドイツ","エジプト":"エジプト","ケニア":"ケニア"};
+  const PORDER=["フィンランド","イギリス","スペイン","フランス","モナコ","イタリア","スイス","ドイツ","エジプト","ケニア"];
+  const pinCard=p=>p.photo?`<div class="pin has"><img loading="lazy" decoding="async" width="640" height="640" src="${esc(p.photo)}" alt="${esc(p.place)}のピンバッチ（${esc(p.what||"")}）"><span class="pn">${esc(p.place)}${p.what?`<small>${esc(p.what)}</small>`:""}</span></div>`
+    :`<div class="pin empty" aria-label="${esc(p.place)}のピンバッチ（写真待ち）"><span class="pc" aria-hidden="true">＋</span><span class="pn">${esc(p.place)}</span><span class="pw">写真待ち</span></div>`;
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
-    const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
-    el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
-    box.innerHTML=ps.length?`<div class="pingrid">`+
-      ps.map(p=>p.photo?`<div class="pin has"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(p.photo)}" alt="${esc(p.place)}のピンバッチ（${esc(p.what||"")}）"><span class="pn">${esc(p.place)}${p.what?`<small>${esc(p.what)}</small>`:""}</span></div>`
-        :`<div class="pin empty" aria-label="${esc(p.place)}のピンバッチ（写真待ち）"><span class="pc" aria-hidden="true">＋</span><span class="pn">${esc(p.place)}</span><span class="pw">写真待ち</span></div>`).join("")+`</div>`
-      :`<p class="empty">この旅のピンバッチは、まだ登録していない。</p>`;};
+    const ps=PINS.filter(p=>tripOn(p.trip)),by={};
+    ps.forEach(p=>{const c=PCTRY[p.place]||"その他";(by[c]=by[c]||[]).push(p);});
+    const cs=PORDER.filter(c=>by[c]).concat(Object.keys(by).filter(c=>!PORDER.includes(c)));
+    el("pinsub").textContent=ps.length?`${ps.length}個・${cs.length}か国。旅先で買ったピンバッチ`:"旅先で買ったピンバッチ";
+    box.innerHTML=ps.length?cs.map(c=>`<section class="pinc"><h3>${esc(c)}<small>${by[c].length}個</small></h3><div class="pingrid">${by[c].map(pinCard).join("")}</div></section>`).join(""):`<p class="empty">この旅のピンバッチは、まだ登録していない。</p>`;};
   (window.__onTrips=window.__onTrips||[]).push(renderPins);renderPins();
   el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
