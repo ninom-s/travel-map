@@ -2741,8 +2741,13 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"ベネチア",what:"2つの仮面",photo:"photos/pin_venezia_masks.webp"},
     {trip:"eu",place:"ボルツァーノ",what:"山とエーデルワイス",photo:"photos/pin_bolzano_mountain.webp"},
     {trip:"eu",place:"オルティゼーイ",what:"教会と赤い岩山",photo:"photos/pin_ortisei.webp"},
+    {trip:"eu",place:"南チロル",what:"赤い鷲の紋章",photo:"photos/pin_suedtirol.webp"},
     {trip:"eu",place:"サンモリッツ",what:"太陽と筆記体のロゴ",photo:"photos/pin_stmoritz.webp"},
-    {trip:"eu",place:"フュッセン",what:"3本の脚の紋章",photo:"photos/pin_fussen.webp"}];
+    {trip:"eu",place:"スイス",what:"国の形と十字の盾",photo:"photos/pin_swiss.webp"},
+    {trip:"eu",place:"フュッセン",what:"3本の脚の紋章",photo:"photos/pin_fussen.webp"},
+    {trip:"eu",place:"フュッセン",what:"ルートヴィヒ2世",photo:"photos/pin_ludwig.webp"},
+    {trip:"eu",place:"ローテンブルク",what:"市門と木組みの家",photo:"photos/pin_rothenburg.webp"},
+    {trip:"eu",place:"ドイツ",what:"鷲の紋章と国旗の盾",photo:"photos/pin_germany.webp"}];
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
     const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
     el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
