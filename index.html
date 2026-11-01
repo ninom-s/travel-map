@@ -109,7 +109,7 @@ body.isfull .panel.empty{display:none}
 .vsw{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap}
 .vsw .chip{padding:7px 14px;font-size:13.5px;font-weight:700}
 .vsw .chip[aria-selected="true"]{background:var(--fg);color:var(--bg);box-shadow:none}
-body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"],body:not([data-view="photos"]) [data-page="photos"],body:not([data-view="fail"]) [data-page="fail"],body:not([data-view="tz"]) [data-page="tz"],body:not([data-view="rec"]) [data-page="rec"]{display:none!important}
+body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [data-page="stats"],body:not([data-view="gal"]) [data-page="gal"],body:not([data-view="photos"]) [data-page="photos"],body:not([data-view="fail"]) [data-page="fail"],body:not([data-view="tz"]) [data-page="tz"],body:not([data-view="rec"]) [data-page="rec"],body:not([data-view="pins"]) [data-page="pins"]{display:none!important}
 .tzctl{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:10px;align-items:center}
 .tzjst b{font:800 34px/1.1 var(--display);font-variant-numeric:tabular-nums}
 .tzrw{display:grid;gap:8px;min-width:0}.tzrw input{width:100%;accent-color:var(--fg)}
@@ -230,11 +230,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .pph:hover{box-shadow:0 0 0 2px var(--fg)}
 .pph:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 @media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);gap:4px}.pph span{font-size:9.5px;padding:12px 5px 3px}}
-.pinbook{margin:0 0 18px;padding:12px 14px 14px;border-radius:8px;background:var(--card);box-shadow:inset 0 0 0 1px var(--rule)}
-.pinbook[hidden]{display:none}
-.pinbook h3{margin:0;font:800 16px var(--display);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
-.pinbook h3 small{font:500 11.5px var(--mono);color:var(--muted)}
-.pinbook .pinsub{margin:2px 0 10px;font-size:12.5px;color:var(--muted)}
+.pinbook{display:grid;gap:10px}
 .pingrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 .pin{position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:4px;padding:8px;text-align:center;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--rule)}
 .pin.empty{box-shadow:none;border:1.5px dashed var(--rule)}
@@ -605,6 +601,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
       <button class="chip" type="button" role="tab" id="vt-gal" data-v="gal" aria-selected="false" aria-controls="gal" tabindex="-1">イラスト一覧</button>
       <button class="chip" type="button" role="tab" id="vt-photos" data-v="photos" aria-selected="false" aria-controls="photos" tabindex="-1">写真ウォール</button>
       <button class="chip" type="button" role="tab" id="vt-fail" data-v="fail" aria-selected="false" aria-controls="fails" tabindex="-1">事件簿</button>
+      <button class="chip" type="button" role="tab" id="vt-pins" data-v="pins" aria-selected="false" aria-controls="pins" tabindex="-1">ピンバッチ図鑑</button>
       <button class="chip" type="button" role="tab" id="vt-tz" data-v="tz" aria-selected="false" aria-controls="tzs" tabindex="-1">時差</button>
       <button class="chip" type="button" role="tab" id="vt-rec" data-v="rec" aria-selected="false" aria-controls="recs" tabindex="-1">記録</button>
     </div>
@@ -708,7 +705,6 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
   </section>
   <section class="vp" data-page="photos" id="photos" aria-labelledby="photoh">
     <div class="stathd"><h2 id="photoh">写真ウォール</h2><p id="photosub">いま地図に出している旅の写真</p></div>
-    <div class="pinbook" id="pinbook" aria-labelledby="pinh"></div>
     <div class="pwall" id="photobody"></div>
   </section>
   <section class="vp" data-page="fail" id="fails" aria-labelledby="failh">
@@ -716,6 +712,10 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
     <div class="stiles" id="failtiles"></div>
     <div id="failbody"></div>
     <p class="snote" id="failnote"></p>
+  </section>
+  <section class="vp" data-page="pins" id="pins" aria-labelledby="pinh">
+    <div class="stathd"><h2 id="pinh">ピンバッチ図鑑</h2><p id="pinsub">旅先で買ったピンバッチ</p></div>
+    <div class="pinbook" id="pinbook"></div>
   </section>
   <section class="gal" data-page="gal" id="gal" aria-labelledby="galh">
     <div class="galhd"><div><h2 id="galh">イラスト一覧</h2><p id="galsub">押すと、思い出の解説と写真が出る</p></div>
@@ -2719,13 +2719,12 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"ベネチア",photo:null},
     {trip:"eu",place:"フュッセン",photo:null}];
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
-    const ps=PINS.filter(p=>tripOn(p.trip));
-    if(!ps.length){box.hidden=true;box.innerHTML="";return;}
-    box.hidden=false;
-    const got=ps.filter(p=>p.photo).length;
-    box.innerHTML=`<h3 id="pinh">ピンバッチ図鑑<small>${got} / ${ps.length}　写真が入った数</small></h3><p class="pinsub">旅先で買ったピンバッチ。写真が届いたら、ここに並べていく</p><div class="pingrid">`+
+    const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
+    el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
+    box.innerHTML=ps.length?`<div class="pingrid">`+
       ps.map(p=>p.photo?`<div class="pin has"><img loading="lazy" decoding="async" src="${esc(p.photo)}" alt="${esc(p.place)}のピンバッチ"><span class="pn">${esc(p.place)}</span></div>`
-        :`<div class="pin empty" aria-label="${esc(p.place)}のピンバッチ（写真待ち）"><span class="pc" aria-hidden="true">＋</span><span class="pn">${esc(p.place)}</span><span class="pw">写真待ち</span></div>`).join("")+`</div>`;};
+        :`<div class="pin empty" aria-label="${esc(p.place)}のピンバッチ（写真待ち）"><span class="pc" aria-hidden="true">＋</span><span class="pn">${esc(p.place)}</span><span class="pw">写真待ち</span></div>`).join("")+`</div>`
+      :`<p class="empty">この旅のピンバッチは、まだ登録していない。</p>`;};
   (window.__onTrips=window.__onTrips||[]).push(renderPins);renderPins();
   el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
