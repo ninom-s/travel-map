@@ -2731,6 +2731,7 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"イギリス",what:"ビブリー（コッツウォルズ）",photo:"photos/pin_bibury.webp"},
     {trip:"eu",place:"イギリス",what:"スコットランド（地図とバグパイプ奏者）",photo:"photos/pin_scotland.webp"},
     {trip:"eu",place:"イギリス",what:"ネッシー（スコットランド）",photo:"photos/pin_nessie.webp"},
+    {trip:"eu",place:"イギリス",what:"タータン柄のスコティッシュ・テリア",photo:"photos/pin_scotty.webp"},
     {trip:"eu",place:"バルセロナ",what:"サグラダ・ファミリア",photo:"photos/pin_sagrada.webp"},
     {trip:"eu",place:"バルセロナ",what:"ステンドグラス風の丸いピン",photo:"photos/pin_barcelona_glass.webp"},
     {trip:"eu",place:"バルセロナ",what:"踊る男女",photo:"photos/pin_barcelona_dancers.webp"},
@@ -2758,6 +2759,7 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"スイス",what:"国の形と十字の盾",photo:"photos/pin_swiss.webp"},
     {trip:"eu",place:"フュッセン",what:"3本の脚の紋章",photo:"photos/pin_fussen.webp"},
     {trip:"eu",place:"フュッセン",what:"ルートヴィヒ2世",photo:"photos/pin_ludwig.webp"},
+    {trip:"eu",place:"フュッセン",what:"ノイシュヴァンシュタイン城",photo:"photos/pin_neuschwanstein.webp"},
     {trip:"eu",place:"ローテンブルク",what:"市門と木組みの家",photo:"photos/pin_rothenburg.webp"},
     {trip:"eu",place:"ドイツ",what:"バイエルンの紋章",photo:"photos/pin_bayern.webp"},
     {trip:"eu",place:"ドイツ",what:"鷲の紋章と国旗の盾",photo:"photos/pin_germany.webp"},
@@ -2765,7 +2767,10 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"af",place:"エジプト",what:"有翼の女神の壁画",photo:"photos/pin_eg_mural.webp"},
     {trip:"af",place:"エジプト",what:"スカラベ",photo:"photos/pin_eg_scarab.webp"},
     {trip:"af",place:"エジプト",what:"ウジャトの目",photo:"photos/pin_eg_horus.webp"},
-    {trip:"af",place:"エジプト",what:"ファラオのマスク",photo:"photos/pin_eg_tut.webp"}];
+    {trip:"af",place:"エジプト",what:"ファラオのマスク",photo:"photos/pin_eg_tut.webp"},
+    {trip:"af",place:"ケニア",what:"国旗",photo:"photos/pin_ke_flag.webp"},
+    {trip:"af",place:"ケニア",what:"ライオン",photo:"photos/pin_ke_lion.webp"},
+    {trip:"af",place:"ケニア",what:"座るチーター",photo:"photos/pin_ke_cheetah.webp"}];
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
     const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
     el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
