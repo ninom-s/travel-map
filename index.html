@@ -2728,6 +2728,7 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"モナコ",what:"サーカス・フェスティバルのピエロ",photo:"photos/pin_monaco_circus.webp"},
     {trip:"eu",place:"モナコ",what:"サーカス・フェスティバル2025（キリンと馬）",photo:"photos/pin_monaco_circus2025.webp"},
     {trip:"eu",place:"マントン",what:"レモンと塔",photo:"photos/pin_menton_lemon.webp"},
+    {trip:"eu",place:"エズ",what:"交差した旗（海辺の村とフランス国旗）",photo:"photos/pin_eze.webp"},
     {trip:"eu",place:"ニース",what:"フランス地図とコート・ダジュール",photo:"photos/pin_nice_france.webp"},
     {trip:"eu",place:"ニース",what:"ヤシの木と海辺のホテル",photo:"photos/pin_nice_seaside.webp"},
     {trip:"eu",place:"ニース",what:"赤い鷲の紋章",photo:"photos/pin_nice_eagle.webp"},
@@ -2739,8 +2740,9 @@ function rideGlobe(){return new Promise(res=>{
     {trip:"eu",place:"ベネチア",what:"ゴンドラ",photo:"photos/pin_venezia_gondola.webp"},
     {trip:"eu",place:"ベネチア",what:"2つの仮面",photo:"photos/pin_venezia_masks.webp"},
     {trip:"eu",place:"ボルツァーノ",what:"山とエーデルワイス",photo:"photos/pin_bolzano_mountain.webp"},
-    {trip:"eu",place:"サンモリッツ",photo:null},
-    {trip:"eu",place:"フュッセン",photo:null}];
+    {trip:"eu",place:"オルティゼーイ",what:"教会と赤い岩山",photo:"photos/pin_ortisei.webp"},
+    {trip:"eu",place:"サンモリッツ",what:"太陽と筆記体のロゴ",photo:"photos/pin_stmoritz.webp"},
+    {trip:"eu",place:"フュッセン",what:"3本の脚の紋章",photo:"photos/pin_fussen.webp"}];
   const renderPins=()=>{const box=el("pinbook");if(!box)return;
     const ps=PINS.filter(p=>tripOn(p.trip)),got=ps.filter(p=>p.photo).length;
     el("pinsub").textContent=ps.length?`${got} / ${ps.length}　写真が入った数。写真が届いたら、ここに並べていく`:"旅先で買ったピンバッチ";
