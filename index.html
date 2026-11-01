@@ -230,6 +230,20 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .pph:hover{box-shadow:0 0 0 2px var(--fg)}
 .pph:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 @media (max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);gap:4px}.pph span{font-size:9.5px;padding:12px 5px 3px}}
+.pinbook{margin:0 0 18px;padding:12px 14px 14px;border-radius:8px;background:var(--card);box-shadow:inset 0 0 0 1px var(--rule)}
+.pinbook[hidden]{display:none}
+.pinbook h3{margin:0;font:800 16px var(--display);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.pinbook h3 small{font:500 11.5px var(--mono);color:var(--muted)}
+.pinbook .pinsub{margin:2px 0 10px;font-size:12.5px;color:var(--muted)}
+.pingrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.pin{position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:4px;padding:8px;text-align:center;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--rule)}
+.pin.empty{box-shadow:none;border:1.5px dashed var(--rule)}
+.pin .pn{font-size:11px;font-weight:700;line-height:1.3;color:var(--fg)}
+.pin .pw{font-size:10.5px;color:var(--muted)}
+.pin .pc{width:34px;height:34px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--rule);display:grid;place-items:center;color:var(--muted);font-size:16px}
+.pin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pin.has .pn{position:absolute;left:0;right:0;bottom:0;padding:14px 6px 4px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.62))}
+@media (max-width:600px){.pingrid{grid-template-columns:repeat(3,1fr);gap:6px}.pin .pn{font-size:10px}}
 .gal{display:grid;gap:8px;margin-top:8px}
 .galhd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
 .galhd h2{margin:0;font:800 22px var(--display)}
@@ -694,6 +708,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
   </section>
   <section class="vp" data-page="photos" id="photos" aria-labelledby="photoh">
     <div class="stathd"><h2 id="photoh">写真ウォール</h2><p id="photosub">いま地図に出している旅の写真</p></div>
+    <div class="pinbook" id="pinbook" aria-labelledby="pinh"></div>
     <div class="pwall" id="photobody"></div>
   </section>
   <section class="vp" data-page="fail" id="fails" aria-labelledby="failh">
@@ -2696,6 +2711,22 @@ function rideGlobe(){return new Promise(res=>{
       if(f.ev)head=`${esc(f.ev.title)}<time>${esc(f.ev.d)}</time>`;
       else{const [pl,dd]=window.__illPlace(f.i);head=`${esc(pl)}${dd?`<time>${esc(dd)}</time>`:""}`;}
       return `<div class="ggrp"><h3>${head}</h3><div class="pgrid">${g.items.map(it=>`<button class="pph" type="button" ${it.ev?`data-e="${it.e}"`:`data-i="${it.i}"`} aria-label="${esc(it.name)}の写真"><img loading="lazy" decoding="async" width="800" height="600" src="${esc(it.src)}" alt=""><span>${esc(it.name)}</span></button>`).join("")}</div></div>`;}).join(""):`<p class="empty">この旅には、まだ写真がない。</p>`;};
+  // ピンバッチ図鑑：写真はまだ。photo に "photos/pin_xxx.webp" を入れると、その枠に写真が出る
+  // ★で買ったと確認できている場所だけ枠を作ってある（残りは写真が届いてから足す）
+  const PINS=[
+    {trip:"eu",place:"ロンドン",photo:null},
+    {trip:"eu",place:"サンモリッツ",photo:null},
+    {trip:"eu",place:"ベネチア",photo:null},
+    {trip:"eu",place:"フュッセン",photo:null}];
+  const renderPins=()=>{const box=el("pinbook");if(!box)return;
+    const ps=PINS.filter(p=>tripOn(p.trip));
+    if(!ps.length){box.hidden=true;box.innerHTML="";return;}
+    box.hidden=false;
+    const got=ps.filter(p=>p.photo).length;
+    box.innerHTML=`<h3 id="pinh">ピンバッチ図鑑<small>${got} / ${ps.length}　写真が入った数</small></h3><p class="pinsub">旅先で買ったピンバッチ。写真が届いたら、ここに並べていく</p><div class="pingrid">`+
+      ps.map(p=>p.photo?`<div class="pin has"><img loading="lazy" decoding="async" src="${esc(p.photo)}" alt="${esc(p.place)}のピンバッチ"><span class="pn">${esc(p.place)}</span></div>`
+        :`<div class="pin empty" aria-label="${esc(p.place)}のピンバッチ（写真待ち）"><span class="pc" aria-hidden="true">＋</span><span class="pn">${esc(p.place)}</span><span class="pw">写真待ち</span></div>`).join("")+`</div>`;};
+  (window.__onTrips=window.__onTrips||[]).push(renderPins);renderPins();
   el("photobody").addEventListener("click",e=>{const b=e.target.closest(".pph");if(!b)return;if(b.dataset.e!==undefined)window.__goEv(+b.dataset.e);else window.__showIll(+b.dataset.i);});
   (window.__onTrips=window.__onTrips||[]).push(render);render();})();
 // ---- 次の旅ルーレット（行ったことのない国の街を、地球儀を回して出す。体験ではなく、おすすめの候補） ----
