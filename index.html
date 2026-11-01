@@ -260,7 +260,7 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .gcard .gb{position:absolute;top:4px;right:4px;min-width:14px;height:14px;padding:0 3px;box-sizing:border-box;border-radius:999px;background:var(--eu);color:#fff;font:700 9px/14px var(--mono)}
 .illdlg{border:1px solid var(--rule);border-radius:10px;padding:16px 16px 12px;width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 32px);box-sizing:border-box;background:var(--card);color:var(--fg);box-shadow:0 10px 40px rgba(0,0,0,.25);font-family:var(--body);overflow:auto}
 .illdlg::backdrop{background:rgba(20,24,28,.45)}
-.illdlg .illrow{padding-right:36px}
+.illdlg .illtx>.k{padding-right:36px}
 .illdlg h2{margin:0;font-family:var(--display);font-size:22px;font-weight:800}
 .illdlg p{margin:0;font-size:14px}.illdlg .m{color:var(--muted);font-size:13px}
 .illdlg .k{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
@@ -379,8 +379,10 @@ body:not([data-view="map"]) [data-page="map"],body:not([data-view="stats"]) [dat
 .panel{position:relative}
 .pclose{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--fg);font:500 18px/1 system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;padding:0;z-index:2}
 .pclose:hover{background:var(--bg)}
-.panel:not(.empty){padding-right:52px}
-.panel:not(.empty) .phwrap,.panel:not(.empty) .dots{margin-right:-36px}
+.panel:not(.empty){padding-right:16px}
+/* 閉じるボタンと重なるのは見出しの行だけ。文章・ボタン・写真は右端まで使う */
+.panel:not(.empty)>.k,.panel:not(.empty) .illtx>.k{padding-right:40px}
+@media (max-width:600px){.panel .illbig{width:56px;height:56px}.panel .illrow{gap:10px}}
 
 .phwrap{position:relative;max-width:520px;margin-top:6px}
 .phwrap .phs{margin-top:0}
