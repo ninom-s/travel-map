@@ -5,8 +5,8 @@
 // ======================================================================
 // d3 が読み込めなかったときは、ここから先の処理を実行しない（元のコードの「return」と同じ働き）
 if (!window.d3) throw new Error("d3 が読み込めていないため、地図の処理を止めた");
-// 起動：最初は地球儀の表示から始める
-enterGlobe(null, { instant: true });
+// 起動：最初は地球儀の表示から始める。向きは、選んでいる旅（最初はヨーロッパ一周とエジプト・ケニア）の中心に合わせる
+enterGlobe(window.__selCentroid ? window.__selCentroid() : null, { instant: true });
 // ---- URLの #ill=イラスト名（noteの記事などから） ----
 (() => {
     const GRP_OF = { eu: "sg", af: "fu", hi: "mina", ko: "mina", ld: "mina", th: "th", cn: "cn" };

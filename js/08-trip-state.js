@@ -5,9 +5,9 @@
 // ======================================================================
 // Mの旅（ninomの旅ではない）は、スイッチを入れたときだけ出す
 // 旅の表示スイッチ：Sの旅＝ヨーロッパ一周、ふたりの旅＝エジプト・ケニア、Mの旅＝ハワイ・韓国・ロンドン
-// SHOW＝旅ごとの表示ON/OFF（最初はエジプト・ケニアだけON）。GRPS＝タブ名→旅の一覧
+// SHOW＝旅ごとの表示ON/OFF（最初はヨーロッパ一周とエジプト・ケニアがON）。GRPS＝タブ名→旅の一覧
 // （sg＝ヨーロッパ、fu＝エジプト・ケニア、mina＝ミナの旅、th＝タイ、cn＝中国）
-const SHOW = { eu: false, af: true, hi: false, ko: false, ld: false, th: false, cn: false }, GRPS = { sg: ["eu"], fu: ["af"], mina: ["hi", "ko", "ld"], th: ["th"], cn: ["cn"] };
+const SHOW = { eu: true, af: true, hi: false, ko: false, ld: false, th: false, cn: false }, GRPS = { sg: ["eu"], fu: ["af"], mina: ["hi", "ko", "ld"], th: ["th"], cn: ["cn"] };
 // tripOn＝その旅を表示中か。TRNT＝乗り継ぎ地点がどの旅のものか
 const tripOn = t => !(t in SHOW) || SHOW[t], TRNT = { ICN: "ko", HEL: "eu", PEK: "af", DOH: "af", BAH: "af", GZ: "af", HND: "af" };
 // SHOW の状態を body の「off-旅」クラスに反映する（CSSが、その旅の線・点・名前を隠す）

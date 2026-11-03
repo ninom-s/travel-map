@@ -11,8 +11,8 @@ if (!window.d3) throw new Error("d3 が読み込めていないため、地図�
     const tp = document.getElementById("tplay"), PLAYK = { sg: "eu", fu: "af" }, NAME = { sg: "ヨーロッパ一周", fu: "エジプト・ケニア", mina: "ハワイ・韓国・ロンドン" };
     // tabs＝旅のタブのボタン
     const tabs = [...document.querySelectorAll(".ttab")];
-    // sel＝いま選んでいるタブの集合（最初はエジプト・ケニア）
-    let sel = new Set(["fu"]);
+    // sel＝いま選んでいるタブの集合（最初はヨーロッパ一周とエジプト・ケニア。index.html のタブの aria-pressed と js/08 の SHOW も同じにしておく）
+    let sel = new Set(["sg", "fu"]);
     // only＝選んでいるのが1つならそのタブ、複数なら null
     const only = () => sel.size === 1 ? [...sel][0] : null;
     // syncTP＝選択に応じて再生ボタンの表示を切り替える
@@ -34,6 +34,8 @@ if (!window.d3) throw new Error("d3 が読み込めていないため、地図�
         const c = pts.length ? d3.geoCentroid({ type: "MultiPoint", coordinates: pts }) : [20, 30];
         return c && isFinite(c[0]) ? c : [20, 30];
     };
+    // 起動時の地球儀の向き（js/36-startup.js が使う）
+    window.__selCentroid = centroid;
     // apply＝タブの選択を変更して画面に反映する。
     // 旅の線・点・名前の表示を切り替え、再生中なら止め、パネルを閉じ、イラスト一覧を更新し、
     // 旅が1つならその旅の地図へ、複数なら全部が入る地球儀にする
